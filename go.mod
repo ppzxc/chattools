@@ -5,7 +5,6 @@ go 1.17
 require (
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/json-iterator/go v1.1.12
-	github.com/ppzxc/types v0.0.1
 	github.com/sirupsen/logrus v1.8.1
 	go.mongodb.org/mongo-driver v1.7.3
 	go.uber.org/zap v1.19.1

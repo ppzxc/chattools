@@ -8,7 +8,7 @@ import (
 	"github.com/ppzxc/chattools/database"
 	"github.com/ppzxc/chattools/database/model"
 	"github.com/ppzxc/chattools/database/mongodb/repository"
-	"github.com/ppzxc/types"
+	"github.com/ppzxc/chattools/types"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
