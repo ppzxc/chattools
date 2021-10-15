@@ -15,13 +15,13 @@ type redisSessionStore struct {
 	rdb cache.Adapter
 }
 
-func (r redisSessionStore) Login(sessionId string, userId int64, deviceId int64) error {
+func (r redisSessionStore) Login(sessionId string, userId int64, browserId string) error {
 	get, err := r.rdb.Get(sessionId)
 	if err != nil || get == nil {
 		return ErrNotRegister
 	} else {
 		sess := NewSessionFromExternal(get)
-		sess.Login(userId, deviceId)
+		sess.Login(userId, browserId)
 		err := r.rdb.Set(sessionId, sess.ToExternal())
 		if err != nil {
 			return err

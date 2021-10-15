@@ -6,11 +6,11 @@ type Session interface {
 	GetSessionId() string
 
 	IsLogin() bool
-	Login(int64, int64)
+	Login(int64, string)
 	Logout()
 
 	GetUserId() int64
-	GetDeviceId() int64
+	GetBrowserId() string
 
 	ToExternal() []byte
 }
@@ -26,7 +26,7 @@ func NewSession(sessionId string) Session {
 		SessionId:  sessionId,
 		LoginState: false,
 		UserId:     0,
-		DeviceId:   0,
+		BrowserId:  "",
 	}
 }
 
@@ -34,7 +34,7 @@ type localSession struct {
 	LoginState bool   `json:"login_state"`
 	SessionId  string `json:"session_id"`
 	UserId     int64  `json:"user_id"`
-	DeviceId   int64  `json:"device_id"`
+	BrowserId  string `json:"browser_id"`
 }
 
 func (s localSession) ToExternal() []byte {
@@ -50,22 +50,22 @@ func (s localSession) IsLogin() bool {
 	return s.LoginState
 }
 
-func (s *localSession) Login(userId int64, deviceId int64) {
+func (s *localSession) Login(userId int64, browserId string) {
 	s.LoginState = true
 	s.UserId = userId
-	s.DeviceId = deviceId
+	s.BrowserId = browserId
 }
 
 func (s *localSession) Logout() {
 	s.LoginState = false
 	s.UserId = 0
-	s.DeviceId = 0
+	s.BrowserId = ""
 }
 
 func (s localSession) GetUserId() int64 {
 	return s.UserId
 }
 
-func (s localSession) GetDeviceId() int64 {
-	return s.DeviceId
+func (s localSession) GetBrowserId() string {
+	return s.BrowserId
 }

@@ -12,7 +12,7 @@ var (
 )
 
 type Adapter interface {
-	Login(sessionId string, userId int64, deviceId int64) error
+	Login(sessionId string, userId int64, deviceId string) error
 	Logout(sessionId string) error
 	GetSession(sessionId string) (Session, bool)
 	GetSessions(userId int64) (map[string]Session, bool)

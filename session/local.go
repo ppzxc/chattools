@@ -18,7 +18,7 @@ type sessionStore struct {
 	userSessions map[int64]map[string]Session
 }
 
-func (s *sessionStore) Login(sessionId string, userId int64, deviceId int64) error {
+func (s *sessionStore) Login(sessionId string, userId int64, browserId string) error {
 	s.Lock()
 	defer s.Unlock()
 
@@ -31,7 +31,7 @@ func (s *sessionStore) Login(sessionId string, userId int64, deviceId int64) err
 		return ErrAlreadyLogin
 	}
 
-	session.Login(userId, deviceId)
+	session.Login(userId, browserId)
 
 	if sess, l := s.userSessions[userId]; l {
 		_, loaded = sess[sessionId]
