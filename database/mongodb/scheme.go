@@ -92,7 +92,7 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 		var insertUsers []*model.User
 
 		now := time.Now()
-		hash, _ := bcrypt.GenerateFromPassword([]byte("asdfasdf"), bcrypt.DefaultCost)
+		hash, _ := bcrypt.GenerateFromPassword([]byte("asdfasdfasdf"), bcrypt.DefaultCost)
 		expires := time.Now().Add(365 * 24 * time.Hour)
 
 		for _, v := range names {
@@ -157,7 +157,7 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 			},
 			Authentication: &model.Authentication{
 				UserName:  "asdf",
-				Email:     "asdf@asdf",
+				Email:     "asdf@asdf.com",
 				Password:  string(hash),
 				AuthType:  types.StateAuthTypeId,
 				AuthLevel: types.StateAuthLevelUser,

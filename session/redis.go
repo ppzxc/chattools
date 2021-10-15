@@ -54,6 +54,7 @@ func (r redisSessionStore) GetSession(sessionId string) (Session, bool) {
 	}
 }
 
+//TODO get user sessions in multidevce
 func (r redisSessionStore) GetSessions(userId int64) (map[string]Session, bool) {
 	panic("implement me")
 }
