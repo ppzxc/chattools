@@ -5,7 +5,7 @@ import "time"
 type Message struct {
 	Id           int64       `json:"id,omitempty" bson:"_id,omitempty"`
 	MessageType  string      `json:"message_type,omitempty" bson:"message_type,omitempty"`
-	ClintUUID    string      `json:"clint_uuid,omitempty" bson:"clint_uuid,omitempty"`
+	ClientUUID   string      `json:"client_uuid,omitempty" bson:"client_uuid,omitempty"`
 	FromUserId   int64       `json:"from_user_id,omitempty" bson:"from_user_id,omitempty"`
 	FromUserName string      `json:"from_user_name,omitempty" bson:"from_user_name,omitempty"`
 	TopicId      int64       `json:"topic_id,omitempty" bson:"topic_id,omitempty"`
