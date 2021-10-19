@@ -64,6 +64,28 @@ func (m mongodb) UserLogout(ctx context.Context, userId int64) error {
 	}
 }
 
+func (m mongodb) UserFindAllByTopicId(ctx context.Context, topicId int64) ([]model.User, error) {
+	cCtx, cancel := context.WithCancel(ctx)
+	subs, err := m.crudSubs.FindManyByFilter(cCtx, bson.D{{"topic_id", topicId}})
+	cancel()
+	if err != nil {
+		return nil, err
+	}
+
+	var users []model.User
+	for _, sub := range subs {
+		cCtx, cancel = context.WithCancel(ctx)
+		user, err := m.UserFindOneById(cCtx, sub.UserId)
+		cancel()
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
+}
+
 func (m mongodb) UserFindAllByPaging(ctx context.Context, paging model.Paging) ([]model.User, error) {
 	var filter bson.D
 	//filter := bson.M{"updated_at": bson.M{"$gte": paging.UpdatedAt, "$lte": paging.CreatedAt}}

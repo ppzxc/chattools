@@ -11,6 +11,7 @@ type Service interface {
 
 	UserInsert(ctx context.Context, user model.User) (id int64, err error)
 	UserFindAllByPaging(ctx context.Context, paging model.Paging) (users []model.User, err error)
+	UserFindAllByTopicId(ctx context.Context, topicId int64) ([]model.User, error)
 	UserFindOneById(ctx context.Context, id int64) (user model.User, err error)
 	UserFindOneByEmail(ctx context.Context, email string) (user model.User, err error)
 	UserUpdate(ctx context.Context, user model.User) (err error)
