@@ -2,6 +2,11 @@ package types
 
 import "errors"
 
+// for msa
+var (
+	ErrSessionIsNotRegister = errors.New("session is not register")
+)
+
 var (
 	ErrAuthSessionAlreadyLogin              = errors.New("ws sessions login fail, sessions is already login")
 	ErrAuthNotSupportUsingType              = errors.New("ws sessions login fail, login using type invalid")
