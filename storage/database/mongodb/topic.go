@@ -3,7 +3,6 @@ package mongodb
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"github.com/ppzxc/chattools/storage/database"
 	model2 "github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
@@ -39,10 +38,6 @@ func (m mongodb) TopicDeleteByEmptySubs(ctx context.Context) error {
 	all, err := m.crudTopic.FindManyFilter(ctx, bson.D{})
 	if err != nil {
 		return err
-	}
-
-	for _, a := range all {
-		fmt.Printf("%+#v\n", a)
 	}
 
 	// topic empty

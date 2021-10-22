@@ -20,7 +20,7 @@ type Adapter interface {
 	Login(sessionId string, userId int64, deviceId string) error
 	Logout(sessionId string) error
 	GetSession(sessionId string) (domain.SessionAdapter, bool)
-	GetSessions(userId int64) (map[string]domain.SessionAdapter, bool)
+	GetSessionByUserId(userId int64) (map[string]domain.SessionAdapter, error)
 	Register(session domain.SessionAdapter) error
 	Unregister(sessionId string)
 

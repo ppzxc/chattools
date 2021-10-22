@@ -2,13 +2,20 @@ package cache
 
 import (
 	"context"
+	"fmt"
 	"github.com/go-redis/redis/v8"
+	"github.com/ppzxc/chattools/types"
 )
 
 type Adapter interface {
+	MGet(keys ...string) ([]interface{}, error)
 	Get(key string) (interface{}, error)
 	Set(key string, value interface{}) error
+	HGetAll(key string) (map[string]string, error)
+	HSet(key string, value ...interface{}) error
 	Del(key string) error
+
+	Exists(key ...string) error
 
 	Subscribe(ctx context.Context, key string) (*redis.PubSub, error)
 	Publish(ctx context.Context, key string, message interface{}) error
@@ -16,6 +23,21 @@ type Adapter interface {
 
 type redisCache struct {
 	rdb *redis.Client
+}
+
+func (r redisCache) Exists(key ...string) error {
+	cCtx, cancel := context.WithCancel(context.Background())
+	count, err := r.rdb.Exists(cCtx, key...).Result()
+	cancel()
+	if err != nil {
+		return err
+	}
+
+	if len(key) > 0 && len(key) == int(count) {
+		return nil
+	} else {
+		return types.ErrNoExistsKeys
+	}
 }
 
 func (r redisCache) Subscribe(ctx context.Context, key string) (*redis.PubSub, error) {
@@ -53,6 +75,20 @@ func (r redisCache) Del(key string) (err error) {
 	}
 }
 
+func (r redisCache) MGet(keys ...string) ([]interface{}, error) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cmd := r.rdb.MGet(ctx, keys...)
+	cancel()
+	fmt.Println(cmd)
+	if cmd.Err() == redis.Nil {
+		return nil, redis.Nil
+	} else if cmd.Err() != nil {
+		return nil, cmd.Err()
+	} else {
+		return cmd.Val(), nil
+	}
+}
+
 func (r redisCache) Get(key string) (interface{}, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	value, err := r.rdb.Get(ctx, key).Result()
@@ -69,6 +105,29 @@ func (r redisCache) Get(key string) (interface{}, error) {
 func (r redisCache) Set(key string, value interface{}) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	err := r.rdb.Set(ctx, key, value, 0).Err()
+	cancel()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r redisCache) HGetAll(key string) (map[string]string, error) {
+	ctx, cancel := context.WithCancel(context.Background())
+	value, err := r.rdb.HGetAll(ctx, key).Result()
+	cancel()
+	if err == redis.Nil {
+		return nil, redis.Nil
+	} else if err != nil {
+		return nil, err
+	} else {
+		return value, nil
+	}
+}
+
+func (r redisCache) HSet(key string, values ...interface{}) error {
+	ctx, cancel := context.WithCancel(context.Background())
+	err := r.rdb.HSet(ctx, key, values...).Err()
 	cancel()
 	if err != nil {
 		return err
