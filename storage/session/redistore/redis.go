@@ -70,11 +70,15 @@ func (r redisSessionStore) Logout(sessionId string) error {
 }
 
 func (r redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter, bool) {
-	get, err := r.rdb.Get(sessionId)
+	get, err := r.rdb.HGetAll(sessionId)
 	if err != nil || get == nil {
 		return nil, false
 	} else {
-		return domain.FromHash(get), true
+		fromMap, err := domain.FromMap(get)
+		if err != nil {
+			return nil, false
+		}
+		return fromMap, true
 	}
 }
 
