@@ -25,5 +25,6 @@ type Adapter interface {
 	Unregister(sessionId string)
 
 	Subscribe(ctx context.Context, key string, conn *websocket.Conn) error
+	UnSubscribe(key string)
 	Publish(ctx context.Context, key string, message interface{}) error
 }
