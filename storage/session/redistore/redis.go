@@ -18,7 +18,8 @@ func getUserKey(userId int64) string {
 
 func NewRedisSessionStore(adapter cache.Adapter) session.Adapter {
 	return &redisSessionStore{
-		rdb: adapter,
+		rdb:            adapter,
+		subscribeStore: &sync.Map{},
 	}
 }
 
@@ -39,7 +40,7 @@ func (r *redisSessionStore) Subscribe(ctx context.Context, key string, conn *web
 	return nil
 }
 
-func (r *redisSessionStore) UnSubscribe(key string)  {
+func (r *redisSessionStore) UnSubscribe(key string) {
 	value, loaded := r.subscribeStore.LoadAndDelete(key)
 	if loaded {
 		switch value.(type) {
