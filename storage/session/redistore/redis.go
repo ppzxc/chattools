@@ -3,12 +3,13 @@ package redistore
 import (
 	"context"
 	"fmt"
-	"github.com/go-redis/redis/v8"
+	"github.com/kataras/iris/v12/websocket"
 	"github.com/ppzxc/chattools/domain"
 	"github.com/ppzxc/chattools/storage/cache"
 	"github.com/ppzxc/chattools/storage/session"
 	"github.com/ppzxc/chattools/types"
 	"github.com/sirupsen/logrus"
+	"sync"
 )
 
 func getUserKey(userId int64) string {
@@ -22,18 +23,27 @@ func NewRedisSessionStore(adapter cache.Adapter) session.Adapter {
 }
 
 type redisSessionStore struct {
-	rdb cache.Adapter
+	rdb            cache.Adapter
+	subscribeStore *sync.Map
 }
 
-func (r redisSessionStore) Subscribe(ctx context.Context, key string) (*redis.PubSub, error) {
-	return r.rdb.Subscribe(ctx, key)
+func (r *redisSessionStore) Subscribe(ctx context.Context, key string, conn *websocket.Conn) error {
+	subscribe, err := r.rdb.Subscribe(ctx, key)
+	if err != nil {
+		return err
+	}
+
+	subscriber := domain.NewSubscriber(ctx, key, subscribe, conn)
+	subscriber.Serve()
+	r.subscribeStore.Store(key, subscriber)
+	return nil
 }
 
-func (r redisSessionStore) Publish(ctx context.Context, key string, message interface{}) error {
+func (r *redisSessionStore) Publish(ctx context.Context, key string, message interface{}) error {
 	return r.rdb.Publish(ctx, key, message)
 }
 
-func (r redisSessionStore) Login(sessionId string, userId int64, browserId string) error {
+func (r *redisSessionStore) Login(sessionId string, userId int64, browserId string) error {
 	if err := r.rdb.Exists(sessionId); err != nil {
 		return err
 	}
@@ -51,10 +61,11 @@ func (r redisSessionStore) Login(sessionId string, userId int64, browserId strin
 			return err
 		}
 	} // fallthrough
+
 	return r.rdb.HSet(getUserKey(userId), sessionId, browserId)
 }
 
-func (r redisSessionStore) Logout(sessionId string) error {
+func (r *redisSessionStore) Logout(sessionId string) error {
 	get, err := r.rdb.Get(sessionId)
 	if err != nil || get == nil {
 		return session.ErrNotRegister
@@ -69,7 +80,7 @@ func (r redisSessionStore) Logout(sessionId string) error {
 	}
 }
 
-func (r redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter, bool) {
+func (r *redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter, bool) {
 	get, err := r.rdb.HGetAll(sessionId)
 	if err != nil || get == nil {
 		return nil, false
@@ -82,7 +93,7 @@ func (r redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter, 
 	}
 }
 
-func (r redisSessionStore) GetSessionByUserId(userId int64) (map[string]domain.SessionAdapter, error) {
+func (r *redisSessionStore) GetSessionByUserId(userId int64) (map[string]domain.SessionAdapter, error) {
 	maps, err := r.rdb.HGetAll(getUserKey(userId))
 	if err != nil {
 		return nil, err
@@ -105,7 +116,7 @@ func (r redisSessionStore) GetSessionByUserId(userId int64) (map[string]domain.S
 	return s, nil
 }
 
-func (r redisSessionStore) Register(registerSession domain.SessionAdapter) error {
+func (r *redisSessionStore) Register(registerSession domain.SessionAdapter) error {
 	if err := r.rdb.Exists(registerSession.GetSessionId()); err != nil {
 		if err != types.ErrNoExistsKeys {
 			return err
@@ -115,7 +126,7 @@ func (r redisSessionStore) Register(registerSession domain.SessionAdapter) error
 	return r.rdb.HSet(registerSession.GetSessionId(), registerSession.ToMap())
 }
 
-func (r redisSessionStore) Unregister(sessionId string) {
+func (r *redisSessionStore) Unregister(sessionId string) {
 	err := r.rdb.Del(sessionId)
 	if err != nil {
 		logrus.WithError(err).Debug("unregister, rdb delete error")

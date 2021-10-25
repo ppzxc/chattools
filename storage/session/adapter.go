@@ -3,7 +3,7 @@ package session
 import (
 	"context"
 	"errors"
-	"github.com/go-redis/redis/v8"
+	"github.com/kataras/iris/v12/websocket"
 	"github.com/ppzxc/chattools/domain"
 )
 
@@ -24,6 +24,6 @@ type Adapter interface {
 	Register(session domain.SessionAdapter) error
 	Unregister(sessionId string)
 
-	Subscribe(ctx context.Context, key string) (*redis.PubSub, error)
+	Subscribe(ctx context.Context, key string, conn *websocket.Conn) error
 	Publish(ctx context.Context, key string, message interface{}) error
 }
