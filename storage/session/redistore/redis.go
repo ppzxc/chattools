@@ -39,6 +39,23 @@ func (r *redisSessionStore) Subscribe(ctx context.Context, key string, conn *web
 	return nil
 }
 
+func (r *redisSessionStore) UnSubscribe(key string)  {
+	value, loaded := r.subscribeStore.LoadAndDelete(key)
+	if loaded {
+		switch value.(type) {
+		case domain.Subscriber:
+			subs := value.(domain.Subscriber)
+			//ctx, cancel := context.WithCancel(context.Background())
+			//err := subs.GetPubSub().Unsubscribe(ctx, key)
+			//cancel()
+			//if err != nil {
+			//	return
+			//}
+			subs.Close()
+		}
+	}
+}
+
 func (r *redisSessionStore) Publish(ctx context.Context, key string, message interface{}) error {
 	return r.rdb.Publish(ctx, key, message)
 }
