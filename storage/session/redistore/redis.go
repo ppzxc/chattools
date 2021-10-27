@@ -3,13 +3,12 @@ package redistore
 import (
 	"context"
 	"fmt"
-	"github.com/kataras/iris/v12/websocket"
+	"github.com/go-redis/redis/v8"
 	"github.com/ppzxc/chattools/domain"
 	"github.com/ppzxc/chattools/storage/cache"
 	"github.com/ppzxc/chattools/storage/session"
 	"github.com/ppzxc/chattools/types"
 	"github.com/sirupsen/logrus"
-	"sync"
 )
 
 func getUserKey(userId int64) string {
@@ -18,43 +17,16 @@ func getUserKey(userId int64) string {
 
 func NewRedisSessionStore(adapter cache.Adapter) session.Adapter {
 	return &redisSessionStore{
-		rdb:            adapter,
-		subscribeStore: &sync.Map{},
+		rdb: adapter,
 	}
 }
 
 type redisSessionStore struct {
-	rdb            cache.Adapter
-	subscribeStore *sync.Map
+	rdb cache.Adapter
 }
 
-func (r *redisSessionStore) Subscribe(ctx context.Context, key string, conn *websocket.Conn) error {
-	subscribe, err := r.rdb.Subscribe(ctx, key)
-	if err != nil {
-		return err
-	}
-
-	subscriber := domain.NewSubscriber(ctx, key, subscribe, conn)
-	subscriber.Serve()
-	r.subscribeStore.Store(key, subscriber)
-	return nil
-}
-
-func (r *redisSessionStore) UnSubscribe(key string) {
-	value, loaded := r.subscribeStore.LoadAndDelete(key)
-	if loaded {
-		switch value.(type) {
-		case domain.Subscriber:
-			subs := value.(domain.Subscriber)
-			//ctx, cancel := context.WithCancel(context.Background())
-			//err := subs.GetPubSub().Unsubscribe(ctx, key)
-			//cancel()
-			//if err != nil {
-			//	return
-			//}
-			subs.Close()
-		}
-	}
+func (r *redisSessionStore) Subscribe(ctx context.Context, key string) (*redis.PubSub, error) {
+	return r.rdb.Subscribe(ctx, key)
 }
 
 func (r *redisSessionStore) Publish(ctx context.Context, key string, message interface{}) error {
@@ -129,7 +101,7 @@ func (r *redisSessionStore) GetSessionByUserId(userId int64) (map[string]domain.
 	}
 
 	s := make(map[string]domain.SessionAdapter)
-	for key, _ := range maps {
+	for key := range maps {
 		all, err := r.rdb.HGetAll(key)
 		if err != nil {
 			return nil, err
