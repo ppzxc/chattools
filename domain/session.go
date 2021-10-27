@@ -25,6 +25,24 @@ func FromHash(payload interface{}) SessionAdapter {
 	return &ls
 }
 
+func (s session) ToMap() map[string]interface{} {
+	sess := make(map[string]interface{})
+	sess["session_id"] = s.SessionId
+
+	if s.LoginState {
+		sess["login_state"] = s.LoginState
+	}
+
+	if s.UserId > 0 {
+		sess["user_id"] = s.UserId
+	}
+
+	if len(s.BrowserId) > 0 {
+		sess["browser_id"] = s.BrowserId
+	}
+	return sess
+}
+
 func FromMap(payload map[string]string) (SessionAdapter, error) {
 	sess := session{}
 	value, loaded := payload["login_state"]
@@ -71,24 +89,6 @@ type session struct {
 	SessionId  string `json:"session_id"`
 	UserId     int64  `json:"user_id"`
 	BrowserId  string `json:"browser_id"`
-}
-
-func (s session) ToMap() map[string]interface{} {
-	sess := make(map[string]interface{})
-	sess["session_id"] = s.SessionId
-
-	if s.LoginState {
-		sess["login_state"] = s.LoginState
-	}
-
-	if s.UserId > 0 {
-		sess["user_id"] = s.UserId
-	}
-
-	if len(s.BrowserId) > 0 {
-		sess["browser_id"] = s.BrowserId
-	}
-	return sess
 }
 
 func (s session) GetSessionId() string {

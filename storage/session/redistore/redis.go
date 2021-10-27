@@ -85,40 +85,47 @@ func (r *redisSessionStore) Login(sessionId string, userId int64, browserId stri
 
 func (r *redisSessionStore) Logout(sessionId string) error {
 	get, err := r.rdb.HGetAll(sessionId)
-	if err != nil || get == nil {
-		return session.ErrNotRegister
-	} else {
-		sess, err := domain.FromMap(get)
-		if err != nil {
-			return err
-		}
-		userId := sess.GetUserId()
-		sess.Logout()
-		err = r.rdb.HSet(sessionId, sess.ToMap())
-		if err != nil {
-			return err
-		}
-
-		all, err := r.rdb.HGetAll(getUserKey(userId))
-		if err != nil {
-			return err
-		}
-
-		if _, loaded := all[sessionId]; loaded {
-			if len(all) <= 1 {
-				if err := r.rdb.Del(getUserKey(userId)); err != nil {
-					return err
-				}
-			} else {
-				err := r.rdb.HDel(getUserKey(userId), sessionId)
-				if err != nil {
-					return err
-				}
-			}
-		}
-
-		return nil
+	if err != nil {
+		return err
 	}
+
+	sess, err := domain.FromMap(get)
+	if err != nil {
+		return err
+	}
+
+	if sess.IsLogin() {
+		//all, err := r.rdb.HGetAll(getUserKey(sess.GetUserId()))
+		//if err != nil {
+		//	return err
+		//}
+		//
+		//if _, loaded := all[sessionId]; loaded {
+		//	if len(all) <= 1 {
+		//		if err := r.rdb.Del(getUserKey(sess.GetUserId())); err != nil {
+		//			return err
+		//		}
+		//	} else {
+		//		err := r.rdb.HDel(getUserKey(sess.GetUserId()), sessionId)
+		//		if err != nil {
+		//			return err
+		//		}
+		//	}
+		//}
+		_ = r.rdb.HDel(getUserKey(sess.GetUserId()), sessionId)
+
+		sess.Logout()
+		err := r.rdb.HDel(sessionId, "login_state", "user_id", "browser_id")
+		if err != nil {
+			return err
+		}
+		//err = r.rdb.HSet(sessionId, sess.ToMap())
+		//if err != nil {
+		//	return err
+		//}
+	}
+
+	return nil
 }
 
 func (r *redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter, bool) {
