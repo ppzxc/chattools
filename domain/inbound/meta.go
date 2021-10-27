@@ -1,8 +1,8 @@
 package inbound
 
 import (
+	"github.com/ppzxc/chattools/common/global"
 	"github.com/ppzxc/chattools/storage/database/model"
-	"go-msa-link-gw/common/global"
 )
 
 type Meta struct {

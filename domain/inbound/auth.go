@@ -1,6 +1,8 @@
 package inbound
 
-import "go-msa-link-gw/common/global"
+import (
+	"github.com/ppzxc/chattools/common/global"
+)
 
 type Authentication struct {
 	UUID     string           `json:"uuid,omitempty" validate:"required,uuid4"`

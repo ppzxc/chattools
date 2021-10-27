@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-playground/validator/v10"
-	"go-msa-link-gw/common"
-	"go-msa-link-gw/common/global"
+	"github.com/ppzxc/chattools/common"
+	"github.com/ppzxc/chattools/common/global"
 )
 
 type Root struct {
