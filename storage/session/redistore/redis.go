@@ -94,7 +94,7 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 		}
 		userId := sess.GetUserId()
 		sess.Logout()
-		err = r.rdb.Set(sessionId, sess.ToMap())
+		err = r.rdb.HSet(sessionId, sess.ToMap())
 		if err != nil {
 			return err
 		}
@@ -110,8 +110,8 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 					return err
 				}
 			} else {
-				delete(all, sessionId)
-				if err := r.rdb.HSet(getUserKey(userId)); err != nil {
+				err := r.rdb.HDel(getUserKey(userId), sessionId)
+				if err != nil {
 					return err
 				}
 			}
