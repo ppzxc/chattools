@@ -89,11 +89,31 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 		return session.ErrNotRegister
 	} else {
 		sess := domain.FromHash(get)
+		userId := sess.GetUserId()
 		sess.Logout()
 		err := r.rdb.Set(sessionId, sess.ToMap())
 		if err != nil {
 			return err
 		}
+
+		all, err := r.rdb.HGetAll(getUserKey(userId))
+		if err != nil {
+			return err
+		}
+
+		if _, loaded := all[sessionId]; loaded {
+			if len(all) <= 1 {
+				if err := r.rdb.Del(getUserKey(userId)); err != nil {
+					return err
+				}
+			} else {
+				delete(all, sessionId)
+				if err := r.rdb.HSet(getUserKey(userId)); err != nil {
+					return err
+				}
+			}
+		}
+
 		return nil
 	}
 }
@@ -145,8 +165,45 @@ func (r *redisSessionStore) Register(registerSession domain.SessionAdapter) erro
 }
 
 func (r *redisSessionStore) Unregister(sessionId string) {
-	err := r.rdb.Del(sessionId)
+	get, err := r.rdb.Get(sessionId)
 	if err != nil {
-		logrus.WithError(err).Debug("unregister, rdb delete error")
+		logrus.WithFields(logrus.Fields{
+			"session.id": sessionId,
+		}).WithError(err).Error("unregister session get failed")
+		return
+	}
+
+	defer func() {
+		err := r.rdb.Del(sessionId)
+		if err != nil {
+			logrus.WithError(err).Debug("unregister, rdb delete error")
+		}
+	}()
+
+	sess := domain.FromHash(get)
+	if sess.IsLogin() {
+		all, err := r.rdb.HGetAll(getUserKey(sess.GetUserId()))
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"session.id": sessionId,
+			}).WithError(err).Error("unregister user sessions get failed")
+			return
+		}
+
+		if _, loaded := all[sessionId]; loaded {
+			if len(all) <= 1 {
+				if err := r.rdb.Del(getUserKey(sess.GetUserId())); err != nil {
+					logrus.WithFields(logrus.Fields{
+						"session.id": sessionId,
+					}).WithError(err).Error("unregister user sessions get failed")
+					return
+				}
+			} else {
+				delete(all, sessionId)
+				if err := r.rdb.HSet(getUserKey(sess.GetUserId())); err != nil {
+					return
+				}
+			}
+		}
 	}
 }
