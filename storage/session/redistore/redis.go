@@ -84,7 +84,7 @@ func (r *redisSessionStore) Login(sessionId string, userId int64, browserId stri
 }
 
 func (r *redisSessionStore) Logout(sessionId string) error {
-	get, err := r.rdb.Get(sessionId)
+	get, err := r.rdb.HGetAll(sessionId)
 	if err != nil || get == nil {
 		return session.ErrNotRegister
 	} else {
@@ -165,7 +165,7 @@ func (r *redisSessionStore) Register(registerSession domain.SessionAdapter) erro
 }
 
 func (r *redisSessionStore) Unregister(sessionId string) {
-	get, err := r.rdb.Get(sessionId)
+	get, err := r.rdb.HGetAll(sessionId)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"session.id": sessionId,
