@@ -200,7 +200,7 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 				}
 			} else {
 				delete(all, sessionId)
-				if err := r.rdb.HSet(getUserKey(sess.GetUserId())); err != nil {
+				if err := r.rdb.HSet(getUserKey(sess.GetUserId()), all); err != nil {
 					return
 				}
 			}
