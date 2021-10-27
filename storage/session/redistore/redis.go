@@ -88,10 +88,13 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 	if err != nil || get == nil {
 		return session.ErrNotRegister
 	} else {
-		sess := domain.FromHash(get)
+		sess, err := domain.FromMap(get)
+		if err != nil {
+			return err
+		}
 		userId := sess.GetUserId()
 		sess.Logout()
-		err := r.rdb.Set(sessionId, sess.ToMap())
+		err = r.rdb.Set(sessionId, sess.ToMap())
 		if err != nil {
 			return err
 		}
@@ -176,11 +179,20 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 	defer func() {
 		err := r.rdb.Del(sessionId)
 		if err != nil {
-			logrus.WithError(err).Debug("unregister, rdb delete error")
+			logrus.WithFields(logrus.Fields{
+				"session.id": sessionId,
+			}).WithError(err).Error("unregister, rdb delete error")
 		}
 	}()
 
-	sess := domain.FromHash(get)
+	sess, err := domain.FromMap(get)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"session.id": sessionId,
+		}).WithError(err).Error("unregister, fromMap transform fail")
+		return
+	}
+
 	if sess.IsLogin() {
 		all, err := r.rdb.HGetAll(getUserKey(sess.GetUserId()))
 		if err != nil {
