@@ -14,6 +14,7 @@ type Adapter interface {
 	HGetAll(key string) (map[string]string, error)
 	HSet(key string, value ...interface{}) error
 	Del(key string) error
+	HDel(key string, fields ...string) error
 
 	Exists(key ...string) error
 
@@ -62,6 +63,17 @@ func (r redisCache) Publish(ctx context.Context, key string, message interface{}
 		return err
 	}
 	return nil
+}
+
+func (r redisCache) HDel(key string, fields ...string) (err error) {
+	ctx, cancel := context.WithCancel(context.Background())
+	err = r.rdb.HDel(ctx, key, fields...).Err()
+	cancel()
+	if err != nil {
+		return err
+	} else {
+		return nil
+	}
 }
 
 func (r redisCache) Del(key string) (err error) {

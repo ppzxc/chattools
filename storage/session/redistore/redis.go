@@ -211,8 +211,11 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 					return
 				}
 			} else {
-				delete(all, sessionId)
-				if err := r.rdb.HSet(getUserKey(sess.GetUserId()), all); err != nil {
+				err := r.rdb.HDel(getUserKey(sess.GetUserId()), sess.GetSessionId())
+				if err != nil {
+					logrus.WithFields(logrus.Fields{
+						"session.id": sessionId,
+					}).WithError(err).Error("unregister user sessions get failed")
 					return
 				}
 			}
