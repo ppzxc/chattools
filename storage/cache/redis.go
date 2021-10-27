@@ -16,6 +16,7 @@ type Adapter interface {
 	Del(key string) error
 	HDel(key string, fields ...string) error
 
+	HExists(key string, field string) error
 	Exists(key ...string) error
 
 	Subscribe(ctx context.Context, key string) (*redis.PubSub, error)
@@ -24,6 +25,20 @@ type Adapter interface {
 
 type redisCache struct {
 	rdb *redis.Client
+}
+
+func (r redisCache) HExists(key string, field string) error {
+	cCtx, cancel := context.WithCancel(context.Background())
+	exist, err := r.rdb.HExists(cCtx, key, field).Result()
+	cancel()
+	if err != nil {
+		return err
+	}
+
+	if !exist {
+		return types.ErrNoExistsKeys
+	}
+	return nil
 }
 
 func (r redisCache) Exists(key ...string) error {

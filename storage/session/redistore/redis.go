@@ -95,34 +95,15 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 	}
 
 	if sess.IsLogin() {
-		//all, err := r.rdb.HGetAll(getUserKey(sess.GetUserId()))
-		//if err != nil {
-		//	return err
-		//}
-		//
-		//if _, loaded := all[sessionId]; loaded {
-		//	if len(all) <= 1 {
-		//		if err := r.rdb.Del(getUserKey(sess.GetUserId())); err != nil {
-		//			return err
-		//		}
-		//	} else {
-		//		err := r.rdb.HDel(getUserKey(sess.GetUserId()), sessionId)
-		//		if err != nil {
-		//			return err
-		//		}
-		//	}
-		//}
-		_ = r.rdb.HDel(getUserKey(sess.GetUserId()), sessionId)
+		if err := r.rdb.HExists(getUserKey(sess.GetUserId()), sessionId); err == nil {
+			_ = r.rdb.HDel(getUserKey(sess.GetUserId()), sessionId)
+		}
 
 		sess.Logout()
 		err := r.rdb.HDel(sessionId, "login_state", "user_id", "browser_id")
 		if err != nil {
 			return err
 		}
-		//err = r.rdb.HSet(sessionId, sess.ToMap())
-		//if err != nil {
-		//	return err
-		//}
 	}
 
 	return nil
