@@ -20,6 +20,10 @@ func (m mongodb) SubscriptionExistsByUserIdAndTopicId(ctx context.Context, userI
 	return filter.Id, nil
 }
 
+func (m mongodb) SubscriptionFindAllByUserId(ctx context.Context, userId int64) (subscriptions []model.Subscription, err error) {
+	return m.crudSubs.FindManyByFilter(ctx, bson.D{{"user_id", userId}})
+}
+
 func (m mongodb) SubscriptionFindAllByTopicId(ctx context.Context, topicId int64) ([]model.Subscription, error) {
 	return m.crudSubs.FindManyByFilter(ctx, bson.D{{"topic_id", topicId}})
 }
