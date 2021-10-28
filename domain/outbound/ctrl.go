@@ -28,8 +28,8 @@ type Topic struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 
-	Message []*Message `json:"messages,omitempty"`
-	Users   []*User    `json:"users,omitempty"`
+	Message []*Message `json:"messages"`
+	Users   []*User    `json:"users"`
 }
 
 type Message struct {

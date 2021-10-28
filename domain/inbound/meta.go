@@ -31,7 +31,7 @@ func (m Meta) GetMetaType() global.Meta {
 }
 
 type RequestTopic struct {
-	Mine   bool          `json:"me" validate:"required"`
+	Mine   bool          `json:"mine" validate:"required"`
 	Paging *model.Paging `json:"paging,omitempty"`
 }
 
