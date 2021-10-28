@@ -45,3 +45,12 @@ const (
 	MetaNotify  Meta = "notify"
 	MetaProfile Meta = "profile"
 )
+
+type Msg string
+
+const (
+	MsgSend Msg = "send"
+	MsgAck  Msg = "ack"
+	MsgRead Msg = "read"
+	MsgFile Msg = "file"
+)
