@@ -4,10 +4,10 @@ import "github.com/ppzxc/chattools/common/global"
 
 type Message struct {
 	UUID string       `json:"uuid,omitempty" validate:"required,uuid4"`
-	Send *RequestSend `json:"create,omitempty"`
-	Ack  *RequestAck  `json:"leave,omitempty"`
-	Read *RequestRead `json:"invite,omitempty"`
-	File *RequestFile `json:"join,omitempty"`
+	Send *RequestSend `json:"send,omitempty"`
+	Ack  *RequestAck  `json:"ack,omitempty"`
+	Read *RequestRead `json:"read,omitempty"`
+	File *RequestFile `json:"file,omitempty"`
 }
 
 func (m Message) GetMsgType() global.Msg {
