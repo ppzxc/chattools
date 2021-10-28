@@ -156,7 +156,7 @@ func (c subscription) UpdateOneByFilter(ctx context.Context, filter interface{},
 		return err
 	}
 
-	if result.MatchedCount != 1 {
+	if result.MatchedCount <= 0 {
 		return mongo.ErrNoDocuments
 	}
 
