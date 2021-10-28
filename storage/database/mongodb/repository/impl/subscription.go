@@ -143,8 +143,7 @@ func (c subscription) DeleteOneByFilter(ctx context.Context, filter interface{})
 func (c subscription) UpdateOneByFilter(ctx context.Context, filter interface{}, update interface{}) error {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
-	t := true
-	result, err := c.collection.UpdateOne(cCtx, filter, update, &options.UpdateOptions{Upsert: &t})
+	result, err := c.collection.UpdateOne(cCtx, filter, update, &options.UpdateOptions{})
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.UpdateOne",
