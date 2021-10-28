@@ -1,6 +1,5 @@
 package types
 
-// for user table
 const (
 	StateUserCreated  = "CREATED"
 	StateUserActive   = "ACTIVE"
@@ -8,7 +7,6 @@ const (
 	StateUserRemoved  = "REMOVED"
 )
 
-// for topic table
 const (
 	StateTopicCreated  = "CREATED"
 	StateTopicActive   = "ACTIVE"
@@ -16,7 +14,6 @@ const (
 	StateTopicRemoved  = "REMOVED"
 )
 
-// for auth table
 const (
 	StateAuthLevelAdmin     = "admin"
 	StateAuthLevelUser      = "user"
