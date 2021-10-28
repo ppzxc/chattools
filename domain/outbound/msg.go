@@ -9,7 +9,6 @@ type Msg struct {
 }
 
 type ResponseSend struct {
-	TopicId int64   `json:"topic_id,omitempty"`
 	Message Message `json:"message,omitempty"`
 }
 

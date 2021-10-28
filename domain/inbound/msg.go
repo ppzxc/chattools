@@ -25,8 +25,9 @@ func (m Message) GetMsgType() global.Msg {
 }
 
 type RequestSend struct {
-	TopicId int64  `json:"topic_id,omitempty" validate:"required,min=1"`
-	Message string `json:"message,omitempty" validate:"required,min=1,max=2000"`
+	TopicId int64       `json:"topic_id,omitempty" validate:"required,min=1"`
+	Message string      `json:"message,omitempty" validate:"required,min=1,max=2000"`
+	Custom  interface{} `json:"custom,omitempty"`
 }
 
 type RequestAck struct {
