@@ -2,7 +2,7 @@ package common
 
 import jsoniter "github.com/json-iterator/go"
 
-func FromMapToByte(src map[string]interface{}) []byte {
+func FromMapToByte(src interface{}) []byte {
 	if src == nil {
 		return nil
 	}
