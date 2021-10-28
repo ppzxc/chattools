@@ -70,7 +70,7 @@ func (m mongodb) SubscriptionUpdateAck(ctx context.Context, subscription model.S
 			{"updated_at", subscription.UpdatedAt},
 		}}}
 	} else {
-		update = bson.D{{"$set", bson.D{{"updated_at", subscription.UpdatedAt}}}}
+		return mongo.ErrNoDocuments
 	}
 
 	// where sequence_id is not null
@@ -92,30 +92,7 @@ func (m mongodb) SubscriptionUpdateAck(ctx context.Context, subscription model.S
 				"read_sequence_id": bson.D{{"$lt", subscription.ReadSequenceId}},
 			},
 			update)
-		//return m.crudSubs.UpdateOneByFilter(
-		//	ctx,
-		//	bson.D{
-		//		{"user_id", subscription.UserId},
-		//		{"topic_id", subscription.TopicId},
-		//		{"sequence_id", bson.D{{"$lt", subscription.ReadSequenceId}}},
-		//	},
-		//	update,
-		//)
 	} else {
-		return m.crudSubs.UpdateOneByFilter(
-			ctx,
-			bson.M{
-				"user_id":  subscription.UserId,
-				"topic_id": subscription.TopicId,
-			},
-			update)
-		//return m.crudSubs.UpdateOneByFilter(
-		//	ctx,
-		//	bson.D{
-		//		{"user_id", subscription.UserId},
-		//		{"topic_id", subscription.TopicId},
-		//	},
-		//	update,
-		//)
+		return mongo.ErrNoDocuments
 	}
 }
