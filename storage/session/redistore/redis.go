@@ -33,13 +33,13 @@ func (r *redisSessionStore) Publish(ctx context.Context, key string, message int
 	return r.rdb.Publish(ctx, key, message)
 }
 
-func (r *redisSessionStore) Login(sessionId string, userId int64, browserId string) error {
+func (r *redisSessionStore) Login(sessionId string, userId int64, userName string, browserId string) error {
 	if err := r.rdb.Exists(sessionId); err != nil {
 		return err
 	}
 
 	sess := domain.NewSession(sessionId)
-	sess.Login(userId, browserId)
+	sess.Login(userId, userName, browserId)
 
 	err := r.rdb.HSet(sessionId, sess.ToMap())
 	if err != nil {
@@ -72,7 +72,7 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 		}
 
 		sess.Logout()
-		err := r.rdb.HDel(sessionId, "login_state", "user_id", "browser_id")
+		err := r.rdb.HDel(sessionId, "login_state", "user_id", "browser_id", "user_name")
 		if err != nil {
 			return err
 		}

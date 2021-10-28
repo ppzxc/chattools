@@ -10,7 +10,7 @@ type Message struct {
 	File *RequestFile `json:"join,omitempty"`
 }
 
-func (m Message) GetCtrlType() global.Msg {
+func (m Message) GetMsgType() global.Msg {
 	if m.Send != nil {
 		return global.MsgSend
 	} else if m.Ack != nil {

@@ -7,7 +7,7 @@ import (
 )
 
 type Adapter interface {
-	Login(sessionId string, userId int64, deviceId string) error
+	Login(sessionId string, userId int64, userName string, deviceId string) error
 	Logout(sessionId string) error
 	GetSession(sessionId string) (domain.SessionAdapter, bool)
 	GetSessionByUserId(userId int64) (map[string]domain.SessionAdapter, error)

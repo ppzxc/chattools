@@ -9,10 +9,11 @@ type SessionAdapter interface {
 	GetSessionId() string
 
 	IsLogin() bool
-	Login(int64, string)
+	Login(int64, string, string)
 	Logout()
 
 	GetUserId() int64
+	GetUserName() string
 	GetBrowserId() string
 
 	ToMap() map[string]interface{}
@@ -35,6 +36,10 @@ func (s session) ToMap() map[string]interface{} {
 
 	if s.UserId > 0 {
 		sess["user_id"] = s.UserId
+	}
+
+	if len(s.UserName) > 0 {
+		sess["user_name"] = s.UserName
 	}
 
 	if len(s.BrowserId) > 0 {
@@ -63,6 +68,11 @@ func FromMap(payload map[string]string) (SessionAdapter, error) {
 		sess.UserId = int64(userId)
 	}
 
+	value, loaded = payload["user_name"]
+	if loaded {
+		sess.UserName = value
+	}
+
 	value, loaded = payload["session_id"]
 	if loaded {
 		sess.SessionId = value
@@ -80,6 +90,7 @@ func NewSession(sessionId string) SessionAdapter {
 		SessionId:  sessionId,
 		LoginState: false,
 		UserId:     0,
+		UserName:   "",
 		BrowserId:  "",
 	}
 }
@@ -88,6 +99,7 @@ type session struct {
 	LoginState bool   `json:"login_state"`
 	SessionId  string `json:"session_id"`
 	UserId     int64  `json:"user_id"`
+	UserName   string `json:"user_name"`
 	BrowserId  string `json:"browser_id"`
 }
 
@@ -99,20 +111,26 @@ func (s session) IsLogin() bool {
 	return s.LoginState
 }
 
-func (s *session) Login(userId int64, browserId string) {
+func (s *session) Login(userId int64, userName string, browserId string) {
 	s.LoginState = true
 	s.UserId = userId
+	s.UserName = userName
 	s.BrowserId = browserId
 }
 
 func (s *session) Logout() {
 	s.LoginState = false
 	s.UserId = 0
+	s.UserName = ""
 	s.BrowserId = ""
 }
 
 func (s session) GetUserId() int64 {
 	return s.UserId
+}
+
+func (s session) GetUserName() string {
+	return s.UserName
 }
 
 func (s session) GetBrowserId() string {
