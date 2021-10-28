@@ -129,7 +129,7 @@ func (c subscription) DeleteOneByFilter(ctx context.Context, filter interface{})
 		"query":     "c.collection.DeleteOne",
 		"exec.time": time.Since(start),
 		"args":      fmt.Sprintf("%+#v", filter),
-	})
+	}).Debug("DeleteOneByFilter")
 	if err != nil {
 		return err
 	}
@@ -149,7 +149,7 @@ func (c subscription) UpdateOneByFilter(ctx context.Context, filter interface{},
 		"query":     "c.collection.UpdateOne",
 		"exec.time": time.Since(start),
 		"args":      fmt.Sprintf("%+#v", filter),
-	})
+	}).Debug("UpdateOneByFilter")
 
 	if err != nil {
 		return err
