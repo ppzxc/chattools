@@ -5,7 +5,7 @@ import "time"
 type Root struct {
 	Auth   *Authentication `json:"auth,omitempty"`
 	Ctrl   *Control        `json:"ctrl,omitempty"`
-	Msg    *Message        `json:"msg,omitempty"`
+	Msg    *Msg            `json:"msg,omitempty"`
 	Meta   *Meta           `json:"meta,omitempty"`
 	Notify *Notify         `json:"notify,omitempty"`
 	File   *File           `json:"file,omitempty"`
