@@ -78,18 +78,18 @@ func (m mongodb) SubscriptionUpdateAck(ctx context.Context, subscription model.S
 		return m.crudSubs.UpdateOneByFilter(
 			ctx,
 			bson.M{
-				"user_id":     subscription.UserId,
-				"topic_id":    subscription.TopicId,
-				"sequence_id": bson.D{{"$lt", subscription.ReceiveSequenceId}},
+				"user_id":             subscription.UserId,
+				"topic_id":            subscription.TopicId,
+				"receive_sequence_id": bson.D{{"$lt", subscription.ReceiveSequenceId}},
 			},
 			update)
 	} else if subscription.ReadSequenceId > 0 {
 		return m.crudSubs.UpdateOneByFilter(
 			ctx,
 			bson.M{
-				"user_id":     subscription.UserId,
-				"topic_id":    subscription.TopicId,
-				"sequence_id": bson.D{{"$lt", subscription.ReadSequenceId}},
+				"user_id":          subscription.UserId,
+				"topic_id":         subscription.TopicId,
+				"read_sequence_id": bson.D{{"$lt", subscription.ReadSequenceId}},
 			},
 			update)
 		//return m.crudSubs.UpdateOneByFilter(
