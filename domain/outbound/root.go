@@ -16,8 +16,6 @@ type Root struct {
 	Cause      string `json:"cause,omitempty"`
 }
 
-type Notify struct {
-}
 type File struct {
 }
 type Pong struct {

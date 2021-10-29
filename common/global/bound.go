@@ -54,3 +54,19 @@ const (
 	MsgRead Msg = "read"
 	MsgFile Msg = "file"
 )
+
+type Notify string
+
+const (
+	NotifyMention Notify = "mention"
+	NotifyReply   Notify = "reply"
+)
+
+type NotifyCommand string
+
+const (
+	NotifyCreate  NotifyCommand = "create"
+	NotifyReceive NotifyCommand = "receive"
+	NotifyRead    NotifyCommand = "read"
+	NotifyDelete  NotifyCommand = "delete"
+)

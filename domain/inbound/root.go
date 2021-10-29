@@ -91,9 +91,6 @@ func Change(err error) error {
 	return errors.New(s)
 }
 
-type Notify struct {
-	UUID string `json:"uuid,omitempty" validate:"required,uuid4"`
-}
 type File struct {
 	UUID string `json:"uuid,omitempty" validate:"required,uuid4"`
 }
