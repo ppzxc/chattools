@@ -33,7 +33,7 @@ func (s sequence) TopicMaxSeq(collectionName string, topicId int64) string {
 
 func (s sequence) Current(ctx context.Context, collectionName string, topicId int64) (int64, error) {
 	seq := model.Serial{}
-	cCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	cCtx, cancel := context.WithCancel(ctx)
 	start := time.Now()
 	err := s.counter.FindOne(cCtx,
 		bson.D{{Key: "_id", Value: s.TopicMaxSeq(collectionName, topicId)}},
