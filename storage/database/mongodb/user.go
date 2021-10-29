@@ -64,7 +64,7 @@ func (m mongodb) UserLogout(ctx context.Context, userId int64) error {
 	}
 }
 
-func (m mongodb) UserFindAllByTopicId(ctx context.Context, topicId int64) ([]model2.User, error) {
+func (m mongodb) UserFindAllByTopicId(ctx context.Context, topicId int64, paging model2.Paging) ([]model2.User, error) {
 	cCtx, cancel := context.WithCancel(ctx)
 	subs, err := m.crudSubs.FindManyByFilter(cCtx, bson.D{{"topic_id", topicId}})
 	cancel()
@@ -74,8 +74,18 @@ func (m mongodb) UserFindAllByTopicId(ctx context.Context, topicId int64) ([]mod
 
 	var users []model2.User
 	for _, sub := range subs {
+		var filter bson.D
+		if paging != (model2.Paging{}) && paging.UpdatedAt != nil {
+			filter = bson.D{{"_id", sub.UserId}, {"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
+		} else if paging != (model2.Paging{}) && paging.CreatedAt != nil {
+			filter = bson.D{{"_id", sub.UserId}, {"created_at", bson.M{"$gt": paging.CreatedAt}}}
+		} else {
+			filter = bson.D{{"_id", sub.UserId}}
+		}
+
 		cCtx, cancel = context.WithCancel(ctx)
-		user, err := m.UserFindOneById(cCtx, sub.UserId)
+		user, err := m.crudUser.FindOneByFilter(cCtx, filter)
+		//user, err := m.UserFindOneById(cCtx, sub.UserId)
 		cancel()
 		if err != nil {
 			return nil, err
