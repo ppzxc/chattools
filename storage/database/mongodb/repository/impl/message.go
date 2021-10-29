@@ -34,9 +34,9 @@ func (c message) InsertOne(ctx context.Context, message model.Message) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.InsertOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      message,
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -55,9 +55,9 @@ func (c message) InsertMany(ctx context.Context, messages []interface{}) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.InsertMany",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      messages,
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -76,9 +76,9 @@ func (c message) FindManyByFilter(ctx context.Context, filter bson.D) ([]model.M
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.Find",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      filter,
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return nil, err
 	}
@@ -113,9 +113,9 @@ func (c message) Delete(ctx context.Context, filter bson.D) error {
 
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.DeleteMany",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      filter,
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return err
 	}

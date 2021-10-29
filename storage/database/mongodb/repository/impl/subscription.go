@@ -37,9 +37,9 @@ func (c subscription) FindOneByFilter(ctx context.Context, filter interface{}) (
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	})
+	}).Debug("sql execute")
 	return subs, err
 }
 
@@ -50,9 +50,9 @@ func (c subscription) FindManyByFilter(ctx context.Context, filter interface{}) 
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.Find",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return nil, err
 	}
@@ -86,9 +86,9 @@ func (c subscription) InsertOne(ctx context.Context, subs model.Subscription) er
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.InsertOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", subs),
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -107,9 +107,9 @@ func (c subscription) DeleteAllByFilter(ctx context.Context, filter interface{})
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.DeleteMany",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (c subscription) DeleteOneByFilter(ctx context.Context, filter interface{})
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.DeleteOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	}).Debug("DeleteOneByFilter")
 	if err != nil {
@@ -147,7 +147,7 @@ func (c subscription) UpdateOneByFilter(ctx context.Context, filter interface{},
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.UpdateOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	}).Debug("UpdateOneByFilter")
 

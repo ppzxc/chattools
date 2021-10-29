@@ -35,7 +35,7 @@ func (c topic) FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, upda
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOneAndUpdate",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args1":     filter,
 		"args2":     update,
 	}).Debug("sql execute")
@@ -49,7 +49,7 @@ func (c topic) FindManyFilter(ctx context.Context, filter bson.D) ([]model.Topic
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.Find",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      filter,
 	}).Debug("sql execute")
 	if err != nil {
@@ -80,7 +80,7 @@ func (c topic) FindOneByFilter(ctx context.Context, filter bson.D) (model.Topic,
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      filter,
 	}).Debug("sql execute")
 	return topic, err
@@ -93,7 +93,7 @@ func (c topic) InsertOne(ctx context.Context, topic model.Topic) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.InsertOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      topic,
 	}).Debug("sql execute")
 	if err != nil {
@@ -114,7 +114,7 @@ func (c topic) UpdateFilter(ctx context.Context, filter bson.D, update bson.D) e
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOneAndUpdate",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args1":     filter,
 		"args2":     update,
 	}).Debug("sql execute")
@@ -131,7 +131,7 @@ func (c topic) Update(ctx context.Context, topic *model.Topic) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOneAndUpdate",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      topic,
 	}).Debug("sql execute")
 	return result.Err()
@@ -144,7 +144,7 @@ func (c topic) Delete(ctx context.Context, topicId int64) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.DeleteOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      topicId,
 	}).Debug("sql execute")
 	if err != nil {

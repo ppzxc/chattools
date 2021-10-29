@@ -38,7 +38,7 @@ func (c user) FindOneByFilter(ctx context.Context, filter bson.D) (model.User, e
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	}).Debug("sql execute")
 	return findUser, err
@@ -52,7 +52,7 @@ func (c user) FindOneAndDelete(ctx context.Context, userId int64) (*model.User, 
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOneAndDelete",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", userId),
 	}).Debug("sql execute")
 	return &findUser, err
@@ -65,7 +65,7 @@ func (c user) FindManyByFilter(ctx context.Context, filter bson.D) ([]model.User
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.Find",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	}).Debug("sql execute")
 	if err != nil {
@@ -101,7 +101,7 @@ func (c user) InsertMany(ctx context.Context, many []interface{}) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.InsertMany",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", many),
 	}).Debug("sql execute")
 	if err != nil {
@@ -122,7 +122,7 @@ func (c user) InsertOne(ctx context.Context, user model.User) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.InsertOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", user),
 	}).Debug("sql execute")
 	if err != nil {
@@ -143,7 +143,7 @@ func (c user) FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, updat
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOneAndUpdate",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 		"args2":     fmt.Sprintf("%+#v", update),
 	}).Debug("sql execute")
@@ -157,7 +157,7 @@ func (c user) Delete(ctx context.Context, userId int64) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.DeleteOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", userId),
 	}).Debug("sql execute")
 	if err != nil {

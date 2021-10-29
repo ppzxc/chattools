@@ -36,7 +36,7 @@ func (c notify) FindOneByFilter(ctx context.Context, filter bson.D) (*model.Noti
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "u.collection.FindOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	}).Debug("sql execute")
 	return &notify, err
@@ -49,7 +49,7 @@ func (c notify) FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Not
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "u.collection.Find",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	}).Debug("sql execute")
 	if err != nil {
@@ -85,7 +85,7 @@ func (c notify) InsertMany(ctx context.Context, many []interface{}) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "u.collection.InsertMany",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", many),
 	}).Debug("sql execute")
 	if err != nil {
@@ -108,7 +108,7 @@ func (c notify) UpdateOne(ctx context.Context, notify *model.Notify) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "u.collection.UpdateOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", notify),
 	}).Debug("sql execute")
 

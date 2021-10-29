@@ -41,7 +41,7 @@ func (s sequence) Current(ctx context.Context, collectionName string, topicId in
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "s.counter.FindOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 	}).Debug("sql execute")
 	if err != nil {
 		return 0, err
@@ -51,7 +51,7 @@ func (s sequence) Current(ctx context.Context, collectionName string, topicId in
 
 func (s sequence) Next(ctx context.Context, collectionName string) (int64, error) {
 	seq := model.Serial{}
-	cCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	cCtx, cancel := context.WithCancel(ctx)
 	start := time.Now()
 	err := s.counter.FindOneAndUpdate(cCtx,
 		bson.D{{Key: "_id", Value: collectionName}},
@@ -61,7 +61,7 @@ func (s sequence) Next(ctx context.Context, collectionName string) (int64, error
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "s.counter.FindOneAndUpdate",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 	}).Debug("sql execute")
 	if err != nil {
 		return 0, err

@@ -35,9 +35,9 @@ func (c file) FindOneByFilter(ctx context.Context, filter bson.D) (model.File, e
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	})
+	}).Debug("sql execute")
 	return file, err
 }
 
@@ -48,9 +48,9 @@ func (c file) InsertOne(ctx context.Context, file model.File) error {
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "c.collection.FindOne",
-		"exec.time": time.Since(start),
+		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", file),
-	})
+	}).Debug("sql execute")
 	if err != nil {
 		return err
 	}
