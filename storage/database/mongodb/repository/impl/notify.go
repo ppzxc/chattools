@@ -14,7 +14,6 @@ import (
 )
 
 type notify struct {
-	ctx          context.Context
 	database     *mongo.Database
 	collection   *mongo.Collection
 	queryTimeout time.Duration
@@ -79,9 +78,9 @@ func (c notify) FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Not
 }
 
 func (c notify) InsertMany(ctx context.Context, many []interface{}) error {
-	ctx, cancel := context.WithTimeout(c.ctx, c.queryTimeout)
+	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
-	result, err := c.collection.InsertMany(ctx, many)
+	result, err := c.collection.InsertMany(cCtx, many)
 	cancel()
 	logrus.WithFields(logrus.Fields{
 		"query":     "u.collection.InsertMany",
@@ -100,7 +99,7 @@ func (c notify) InsertMany(ctx context.Context, many []interface{}) error {
 }
 
 func (c notify) InsertOne(ctx context.Context, one interface{}) (int64, error) {
-	ctx, cancel := context.WithTimeout(c.ctx, c.queryTimeout)
+	ctx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
 	result, err := c.collection.InsertOne(ctx, one)
 	cancel()
@@ -117,9 +116,9 @@ func (c notify) InsertOne(ctx context.Context, one interface{}) (int64, error) {
 }
 
 func (c notify) UpdateOne(ctx context.Context, notify *model.Notify) error {
-	ctx, cancel := context.WithTimeout(c.ctx, c.queryTimeout)
+	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
-	result, err := c.collection.UpdateOne(ctx,
+	result, err := c.collection.UpdateOne(cCtx,
 		bson.M{"_id": notify.Id}, bson.D{{"$set", notify}},
 	)
 	cancel()
