@@ -64,7 +64,7 @@ func (m mongodb) UserLogout(ctx context.Context, userId int64) error {
 	}
 }
 
-func (m mongodb) UserFindAllByTopicId(ctx context.Context, topicId int64, paging model2.Paging) ([]model2.User, error) {
+func (m mongodb) UserFindAllByTopicIdAndPaging(ctx context.Context, topicId int64, paging model2.Paging) ([]model2.User, error) {
 	cCtx, cancel := context.WithCancel(ctx)
 	subs, err := m.crudSubs.FindManyByFilter(cCtx, bson.D{{"topic_id", topicId}})
 	cancel()
