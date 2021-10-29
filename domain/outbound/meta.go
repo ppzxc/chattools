@@ -18,6 +18,7 @@ type ResponseMetaUser struct {
 }
 
 type ResponseMetaMessage struct {
+	Messages []*Message `json:"messages,omitempty"`
 }
 
 type ResponseMetaNotify struct {
