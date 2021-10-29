@@ -7,6 +7,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+func (m mongodb) NotifyInsertOne(ctx context.Context, notify model.Notify) (int64, error) {
+	id, err := m.crudSequence.Next(ctx, database.MongoCollectionNotify)
+	if err != nil {
+		return 0, err
+	}
+	notify.Id = id
+	return m.crudNotify.InsertOne(ctx, notify)
+}
+
 func (m mongodb) NotifyInsertMany(ctx context.Context, notify []*model.Notify) error {
 	var many []interface{}
 	for i := 0; i < len(notify); i++ {

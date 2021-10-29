@@ -99,6 +99,23 @@ func (c notify) InsertMany(ctx context.Context, many []interface{}) error {
 	return nil
 }
 
+func (c notify) InsertOne(ctx context.Context, one interface{}) (int64, error) {
+	ctx, cancel := context.WithTimeout(c.ctx, c.queryTimeout)
+	start := time.Now()
+	result, err := c.collection.InsertOne(ctx, one)
+	cancel()
+	logrus.WithFields(logrus.Fields{
+		"query":     "u.collection.InsertOne",
+		"exec.time": time.Since(start).String(),
+		"args":      fmt.Sprintf("%+#v", one),
+	}).Debug("sql execute")
+	if err != nil {
+		return 0, err
+	}
+
+	return result.InsertedID.(int64), nil
+}
+
 func (c notify) UpdateOne(ctx context.Context, notify *model.Notify) error {
 	ctx, cancel := context.WithTimeout(c.ctx, c.queryTimeout)
 	start := time.Now()

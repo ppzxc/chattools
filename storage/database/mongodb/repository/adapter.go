@@ -39,6 +39,7 @@ type Notify interface {
 	FindOneByFilter(ctx context.Context, filter bson.D) (*model2.Notify, error)
 	FindManyFilter(ctx context.Context, filter bson.D) ([]*model2.Notify, error)
 	InsertMany(ctx context.Context, many []interface{}) error
+	InsertOne(ctx context.Context, one interface{}) (int64, error)
 	UpdateOne(ctx context.Context, notify *model2.Notify) error
 }
 

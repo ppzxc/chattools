@@ -43,6 +43,7 @@ type Service interface {
 	ProfileImageUpdate(ctx context.Context, profile model.File) (fileId int64, err error)
 	ProfileUpdateByUserId(ctx context.Context, profile model.Profile) (err error)
 
+	NotifyInsertOne(ctx context.Context, notify model.Notify) (int64, error)
 	NotifyInsertMany(ctx context.Context, notify []*model.Notify) (err error)
 	NotifyUpdate(ctx context.Context, notify *model.Notify) (err error)
 	NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId int64) ([]*model.Notify, error)
