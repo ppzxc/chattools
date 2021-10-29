@@ -12,6 +12,9 @@ const (
 
 	MsgAck
 	MsgRead
+
+	NotifyCreate
+	NotifyCrud
 )
 
 type SyncProtocol struct {
