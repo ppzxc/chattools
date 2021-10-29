@@ -88,7 +88,7 @@ func (m mongodb) TopicFindAll(ctx context.Context, paging model2.Paging) ([]mode
 	return m.crudTopic.FindManyFilter(ctx, filter)
 }
 
-func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64) ([]model2.Topic, error) {
+func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging model2.Paging) ([]model2.Topic, error) {
 	subs, err := m.crudSubs.FindManyByFilter(ctx, bson.M{"user_id": userId})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -106,7 +106,16 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64) ([]mode
 		return nil, sql.ErrNoRows
 	}
 
-	return m.crudTopic.FindManyFilter(ctx, bson.D{{"_id", bson.M{"$in": topicIds}}})
+	var filter bson.D
+	if paging != (model2.Paging{}) && paging.UpdatedAt != nil {
+		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
+	} else if paging != (model2.Paging{}) && paging.CreatedAt != nil {
+		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"created_at", bson.M{"$gt": paging.CreatedAt}}}
+	} else {
+		filter = bson.D{{"_id", bson.M{"$in": topicIds}}}
+	}
+
+	return m.crudTopic.FindManyFilter(ctx, filter)
 }
 
 func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model2.Topic, error) {

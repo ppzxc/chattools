@@ -20,7 +20,7 @@ type Service interface {
 
 	TopicInsert(ctx context.Context, topic model.Topic) (topicId int64, err error)
 	TopicFindAll(ctx context.Context, paging model.Paging) (topics []model.Topic, err error)
-	TopicFindAllByUserId(ctx context.Context, topicId int64) (topics []model.Topic, err error)
+	TopicFindAllByUserId(ctx context.Context, userId int64, paging model.Paging) (topics []model.Topic, err error)
 	TopicFindOneById(ctx context.Context, topicId int64) (topic model.Topic, err error)
 	TopicDelete(ctx context.Context, topicId int64) (err error)
 
