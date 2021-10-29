@@ -41,8 +41,8 @@ type RequestUser struct {
 }
 
 type RequestMessage struct {
-	TopicId int64         `json:"topic_id,omitempty"`
-	Paging  *model.Paging `json:"paging,omitempty"`
+	TopicId    int64 `json:"topic_id,omitempty"`
+	SequenceId int64 `json:"sequence_id,omitempty"`
 }
 
 type RequestNotify struct {
