@@ -10,7 +10,9 @@ import (
 func (m mongodb) NotifyInsertMany(ctx context.Context, notify []*model.Notify) error {
 	var many []interface{}
 	for i := 0; i < len(notify); i++ {
-		id, err := m.crudSequence.Next(ctx, database.MongoCollectionNotify)
+		cCtx, cancel := context.WithCancel(ctx)
+		id, err := m.crudSequence.Next(cCtx, database.MongoCollectionNotify)
+		cancel()
 		if err != nil {
 			return err
 		}
