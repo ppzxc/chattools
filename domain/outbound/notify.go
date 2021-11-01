@@ -23,7 +23,7 @@ type ResponseReply struct {
 }
 
 type ResponseNotifyCrud struct {
-	NotificationId int64 `json:"notification_id,omitempty"`
+	NotifyId int64 `json:"notify_id,omitempty"`
 }
 
 type ResponseNotifyCreate struct {
