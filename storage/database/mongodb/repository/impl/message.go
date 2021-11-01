@@ -84,23 +84,17 @@ func (c message) FindManyByFilter(ctx context.Context, filter bson.D) ([]model.M
 	}
 
 	var messages []model.Message
-	cCtx, cancel = context.WithTimeout(ctx, c.queryTimeout)
-	if err := cursor.All(cCtx, &messages); err != nil {
-		cancel()
+	if err := cursor.All(ctx, &messages); err != nil {
 		return nil, err
 	}
-	cancel()
 
 	if err := cursor.Err(); err != nil {
 		return nil, err
 	}
 
-	cCtx, cancel = context.WithTimeout(ctx, c.queryTimeout)
 	if err := cursor.Close(ctx); err != nil {
-		cancel()
 		return nil, err
 	}
-	cancel()
 
 	return messages, nil
 }
