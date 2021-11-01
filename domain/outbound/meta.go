@@ -22,6 +22,7 @@ type ResponseMetaMessage struct {
 }
 
 type ResponseMetaNotify struct {
+	Notifications []*Notification `json:"notifications,omitempty"`
 }
 
 type ResponseMetaProfile struct {
