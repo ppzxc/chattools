@@ -9,8 +9,8 @@ type Notify struct {
 	ReceiveUserId int64       `json:"receive_user_id,omitempty" bson:"receive_user_id,omitempty"`
 	TopicId       int64       `json:"topic_id,omitempty" bson:"topic_id,omitempty"`
 	SequenceId    int64       `json:"sequence_id,omitempty" bson:"sequence_id,omitempty"`
-	IsReceived    bool        `json:"is_received" bson:"is_received"`
-	IsRead        bool        `json:"is_read" bson:"is_read"`
+	IsReceived    bool        `json:"is_received,omitempty" bson:"is_received,omitempty"`
+	IsRead        bool        `json:"is_read,omitempty" bson:"is_read,omitempty"`
 	Custom        interface{} `json:"custom,omitempty" bson:"custom,omitempty"`
 	CreatedAt     *time.Time  `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	UpdatedAt     *time.Time  `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
