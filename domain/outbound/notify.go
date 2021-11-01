@@ -37,8 +37,8 @@ type Notification struct {
 	ReceiveUserId int64       `json:"receive_user_id,omitempty"`
 	TopicId       int64       `json:"topic_id,omitempty"`
 	SequenceId    int64       `json:"sequence_id,omitempty"`
-	IsReceived    bool        `json:"is_received,omitempty"`
-	IsRead        bool        `json:"is_read,omitempty"`
+	IsReceived    bool        `json:"is_received"`
+	IsRead        bool        `json:"is_read"`
 	Custom        interface{} `json:"custom,omitempty"`
 	CreatedAt     *time.Time  `json:"created_at,omitempty"`
 	UpdatedAt     *time.Time  `json:"updated_at,omitempty"`
