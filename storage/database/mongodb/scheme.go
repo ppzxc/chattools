@@ -15,7 +15,7 @@ import (
 )
 
 func (m *mongodb) dropTable(ctx context.Context, collectionName string) error {
-	dropCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
+	dropCtx, cancel := context.WithTimeout(ctx, m.queryTimeout)
 	err := m.mongoDataBase.Collection(collectionName).Drop(dropCtx)
 	cancel()
 	if err != nil {

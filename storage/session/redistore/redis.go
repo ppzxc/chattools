@@ -81,6 +81,14 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 	return nil
 }
 
+func (r *redisSessionStore) ExistSession(sessionId string) bool {
+	err := r.rdb.Exists(sessionId)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
 func (r *redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter, bool) {
 	get, err := r.rdb.HGetAll(sessionId)
 	if err != nil || get == nil {
