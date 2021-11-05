@@ -8,5 +8,7 @@ import (
 var Validate *validator.Validate
 
 var (
-	WriteTimeOut = 5 * time.Second
+	WebSocketWriteTimeOut = 5 * time.Second
+	QueryTimeOut          = 5 * time.Second
+	GrpcRequestTimeOut    = 5 * time.Second
 )
