@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "/proto-gen";
+
+package proto_gen;
+
+import "model.proto";
+
+// CTRL //
+message RequestCtrl {
+  Header header = 1;
+  int64 topic_id = 2;
+  string topic_name = 3;
+  int64 user_id = 4;
+}
+
+message ResponseCtrl {
+  Header header = 1;
+  Topic topic = 2;
+  int64 topic_id = 3;
+  string topic_name = 4;
+  int64 user_id = 5;
+  string user_name = 6;
+  Result result = 7;
+}
+
+service Control {
+  rpc Create(RequestCtrl) returns (ResponseCtrl) {}
+  rpc Leave(RequestCtrl) returns (ResponseCtrl) {}
+  rpc Invite(RequestCtrl) returns (ResponseCtrl) {}
+  rpc Join(RequestCtrl) returns (ResponseCtrl) {}
+}

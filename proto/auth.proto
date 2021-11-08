@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "/proto-gen";
+
+package proto_gen;
+
+import "model.proto";
+
+// LOGIN //
+message RequestAuthentication {
+  Header header = 1;
+  int64 user_id = 2;
+  string user_name = 3;
+  string name = 4;
+  string email = 5;
+  string password = 6;
+  string token = 7;
+  int64 topic_id = 8;
+  int64 file_id = 9;
+  File file = 10;
+  Profile profile = 11;
+  DeviceInfo device_info = 12;
+}
+
+message ResponseAuthentication {
+  Header header = 1;
+  User user = 2;
+  File file = 3;
+  string audience = 4;
+  string token = 5;
+  repeated int64 subscription_topic_ids = 6;
+  Result result = 7;
+}
+
+service Authenticator {
+  rpc LoginRotary(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc LoginEmailPassword(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc LoginAnonymous(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc LoginToken(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc LogoutSession(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc RegisterUser(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc UnRegisterUser(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc IssuedToken(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc Classify(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc ProfileUpdate(RequestAuthentication) returns (ResponseAuthentication) {}
+}

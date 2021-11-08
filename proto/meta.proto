@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package = "/proto-gen";
+
+package proto_gen;
+
+import "model.proto";
+
+// META //
+message RequestMeta {
+  Header header = 1;
+  bool mine = 2;
+  int64 user_id = 3;
+  int64 topic_id = 4;
+  int64 sequence_id = 5;
+  Paging paging = 6;
+}
+
+message ResponseMeta {
+  Header header = 1;
+  repeated Topic topic = 2;
+  repeated Message messages = 3;
+  repeated User users = 4;
+  repeated Profile profiles = 5;
+  repeated Notification notifications = 6;
+  Result result = 7;
+}
+
+service Meta {
+  rpc Topic(RequestMeta) returns (ResponseMeta) {}
+  rpc Message(RequestMeta) returns (ResponseMeta) {}
+  rpc User(RequestMeta) returns (ResponseMeta) {}
+  rpc Profile(RequestMeta) returns (ResponseMeta) {}
+  rpc Notify(RequestMeta) returns (ResponseMeta) {}
+}

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option go_package = "/proto-gen";
+
+package proto_gen;
+
+import "model.proto";
+
+// CTRL //
+message RequestNotification {
+  Header header = 1;
+  int64 notify_id = 2;
+  int64 topic_id = 3;
+  string message = 4;
+  int64 sequence_id = 5;
+  repeated int64 user_ids = 6;
+  int64 user_id = 7;
+  string type = 8;
+  bytes custom = 9;
+}
+
+message ResponseNotification {
+  Header header = 1;
+  bool is_me = 2;
+  Notification Notification = 3;
+  Result result = 4;
+}
+
+service Notificator {
+  rpc MentionCreate(RequestNotification) returns (ResponseNotification) {}
+  rpc MentionCrud(RequestNotification) returns (ResponseNotification) {}
+  rpc ReplyCreate(RequestNotification) returns (ResponseNotification) {}
+  rpc ReplyCrud(RequestNotification) returns (ResponseNotification) {}
+}

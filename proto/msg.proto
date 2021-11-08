@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = "/proto-gen";
+
+package proto_gen;
+
+import "model.proto";
+
+// CTRL //
+message RequestMsg {
+  Header header = 1;
+  File file = 2;
+  Message message = 3;
+  MessageType message_type = 4;
+}
+
+message ResponseMsg {
+  Header header = 1;
+  Message message = 2;
+  int64 user_id = 3;
+  Result result = 4;
+}
+
+service Msg {
+  rpc Send(RequestMsg) returns (ResponseMsg) {}
+  rpc Ack(RequestMsg) returns (ResponseMsg) {}
+  rpc Read(RequestMsg) returns (ResponseMsg) {}
+  rpc File(RequestMsg) returns (ResponseMsg) {}
+}
