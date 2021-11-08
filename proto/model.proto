@@ -8,7 +8,7 @@ import "google/protobuf/timestamp.proto";
 
 message Session {
   string id = 1;
-  string user_id = 2;
+  int64 user_id = 2;
   string user_name = 3;
   string browser_id = 4;
 }
