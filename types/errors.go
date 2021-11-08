@@ -67,4 +67,7 @@ var (
 	ErrMetaNotContainsMessages              = errors.New("invalid meta.message, not contains message")
 	ErrMetaTopicCountZero                   = errors.New("invalid meta.topic, topic count zero")
 	ErrMsgNotEnteredTopic                   = errors.New("invalid msg.send, not entered topic")
+
+	ErrValidateNotContainsRoutingObjectInAuth = errors.New("request object is not contains in auth, [login, logout, register]")
+	ErrValidateNotContainsRequestObject       = errors.New("request object is not contains, [auth, ctrl, meta, msg, notify]")
 )

@@ -1,6 +1,8 @@
 package inbound
 
-import "github.com/ppzxc/chattools/common/global"
+import (
+	"github.com/ppzxc/chattools/common"
+)
 
 type Notify struct {
 	UUID    string          `json:"uuid,omitempty" validate:"required,uuid4"`
@@ -8,11 +10,11 @@ type Notify struct {
 	Reply   *RequestReply   `json:"reply,omitempty"`
 }
 
-func (n Notify) GetNotifyType() global.Notify {
+func (n Notify) GetNotifyType() common.Notify {
 	if n.Mention != nil {
-		return global.NotifyMention
+		return common.NotifyMention
 	} else if n.Reply != nil {
-		return global.NotifyReply
+		return common.NotifyReply
 	} else {
 		return ""
 	}
@@ -25,15 +27,15 @@ type RequestMention struct {
 	Delete  *Crud          `json:"delete,omitempty"`
 }
 
-func (r RequestMention) GetNotifyType() global.NotifyCommand {
+func (r RequestMention) GetNotifyType() common.NotifyCommand {
 	if r.Create != nil {
-		return global.NotifyCreate
+		return common.NotifyCreate
 	} else if r.Receive != nil {
-		return global.NotifyReceive
+		return common.NotifyReceive
 	} else if r.Read != nil {
-		return global.NotifyRead
+		return common.NotifyRead
 	} else if r.Delete != nil {
-		return global.NotifyDelete
+		return common.NotifyDelete
 	} else {
 		return ""
 	}
@@ -54,15 +56,15 @@ type RequestReply struct {
 	Delete  *Crud        `json:"delete,omitempty"`
 }
 
-func (r RequestReply) GetNotifyType() global.NotifyCommand {
+func (r RequestReply) GetNotifyType() common.NotifyCommand {
 	if r.Create != nil {
-		return global.NotifyCreate
+		return common.NotifyCreate
 	} else if r.Receive != nil {
-		return global.NotifyReceive
+		return common.NotifyReceive
 	} else if r.Read != nil {
-		return global.NotifyRead
+		return common.NotifyRead
 	} else if r.Delete != nil {
-		return global.NotifyDelete
+		return common.NotifyDelete
 	} else {
 		return ""
 	}

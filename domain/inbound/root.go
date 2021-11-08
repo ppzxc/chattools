@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/ppzxc/chattools/common"
-	"github.com/ppzxc/chattools/common/global"
+	"github.com/ppzxc/chattools/types"
 )
 
 type Root struct {
@@ -18,23 +18,23 @@ type Root struct {
 	Ping   *Ping           `json:"ping,omitempty"`
 }
 
-func (r Root) GetInboundType() global.Bound {
+func (r Root) GetInboundType() common.Bound {
 	if r.Auth != nil {
-		return global.BoundAuthentication
+		return common.BoundAuthentication
 	} else if r.Ctrl != nil {
-		return global.BoundControl
+		return common.BoundControl
 	} else if r.Msg != nil {
-		return global.BoundMessage
+		return common.BoundMessage
 	} else if r.Meta != nil {
-		return global.BoundMeta
+		return common.BoundMeta
 	} else if r.Notify != nil {
-		return global.BoundNotify
+		return common.BoundNotify
 	} else if r.File != nil {
-		return global.BoundFile
+		return common.BoundFile
 	} else if r.Ping != nil {
-		return global.BoundPing
+		return common.BoundPing
 	} else {
-		return global.BoundEtc
+		return common.BoundEtc
 	}
 }
 
@@ -52,7 +52,7 @@ func (r Root) Validate() error {
 			} else if r.Auth.Register != nil {
 				return Change(common.Validate.Struct(r.Auth.Register))
 			} else {
-				return common.ErrValidateNotContainsRoutingObjectInAuth
+				return types.ErrValidateNotContainsRoutingObjectInAuth
 			}
 		}
 	} else if r.Ctrl != nil {
@@ -68,7 +68,7 @@ func (r Root) Validate() error {
 	} else if r.Ping != nil {
 		return nil
 	} else {
-		return common.ErrValidateNotContainsRequestObject
+		return types.ErrValidateNotContainsRequestObject
 	}
 }
 

@@ -1,7 +1,7 @@
 package inbound
 
 import (
-	"github.com/ppzxc/chattools/common/global"
+	"github.com/ppzxc/chattools/common"
 )
 
 type Authentication struct {
@@ -12,15 +12,15 @@ type Authentication struct {
 	Token    *RequestToken    `json:"token,omitempty"`
 }
 
-func (a Authentication) GetAuthType() global.Authentication {
+func (a Authentication) GetAuthType() common.Authentication {
 	if a.Login != nil {
-		return global.AuthLogin
+		return common.AuthLogin
 	} else if a.Logout != nil {
-		return global.AuthLogout
+		return common.AuthLogout
 	} else if a.Token != nil {
-		return global.AuthToken
+		return common.AuthToken
 	} else if a.Register != nil {
-		return global.AuthRegister
+		return common.AuthRegister
 	}
 	return ""
 }

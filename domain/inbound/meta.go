@@ -1,7 +1,7 @@
 package inbound
 
 import (
-	"github.com/ppzxc/chattools/common/global"
+	"github.com/ppzxc/chattools/common"
 	"github.com/ppzxc/chattools/storage/database/model"
 )
 
@@ -14,17 +14,17 @@ type Meta struct {
 	Profile *RequestProfile `json:"profile,omitempty"`
 }
 
-func (m Meta) GetMetaType() global.Meta {
+func (m Meta) GetMetaType() common.Meta {
 	if m.Topic != nil {
-		return global.MetaTopic
+		return common.MetaTopic
 	} else if m.User != nil {
-		return global.MetaUser
+		return common.MetaUser
 	} else if m.Message != nil {
-		return global.MetaMessage
+		return common.MetaMessage
 	} else if m.Notify != nil {
-		return global.MetaNotify
+		return common.MetaNotify
 	} else if m.Profile != nil {
-		return global.MetaProfile
+		return common.MetaProfile
 	} else {
 		return ""
 	}

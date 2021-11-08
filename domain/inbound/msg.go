@@ -1,6 +1,8 @@
 package inbound
 
-import "github.com/ppzxc/chattools/common/global"
+import (
+	"github.com/ppzxc/chattools/common"
+)
 
 type Message struct {
 	UUID string       `json:"uuid,omitempty" validate:"required,uuid4"`
@@ -10,15 +12,15 @@ type Message struct {
 	File *RequestFile `json:"file,omitempty"`
 }
 
-func (m Message) GetMsgType() global.Msg {
+func (m Message) GetMsgType() common.Msg {
 	if m.Send != nil {
-		return global.MsgSend
+		return common.MsgSend
 	} else if m.Ack != nil {
-		return global.MsgAck
+		return common.MsgAck
 	} else if m.Read != nil {
-		return global.MsgRead
+		return common.MsgRead
 	} else if m.File != nil {
-		return global.MsgFile
+		return common.MsgFile
 	} else {
 		return ""
 	}

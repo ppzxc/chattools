@@ -1,4 +1,4 @@
-package global
+package common
 
 type Bound string
 

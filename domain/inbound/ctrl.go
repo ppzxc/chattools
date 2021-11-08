@@ -1,7 +1,7 @@
 package inbound
 
 import (
-	"github.com/ppzxc/chattools/common/global"
+	"github.com/ppzxc/chattools/common"
 )
 
 type Control struct {
@@ -12,15 +12,15 @@ type Control struct {
 	Join   *RequestJoin   `json:"join,omitempty"`
 }
 
-func (c Control) GetCtrlType() global.Control {
+func (c Control) GetCtrlType() common.Control {
 	if c.Create != nil {
-		return global.CtrlCreate
+		return common.CtrlCreate
 	} else if c.Leave != nil {
-		return global.CtrlLeave
+		return common.CtrlLeave
 	} else if c.Join != nil {
-		return global.CtrlJoin
+		return common.CtrlJoin
 	} else if c.Invite != nil {
-		return global.CtrlInvite
+		return common.CtrlInvite
 	} else {
 		return ""
 	}
