@@ -10,6 +10,8 @@ type Device struct {
 	UserAgent       string     `json:"user_agent,omitempty" bson:"user_agent,omitempty"`
 	OperationSystem string     `json:"operation_system,omitempty" bson:"operation_system,omitempty"`
 	Platform        string     `json:"platform,omitempty" bson:"platform,omitempty"`
+	IsConnected     bool       `json:"is_connected,omitempty" bson:"is_connected"`
+	IsLogin         bool       `json:"is_login,omitempty" bson:"is_login"`
 	CreatedAt       *time.Time `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	UpdatedAt       *time.Time `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 	DeletedAt       *time.Time `json:"deleted_at,omitempty" bson:"deleted_at,omitempty"`
