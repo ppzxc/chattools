@@ -8,6 +8,7 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/mustafaturan/monoton/v2 v2.0.2
 	github.com/sirupsen/logrus v1.8.1
+	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	go.mongodb.org/mongo-driver v1.7.3
 	go.uber.org/zap v1.19.1
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519

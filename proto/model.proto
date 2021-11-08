@@ -6,10 +6,17 @@ package proto_gen;
 
 import "google/protobuf/timestamp.proto";
 
+message Session {
+  string id = 1;
+  string user_id = 2;
+  string user_name = 3;
+  string browser_id = 4;
+}
+
 message Header {
-  string session_id = 1;
-  string uuid = 2;
-  string tx_id = 3;
+  Session session = 1;
+  string transaction_id = 2;
+  string uuid = 3;
 }
 
 message Result {
