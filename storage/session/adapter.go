@@ -10,8 +10,8 @@ type Adapter interface {
 	Login(sessionId string, userId int64, userName string, deviceId string) error
 	Logout(sessionId string) error
 	GetSession(sessionId string) (domain.SessionAdapter, bool)
-	ExistSession(sessionId string) bool
 	GetSessionByUserId(userId int64) (map[string]domain.SessionAdapter, error)
+	ExistSession(sessionId string) bool
 	Register(session domain.SessionAdapter) error
 	Unregister(sessionId string)
 

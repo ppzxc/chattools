@@ -126,10 +126,9 @@ func (r *redisSessionStore) GetSessionByUserId(userId int64) (map[string]domain.
 }
 
 func (r *redisSessionStore) Register(registerSession domain.SessionAdapter) error {
-	if err := r.rdb.Exists(registerSession.GetSessionId()); err != nil {
-		if err != types.ErrNoExistsKeys {
-			return err
-		}
+	err := r.rdb.Exists(registerSession.GetSessionId())
+	if err != nil && err != types.ErrNoExistsKeys {
+		return err
 	}
 
 	return r.rdb.HSet(registerSession.GetSessionId(), registerSession.ToMap())
@@ -145,8 +144,7 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 	}
 
 	defer func() {
-		err := r.rdb.Del(sessionId)
-		if err != nil {
+		if err := r.rdb.Del(sessionId); err != nil {
 			logrus.WithFields(logrus.Fields{
 				"session.id": sessionId,
 			}).WithError(err).Error("unregister, rdb delete error")
@@ -161,31 +159,37 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 		return
 	}
 
-	if sess.IsLogin() {
-		all, err := r.rdb.HGetAll(getUserKey(sess.GetUserId()))
-		if err != nil {
-			logrus.WithFields(logrus.Fields{
-				"session.id": sessionId,
-			}).WithError(err).Error("unregister user sessions get failed")
-			return
-		}
+	if !sess.IsLogin() {
+		logrus.WithFields(logrus.Fields{
+			"session.id": sessionId,
+		}).WithError(err).Error("session is not login")
+		return
+	}
 
-		if _, loaded := all[sessionId]; loaded {
-			if len(all) <= 1 {
-				if err := r.rdb.Del(getUserKey(sess.GetUserId())); err != nil {
-					logrus.WithFields(logrus.Fields{
-						"session.id": sessionId,
-					}).WithError(err).Error("unregister user sessions get failed")
-					return
-				}
-			} else {
-				err := r.rdb.HDel(getUserKey(sess.GetUserId()), sess.GetSessionId())
-				if err != nil {
-					logrus.WithFields(logrus.Fields{
-						"session.id": sessionId,
-					}).WithError(err).Error("unregister user sessions get failed")
-					return
-				}
+	all, err := r.rdb.HGetAll(getUserKey(sess.GetUserId()))
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"session.id": sessionId,
+		}).WithError(err).Error("unregister user sessions get failed")
+		return
+	}
+
+	if browserId, loaded := all[sessionId]; loaded {
+		if len(all) <= 1 {
+			if err := r.rdb.Del(getUserKey(sess.GetUserId())); err != nil {
+				logrus.WithFields(logrus.Fields{
+					"session.id": sessionId,
+					"browser.id": browserId,
+				}).WithError(err).Error("unregister user sessions get failed")
+				return
+			}
+		} else {
+			if err := r.rdb.HDel(getUserKey(sess.GetUserId()), sess.GetSessionId()); err != nil {
+				logrus.WithFields(logrus.Fields{
+					"session.id": sessionId,
+					"browser.id": browserId,
+				}).WithError(err).Error("unregister user sessions get failed")
+				return
 			}
 		}
 	}
