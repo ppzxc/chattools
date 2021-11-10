@@ -18,8 +18,9 @@ const (
 )
 
 type SyncProtocol struct {
-	Command Command       `json:"command"`
-	UserId  int64         `json:"user_id"`
-	TopicId int64         `json:"topic_id"`
-	Payload outbound.Root `json:"payload"`
+	Command       Command       `json:"command"`
+	TransactionId string        `json:"transaction_id"`
+	UserId        int64         `json:"user_id"`
+	TopicId       int64         `json:"topic_id"`
+	Payload       outbound.Root `json:"payload"`
 }
