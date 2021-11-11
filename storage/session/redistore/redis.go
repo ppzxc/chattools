@@ -33,30 +33,30 @@ func (r *redisSessionStore) Publish(ctx context.Context, key string, message int
 	return r.rdb.Publish(ctx, key, message)
 }
 
-func (r *redisSessionStore) Login(sessionId string, userId int64, userName string, browserId string) error {
-	if err := r.rdb.Exists(sessionId); err != nil {
+func (r *redisSessionStore) Login(ctx context.Context, sessionId string, userId int64, userName string, browserId string) error {
+	if err := r.rdb.Exists(ctx, sessionId); err != nil {
 		return err
 	}
 
 	sess := domain.NewSession(sessionId)
 	sess.Login(userId, userName, browserId)
 
-	err := r.rdb.HSet(sessionId, sess.ToMap())
+	err := r.rdb.HSet(ctx, sessionId, sess.ToMap())
 	if err != nil {
 		return err
 	}
 
-	if err = r.rdb.Exists(getUserKey(userId)); err != nil {
+	if err = r.rdb.Exists(ctx, getUserKey(userId)); err != nil {
 		if err != types.ErrNoExistsKeys {
 			return err
 		}
 	} // fallthrough
 
-	return r.rdb.HSet(getUserKey(userId), sessionId, browserId)
+	return r.rdb.HSet(ctx, getUserKey(userId), sessionId, browserId)
 }
 
-func (r *redisSessionStore) Logout(sessionId string) error {
-	get, err := r.rdb.HGetAll(sessionId)
+func (r *redisSessionStore) Logout(ctx context.Context, sessionId string) error {
+	get, err := r.rdb.HGetAll(ctx, sessionId)
 	if err != nil {
 		return err
 	}
@@ -67,12 +67,12 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 	}
 
 	if sess.IsLogin() {
-		if err := r.rdb.HExists(getUserKey(sess.GetUserId()), sessionId); err == nil {
-			_ = r.rdb.HDel(getUserKey(sess.GetUserId()), sessionId)
+		if err := r.rdb.HExists(ctx, getUserKey(sess.GetUserId()), sessionId); err == nil {
+			_ = r.rdb.HDel(ctx, getUserKey(sess.GetUserId()), sessionId)
 		}
 
 		sess.Logout()
-		err := r.rdb.HDel(sessionId, "login_state", "user_id", "browser_id", "user_name")
+		err := r.rdb.HDel(ctx, sessionId, "login_state", "user_id", "browser_id", "user_name")
 		if err != nil {
 			return err
 		}
@@ -81,16 +81,16 @@ func (r *redisSessionStore) Logout(sessionId string) error {
 	return nil
 }
 
-func (r *redisSessionStore) ExistSession(sessionId string) bool {
-	err := r.rdb.Exists(sessionId)
+func (r *redisSessionStore) ExistSession(ctx context.Context, sessionId string) bool {
+	err := r.rdb.Exists(ctx, sessionId)
 	if err != nil {
 		return false
 	}
 	return true
 }
 
-func (r *redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter, bool) {
-	get, err := r.rdb.HGetAll(sessionId)
+func (r *redisSessionStore) GetSession(ctx context.Context, sessionId string) (domain.SessionAdapter, bool) {
+	get, err := r.rdb.HGetAll(ctx, sessionId)
 	if err != nil || get == nil {
 		return nil, false
 	} else {
@@ -102,15 +102,15 @@ func (r *redisSessionStore) GetSession(sessionId string) (domain.SessionAdapter,
 	}
 }
 
-func (r *redisSessionStore) GetSessionByUserId(userId int64) (map[string]domain.SessionAdapter, error) {
-	maps, err := r.rdb.HGetAll(getUserKey(userId))
+func (r *redisSessionStore) GetSessionByUserId(ctx context.Context, userId int64) (map[string]domain.SessionAdapter, error) {
+	maps, err := r.rdb.HGetAll(ctx, getUserKey(userId))
 	if err != nil {
 		return nil, err
 	}
 
 	s := make(map[string]domain.SessionAdapter)
 	for key := range maps {
-		all, err := r.rdb.HGetAll(key)
+		all, err := r.rdb.HGetAll(ctx, key)
 		if err != nil {
 			return nil, err
 		}
@@ -125,17 +125,17 @@ func (r *redisSessionStore) GetSessionByUserId(userId int64) (map[string]domain.
 	return s, nil
 }
 
-func (r *redisSessionStore) Register(registerSession domain.SessionAdapter) error {
-	err := r.rdb.Exists(registerSession.GetSessionId())
+func (r *redisSessionStore) Register(ctx context.Context, registerSession domain.SessionAdapter) error {
+	err := r.rdb.Exists(ctx, registerSession.GetSessionId())
 	if err != nil && err != types.ErrNoExistsKeys {
 		return err
 	}
 
-	return r.rdb.HSet(registerSession.GetSessionId(), registerSession.ToMap())
+	return r.rdb.HSet(ctx, registerSession.GetSessionId(), registerSession.ToMap())
 }
 
-func (r *redisSessionStore) Unregister(sessionId string) {
-	get, err := r.rdb.HGetAll(sessionId)
+func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) {
+	get, err := r.rdb.HGetAll(ctx, sessionId)
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"session.id": sessionId,
@@ -144,7 +144,7 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 	}
 
 	defer func() {
-		if err := r.rdb.Del(sessionId); err != nil {
+		if err := r.rdb.Del(ctx, sessionId); err != nil {
 			logrus.WithFields(logrus.Fields{
 				"session.id": sessionId,
 			}).WithError(err).Error("unregister, rdb delete error")
@@ -170,7 +170,7 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 		return
 	}
 
-	all, err := r.rdb.HGetAll(getUserKey(sess.GetUserId()))
+	all, err := r.rdb.HGetAll(ctx, getUserKey(sess.GetUserId()))
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"session.id": sessionId,
@@ -180,7 +180,7 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 
 	if browserId, loaded := all[sessionId]; loaded {
 		if len(all) <= 1 {
-			if err := r.rdb.Del(getUserKey(sess.GetUserId())); err != nil {
+			if err := r.rdb.Del(ctx, getUserKey(sess.GetUserId())); err != nil {
 				logrus.WithFields(logrus.Fields{
 					"session.id": sessionId,
 					"browser.id": browserId,
@@ -188,7 +188,7 @@ func (r *redisSessionStore) Unregister(sessionId string) {
 				return
 			}
 		} else {
-			if err := r.rdb.HDel(getUserKey(sess.GetUserId()), sess.GetSessionId()); err != nil {
+			if err := r.rdb.HDel(ctx, getUserKey(sess.GetUserId()), sess.GetSessionId()); err != nil {
 				logrus.WithFields(logrus.Fields{
 					"session.id": sessionId,
 					"browser.id": browserId,
