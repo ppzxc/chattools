@@ -6,14 +6,12 @@ import (
 	"github.com/ppzxc/chattools/storage/database"
 	model2 "github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/types"
-	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"
 )
 
 func (m mongodb) registerAll(ctx context.Context, users []*model2.User) error {
-	logrus.Debug("call func (m mongodb) registerAll(users []*model.User) error")
 	var many []interface{}
 	for i := 0; i < len(users); i++ {
 		id, err := m.crudSequence.Next(ctx, database.MongoCollectionUser)

@@ -9,6 +9,7 @@ import (
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
 	"github.com/ppzxc/chattools/types"
+	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -35,11 +36,11 @@ func (c subscription) FindOneByFilter(ctx context.Context, filter interface{}) (
 	start := time.Now()
 	err := c.collection.FindOne(cCtx, filter).Decode(&subs)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.FindOne",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	return subs, err
 }
 
@@ -48,11 +49,11 @@ func (c subscription) FindManyByFilter(ctx context.Context, filter interface{}) 
 	start := time.Now()
 	cursor, err := c.collection.Find(cCtx, filter)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.Find",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return nil, err
 	}
@@ -84,11 +85,11 @@ func (c subscription) InsertOne(ctx context.Context, subs model.Subscription) er
 	start := time.Now()
 	result, err := c.collection.InsertOne(cCtx, subs)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.InsertOne",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", subs),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -105,11 +106,11 @@ func (c subscription) DeleteAllByFilter(ctx context.Context, filter interface{})
 	start := time.Now()
 	result, err := c.collection.DeleteMany(cCtx, filter)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.DeleteMany",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -125,11 +126,11 @@ func (c subscription) DeleteOneByFilter(ctx context.Context, filter interface{})
 	start := time.Now()
 	result, err := c.collection.DeleteOne(cCtx, filter)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.DeleteOne",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	}).Debug("DeleteOneByFilter")
+	})).Debug("DeleteOneByFilter")
 	if err != nil {
 		return err
 	}
@@ -145,11 +146,11 @@ func (c subscription) UpdateOneByFilter(ctx context.Context, filter interface{},
 	start := time.Now()
 	result, err := c.collection.UpdateOne(cCtx, filter, update, &options.UpdateOptions{})
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.UpdateOne",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	}).Debug("UpdateOneByFilter")
+	})).Debug("UpdateOneByFilter")
 
 	if err != nil {
 		return err

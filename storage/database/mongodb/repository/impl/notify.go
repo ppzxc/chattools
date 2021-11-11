@@ -7,6 +7,7 @@ import (
 	"github.com/ppzxc/chattools/storage/database"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
+	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -33,11 +34,11 @@ func (c notify) FindOneByFilter(ctx context.Context, filter bson.D) (*model.Noti
 	start := time.Now()
 	err := c.collection.FindOne(cCtx, filter).Decode(&notify)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "u.collection.FindOne",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	return &notify, err
 }
 
@@ -46,11 +47,11 @@ func (c notify) FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Not
 	start := time.Now()
 	cursor, err := c.collection.Find(cCtx, filter)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "u.collection.Find",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return nil, err
 	}
@@ -82,11 +83,11 @@ func (c notify) InsertMany(ctx context.Context, many []interface{}) error {
 	start := time.Now()
 	result, err := c.collection.InsertMany(cCtx, many)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "u.collection.InsertMany",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", many),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -103,11 +104,11 @@ func (c notify) InsertOne(ctx context.Context, one interface{}) (int64, error) {
 	start := time.Now()
 	result, err := c.collection.InsertOne(ctx, one)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "u.collection.InsertOne",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", one),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return 0, err
 	}
@@ -122,11 +123,11 @@ func (c notify) UpdateOne(ctx context.Context, notify *model.Notify) error {
 		bson.M{"_id": notify.Id}, bson.D{{"$set", notify}},
 	)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "u.collection.UpdateOne",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", notify),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 
 	if err != nil {
 		return err

@@ -7,6 +7,7 @@ import (
 	"github.com/ppzxc/chattools/storage/database"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
+	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,11 +33,11 @@ func (c message) InsertOne(ctx context.Context, message model.Message) error {
 	start := time.Now()
 	result, err := c.collection.InsertOne(cCtx, message)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.InsertOne",
 		"exec.time": time.Since(start).String(),
 		"args":      message,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -53,11 +54,11 @@ func (c message) InsertMany(ctx context.Context, messages []interface{}) error {
 	start := time.Now()
 	result, err := c.collection.InsertMany(cCtx, messages)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.InsertMany",
 		"exec.time": time.Since(start).String(),
 		"args":      messages,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -74,11 +75,11 @@ func (c message) FindManyByFilter(ctx context.Context, filter bson.D) ([]model.M
 	start := time.Now()
 	cursor, err := c.collection.Find(cCtx, filter)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.Find",
 		"exec.time": time.Since(start).String(),
 		"args":      filter,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return nil, err
 	}
@@ -105,11 +106,11 @@ func (c message) Delete(ctx context.Context, filter bson.D) error {
 	result, err := c.collection.DeleteMany(cCtx, filter)
 	cancel()
 
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.DeleteMany",
 		"exec.time": time.Since(start).String(),
 		"args":      filter,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}

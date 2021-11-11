@@ -6,6 +6,7 @@ import (
 	"github.com/ppzxc/chattools/storage/database"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
+	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -39,10 +40,10 @@ func (s sequence) Current(ctx context.Context, collectionName string, topicId in
 		bson.D{{Key: "_id", Value: s.TopicMaxSeq(collectionName, topicId)}},
 	).Decode(&seq)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "s.counter.FindOne",
 		"exec.time": time.Since(start).String(),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return 0, err
 	}
@@ -59,10 +60,10 @@ func (s sequence) Next(ctx context.Context, collectionName string) (int64, error
 		options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(options.After),
 	).Decode(&seq)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "s.counter.FindOneAndUpdate",
 		"exec.time": time.Since(start).String(),
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return 0, err
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/ppzxc/chattools/storage/database"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
+	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -33,12 +34,12 @@ func (c topic) FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, upda
 	start := time.Now()
 	result := c.collection.FindOneAndUpdate(cCtx, filter, update, options.FindOneAndUpdate())
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.FindOneAndUpdate",
 		"exec.time": time.Since(start).String(),
 		"args1":     filter,
 		"args2":     update,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	return result.Err()
 }
 
@@ -47,11 +48,11 @@ func (c topic) FindManyFilter(ctx context.Context, filter bson.D) ([]model.Topic
 	start := time.Now()
 	cursor, err := c.collection.Find(cCtx, filter)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.Find",
 		"exec.time": time.Since(start).String(),
 		"args":      filter,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return nil, err
 	}
@@ -78,11 +79,11 @@ func (c topic) FindOneByFilter(ctx context.Context, filter bson.D) (model.Topic,
 	start := time.Now()
 	err := c.collection.FindOne(cCtx, filter).Decode(&topic)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.FindOne",
 		"exec.time": time.Since(start).String(),
 		"args":      filter,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	return topic, err
 }
 
@@ -91,11 +92,11 @@ func (c topic) InsertOne(ctx context.Context, topic model.Topic) error {
 	start := time.Now()
 	result, err := c.collection.InsertOne(cCtx, topic)
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.InsertOne",
 		"exec.time": time.Since(start).String(),
 		"args":      topic,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}
@@ -112,12 +113,12 @@ func (c topic) UpdateFilter(ctx context.Context, filter bson.D, update bson.D) e
 	start := time.Now()
 	result := c.collection.FindOneAndUpdate(cCtx, filter, update, options.FindOneAndUpdate())
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.FindOneAndUpdate",
 		"exec.time": time.Since(start).String(),
 		"args1":     filter,
 		"args2":     update,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	return result.Err()
 }
 
@@ -129,11 +130,11 @@ func (c topic) Update(ctx context.Context, topic *model.Topic) error {
 		bson.D{{"$set", topic}},
 		options.FindOneAndUpdate())
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.FindOneAndUpdate",
 		"exec.time": time.Since(start).String(),
 		"args":      topic,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	return result.Err()
 }
 
@@ -142,11 +143,11 @@ func (c topic) Delete(ctx context.Context, topicId int64) error {
 	start := time.Now()
 	result, err := c.collection.DeleteOne(cCtx, bson.D{{Key: "_id", Value: topicId}})
 	cancel()
-	logrus.WithFields(logrus.Fields{
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.DeleteOne",
 		"exec.time": time.Since(start).String(),
 		"args":      topicId,
-	}).Debug("sql execute")
+	})).Debug("sql execute")
 	if err != nil {
 		return err
 	}
