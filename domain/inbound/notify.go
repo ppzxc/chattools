@@ -43,7 +43,7 @@ func (r RequestMention) GetNotifyType() common.NotifyCommand {
 
 type MentionCreate struct {
 	TopicId int64   `json:"topic_id,omitempty" validate:"required,min=1"`
-	UserIds []int64 `json:"user_ids,omitempty" validate:"required,min=1"`
+	UserIds []int64 `json:"user_ids,omitempty" validate:"required,min=1,dive,gt=0"`
 	//SequenceId int64       `json:"sequence_id,omitempty" validate:"required,min=1"`
 	Custom  interface{} `json:"custom,omitempty"`
 	Message string      `json:"message,omitempty" validate:"required,min=1,max=2000"`

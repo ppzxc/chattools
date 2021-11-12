@@ -42,30 +42,50 @@ func (r Root) Validate() error {
 	if r.Auth != nil {
 		if err := common.Validate.Struct(r.Auth); err != nil {
 			return Change(err)
-		} else {
-			if r.Auth.Login != nil {
-				return Change(common.Validate.Struct(r.Auth.Login))
-			} else if r.Auth.Logout != nil {
-				return Change(common.Validate.Struct(r.Auth.Logout))
-			} else if r.Auth.Token != nil {
-				return Change(common.Validate.Struct(r.Auth.Token))
-			} else if r.Auth.Register != nil {
-				return Change(common.Validate.Struct(r.Auth.Register))
-			} else {
-				return types.ErrValidateNotContainsRoutingObjectInAuth
-			}
 		}
+		return nil
+		//} else {
+		//	if r.Auth.Login != nil {
+		//		return Change(common.Validate.Struct(r.Auth.Login))
+		//	} else if r.Auth.Logout != nil {
+		//		return Change(common.Validate.Struct(r.Auth.Logout))
+		//	} else if r.Auth.Token != nil {
+		//		return Change(common.Validate.Struct(r.Auth.Token))
+		//	} else if r.Auth.Register != nil {
+		//		return Change(common.Validate.Struct(r.Auth.Register))
+		//	} else {
+		//		return types.ErrValidateNotContainsRoutingObjectInAuth
+		//	}
+		//}
 	} else if r.Ctrl != nil {
+		if err := common.Validate.Struct(r.Ctrl); err != nil {
+			return Change(err)
+		}
 		return nil
 	} else if r.Msg != nil {
+		if err := common.Validate.Struct(r.Msg); err != nil {
+			return Change(err)
+		}
 		return nil
 	} else if r.Meta != nil {
+		if err := common.Validate.Struct(r.Meta); err != nil {
+			return Change(err)
+		}
 		return nil
 	} else if r.Notify != nil {
+		if err := common.Validate.Struct(r.Notify); err != nil {
+			return Change(err)
+		}
 		return nil
 	} else if r.File != nil {
+		if err := common.Validate.Struct(r.File); err != nil {
+			return Change(err)
+		}
 		return nil
 	} else if r.Ping != nil {
+		if err := common.Validate.Struct(r.Ping); err != nil {
+			return Change(err)
+		}
 		return nil
 	} else {
 		return types.ErrValidateNotContainsRequestObject
