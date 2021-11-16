@@ -44,6 +44,15 @@ func (c file) FindOneByFilter(ctx context.Context, filter bson.D) (model.File, e
 
 func (c file) InsertOne(ctx context.Context, file model.File) error {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
+	now := time.Now()
+	_, _ = c.collection.UpdateMany(cCtx,
+		bson.D{{"type", "profile"}, {"from_user_id", file.FromUserId}},
+		bson.D{{"$set", bson.M{
+			"profile.deleted_at": now,
+		}}})
+	cancel()
+
+	cCtx, cancel = context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
 	result, err := c.collection.InsertOne(cCtx, file)
 	cancel()

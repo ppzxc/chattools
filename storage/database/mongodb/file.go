@@ -18,5 +18,5 @@ func (m mongodb) FileInsert(ctx context.Context, file model.File) (int64, error)
 }
 
 func (m mongodb) FileFindOneById(ctx context.Context, fileId int64) (model.File, error) {
-	return m.crudFile.FindOneByFilter(ctx, bson.D{{"_id", fileId}})
+	return m.crudFile.FindOneByFilter(ctx, bson.D{{"_id", fileId}, {"deleted_at", bson.M{"$eq": nil}}})
 }

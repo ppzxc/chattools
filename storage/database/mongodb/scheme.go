@@ -52,6 +52,17 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 		//	Options: &options.IndexOptions{},
 		//})
 
+		fileCollection := m.mongoDataBase.Collection(database.MongoCollectionFile)
+		_, _ = fileCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"_id", 1}, {"deleted_at", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		_, _ = fileCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"type", 1}, {"from_user_id", 1}},
+			Options: &options.IndexOptions{},
+		})
+
 		topicCollection := m.mongoDataBase.Collection(database.MongoCollectionTopic)
 		_, _ = topicCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"updated_at", 1}},
