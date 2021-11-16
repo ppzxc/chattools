@@ -41,6 +41,7 @@ service Authenticator {
   rpc RegisterUser(RequestAuthentication) returns (ResponseAuthentication) {}
   rpc UnRegisterUser(RequestAuthentication) returns (ResponseAuthentication) {}
   rpc IssuedToken(RequestAuthentication) returns (ResponseAuthentication) {}
+  rpc ClassifyToken(RequestAuthentication) returns (ResponseAuthentication) {}
   rpc ClassifyFile(RequestAuthentication) returns (ResponseAuthentication) {}
   rpc ClassifyProfile(RequestAuthentication) returns (ResponseAuthentication) {}
   rpc ProfileUpdate(RequestAuthentication) returns (ResponseAuthentication) {}
