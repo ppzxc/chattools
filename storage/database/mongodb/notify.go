@@ -34,8 +34,17 @@ func (m mongodb) NotifyUpdate(ctx context.Context, notify *model.Notify) error {
 	return m.crudNotify.UpdateOne(ctx, notify)
 }
 
-func (m mongodb) NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId int64) ([]*model.Notify, error) {
-	return m.crudNotify.FindManyFilter(ctx, bson.D{{"receive_user_id", receiveUserId}, {"deleted_at", bson.M{"$eq": nil}}})
+func (m mongodb) NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId int64, paging model.Paging) ([]*model.Notify, error) {
+	var filter bson.D
+	if paging != (model.Paging{}) && paging.UpdatedAt != nil {
+		filter = bson.D{{"receive_user_id", receiveUserId}, {"updated_at", bson.M{"$gt": paging.UpdatedAt}}, {"deleted_at", bson.M{"$eq": nil}}}
+	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
+		filter = bson.D{{"receive_user_id", receiveUserId}, {"created_at", bson.M{"$gt": paging.CreatedAt}}, {"deleted_at", bson.M{"$eq": nil}}}
+	} else if paging != (model.Paging{}) && paging.Id > 0 {
+		filter = bson.D{{"receive_user_id", receiveUserId}, {"_id", bson.M{"$lt": paging.Id}}, {"deleted_at", bson.M{"$eq": nil}}}
+	}
+
+	return m.crudNotify.FindManyFilter(ctx, filter)
 }
 
 func (m mongodb) NotifyFindOneReceiveUserIdById(ctx context.Context, notifyId int64) (int64, error) {

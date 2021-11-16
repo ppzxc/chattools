@@ -46,6 +46,6 @@ type Service interface {
 	NotifyInsertOne(ctx context.Context, notify model.Notify) (int64, error)
 	NotifyInsertMany(ctx context.Context, notify []*model.Notify) (err error)
 	NotifyUpdate(ctx context.Context, notify *model.Notify) (err error)
-	NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId int64) ([]*model.Notify, error)
+	NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId int64, paging model.Paging) ([]*model.Notify, error)
 	NotifyFindOneReceiveUserIdById(ctx context.Context, notifyId int64) (int64, error)
 }

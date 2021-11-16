@@ -52,6 +52,27 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 		//	Options: &options.IndexOptions{},
 		//})
 
+		topicCollection := m.mongoDataBase.Collection(database.MongoCollectionTopic)
+		_, _ = topicCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"updated_at", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		_, _ = topicCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"created_at", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		_, _ = topicCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"_id", 1}, {"updated_at", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		_, _ = topicCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"_id", 1}, {"created_at", 1}},
+			Options: &options.IndexOptions{},
+		})
+
 		collMessage := m.mongoDataBase.Collection(database.MongoCollectionMessage)
 		_, _ = collMessage.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"topic_id", 1}},
@@ -77,6 +98,27 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 
 		_, _ = coll.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"user_id", 1}, {"topic_id", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		_, _ = coll.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"user_id", 1}, {"topic_id", 1}, {"receive_sequence_id", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		notifyCollection := m.mongoDataBase.Collection(database.MongoCollectionNotify)
+		_, _ = notifyCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"receive_user_id", 1}, {"created_at", 1}, {"deleted_at", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		_, _ = notifyCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"receive_user_id", 1}, {"updated_at", 1}, {"deleted_at", 1}},
+			Options: &options.IndexOptions{},
+		})
+
+		_, _ = notifyCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
+			Keys:    bson.D{{"receive_user_id", 1}, {"_id", 1}, {"deleted_at", 1}},
 			Options: &options.IndexOptions{},
 		})
 	}

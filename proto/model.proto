@@ -116,6 +116,7 @@ message Notification {
 message Paging {
   google.protobuf.Timestamp created_at = 1;
   google.protobuf.Timestamp updated_at = 2;
+  int64 id = 3;
 }
 
 enum MessageType {

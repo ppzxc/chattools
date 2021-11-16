@@ -12,4 +12,6 @@ var (
 	QueryTimeOut          = 5 * time.Second
 	RedisCmdTimeOut       = 5 * time.Second
 	GrpcRequestTimeOut    = 5 * time.Second
+
+	FindCount int64 = 100
 )
