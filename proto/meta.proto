@@ -13,8 +13,9 @@ message RequestMeta {
   int64 user_id = 3;
   string description = 4;
   int64 topic_id = 5;
-  int64 sequence_id = 6;
-  Paging paging = 7;
+  int64 file_id = 6;
+  int64 sequence_id = 7;
+  Paging paging = 8;
 }
 
 message ResponseMeta {
