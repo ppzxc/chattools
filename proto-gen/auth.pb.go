@@ -303,7 +303,7 @@ var file_auth_proto_rawDesc = []byte{
 	0x62, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x70, 0x69, 0x63, 0x49,
 	0x64, 0x73, 0x12, 0x29, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x07, 0x20, 0x01,
 	0x28, 0x0b, 0x32, 0x11, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52,
-	0x65, 0x73, 0x75, 0x6c, 0x74, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0xf9, 0x06,
+	0x65, 0x73, 0x75, 0x6c, 0x74, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0xd7, 0x07,
 	0x0a, 0x0d, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x6f, 0x72, 0x12,
 	0x54, 0x0a, 0x0b, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x6f, 0x74, 0x61, 0x72, 0x79, 0x12, 0x20,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65,
@@ -348,19 +348,25 @@ var file_auth_proto_rawDesc = []byte{
 	0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x41, 0x75, 0x74, 0x68, 0x65,
 	0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x21, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x41, 0x75,
-	0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x51,
-	0x0a, 0x08, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x69, 0x66, 0x79, 0x12, 0x20, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x41, 0x75,
-	0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x21, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22,
-	0x00, 0x12, 0x56, 0x0a, 0x0d, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x12, 0x20, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61,
-	0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x21, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e,
-	0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74,
-	0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x42, 0x0c, 0x5a, 0x0a, 0x2f, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x2d, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x55,
+	0x0a, 0x0c, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x69, 0x66, 0x79, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x20,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x1a, 0x21, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x58, 0x0a, 0x0f, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x69, 0x66,
+	0x79, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x20, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x41, 0x75, 0x74, 0x68,
+	0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x21, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x41,
+	0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12,
+	0x56, 0x0a, 0x0d, 0x50, 0x72, 0x6f, 0x66, 0x69, 0x6c, 0x65, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x12, 0x20, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x1a, 0x21, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x63,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x42, 0x0c, 0x5a, 0x0a, 0x2f, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2d, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -403,20 +409,22 @@ var file_auth_proto_depIdxs = []int32{
 	0,  // 13: proto_gen.Authenticator.RegisterUser:input_type -> proto_gen.RequestAuthentication
 	0,  // 14: proto_gen.Authenticator.UnRegisterUser:input_type -> proto_gen.RequestAuthentication
 	0,  // 15: proto_gen.Authenticator.IssuedToken:input_type -> proto_gen.RequestAuthentication
-	0,  // 16: proto_gen.Authenticator.Classify:input_type -> proto_gen.RequestAuthentication
-	0,  // 17: proto_gen.Authenticator.ProfileUpdate:input_type -> proto_gen.RequestAuthentication
-	1,  // 18: proto_gen.Authenticator.LoginRotary:output_type -> proto_gen.ResponseAuthentication
-	1,  // 19: proto_gen.Authenticator.LoginEmailPassword:output_type -> proto_gen.ResponseAuthentication
-	1,  // 20: proto_gen.Authenticator.LoginAnonymous:output_type -> proto_gen.ResponseAuthentication
-	1,  // 21: proto_gen.Authenticator.LoginToken:output_type -> proto_gen.ResponseAuthentication
-	1,  // 22: proto_gen.Authenticator.LogoutSession:output_type -> proto_gen.ResponseAuthentication
-	1,  // 23: proto_gen.Authenticator.RegisterUser:output_type -> proto_gen.ResponseAuthentication
-	1,  // 24: proto_gen.Authenticator.UnRegisterUser:output_type -> proto_gen.ResponseAuthentication
-	1,  // 25: proto_gen.Authenticator.IssuedToken:output_type -> proto_gen.ResponseAuthentication
-	1,  // 26: proto_gen.Authenticator.Classify:output_type -> proto_gen.ResponseAuthentication
-	1,  // 27: proto_gen.Authenticator.ProfileUpdate:output_type -> proto_gen.ResponseAuthentication
-	18, // [18:28] is the sub-list for method output_type
-	8,  // [8:18] is the sub-list for method input_type
+	0,  // 16: proto_gen.Authenticator.ClassifyFile:input_type -> proto_gen.RequestAuthentication
+	0,  // 17: proto_gen.Authenticator.ClassifyProfile:input_type -> proto_gen.RequestAuthentication
+	0,  // 18: proto_gen.Authenticator.ProfileUpdate:input_type -> proto_gen.RequestAuthentication
+	1,  // 19: proto_gen.Authenticator.LoginRotary:output_type -> proto_gen.ResponseAuthentication
+	1,  // 20: proto_gen.Authenticator.LoginEmailPassword:output_type -> proto_gen.ResponseAuthentication
+	1,  // 21: proto_gen.Authenticator.LoginAnonymous:output_type -> proto_gen.ResponseAuthentication
+	1,  // 22: proto_gen.Authenticator.LoginToken:output_type -> proto_gen.ResponseAuthentication
+	1,  // 23: proto_gen.Authenticator.LogoutSession:output_type -> proto_gen.ResponseAuthentication
+	1,  // 24: proto_gen.Authenticator.RegisterUser:output_type -> proto_gen.ResponseAuthentication
+	1,  // 25: proto_gen.Authenticator.UnRegisterUser:output_type -> proto_gen.ResponseAuthentication
+	1,  // 26: proto_gen.Authenticator.IssuedToken:output_type -> proto_gen.ResponseAuthentication
+	1,  // 27: proto_gen.Authenticator.ClassifyFile:output_type -> proto_gen.ResponseAuthentication
+	1,  // 28: proto_gen.Authenticator.ClassifyProfile:output_type -> proto_gen.ResponseAuthentication
+	1,  // 29: proto_gen.Authenticator.ProfileUpdate:output_type -> proto_gen.ResponseAuthentication
+	19, // [19:30] is the sub-list for method output_type
+	8,  // [8:19] is the sub-list for method input_type
 	8,  // [8:8] is the sub-list for extension type_name
 	8,  // [8:8] is the sub-list for extension extendee
 	0,  // [0:8] is the sub-list for field type_name
@@ -494,7 +502,8 @@ type AuthenticatorClient interface {
 	RegisterUser(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error)
 	UnRegisterUser(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error)
 	IssuedToken(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error)
-	Classify(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error)
+	ClassifyFile(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error)
+	ClassifyProfile(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error)
 	ProfileUpdate(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error)
 }
 
@@ -578,9 +587,18 @@ func (c *authenticatorClient) IssuedToken(ctx context.Context, in *RequestAuthen
 	return out, nil
 }
 
-func (c *authenticatorClient) Classify(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error) {
+func (c *authenticatorClient) ClassifyFile(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error) {
 	out := new(ResponseAuthentication)
-	err := c.cc.Invoke(ctx, "/proto_gen.Authenticator/Classify", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto_gen.Authenticator/ClassifyFile", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authenticatorClient) ClassifyProfile(ctx context.Context, in *RequestAuthentication, opts ...grpc.CallOption) (*ResponseAuthentication, error) {
+	out := new(ResponseAuthentication)
+	err := c.cc.Invoke(ctx, "/proto_gen.Authenticator/ClassifyProfile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -606,7 +624,8 @@ type AuthenticatorServer interface {
 	RegisterUser(context.Context, *RequestAuthentication) (*ResponseAuthentication, error)
 	UnRegisterUser(context.Context, *RequestAuthentication) (*ResponseAuthentication, error)
 	IssuedToken(context.Context, *RequestAuthentication) (*ResponseAuthentication, error)
-	Classify(context.Context, *RequestAuthentication) (*ResponseAuthentication, error)
+	ClassifyFile(context.Context, *RequestAuthentication) (*ResponseAuthentication, error)
+	ClassifyProfile(context.Context, *RequestAuthentication) (*ResponseAuthentication, error)
 	ProfileUpdate(context.Context, *RequestAuthentication) (*ResponseAuthentication, error)
 }
 
@@ -638,8 +657,11 @@ func (*UnimplementedAuthenticatorServer) UnRegisterUser(context.Context, *Reques
 func (*UnimplementedAuthenticatorServer) IssuedToken(context.Context, *RequestAuthentication) (*ResponseAuthentication, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IssuedToken not implemented")
 }
-func (*UnimplementedAuthenticatorServer) Classify(context.Context, *RequestAuthentication) (*ResponseAuthentication, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Classify not implemented")
+func (*UnimplementedAuthenticatorServer) ClassifyFile(context.Context, *RequestAuthentication) (*ResponseAuthentication, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClassifyFile not implemented")
+}
+func (*UnimplementedAuthenticatorServer) ClassifyProfile(context.Context, *RequestAuthentication) (*ResponseAuthentication, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ClassifyProfile not implemented")
 }
 func (*UnimplementedAuthenticatorServer) ProfileUpdate(context.Context, *RequestAuthentication) (*ResponseAuthentication, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ProfileUpdate not implemented")
@@ -793,20 +815,38 @@ func _Authenticator_IssuedToken_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Authenticator_Classify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Authenticator_ClassifyFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RequestAuthentication)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthenticatorServer).Classify(ctx, in)
+		return srv.(AuthenticatorServer).ClassifyFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto_gen.Authenticator/Classify",
+		FullMethod: "/proto_gen.Authenticator/ClassifyFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthenticatorServer).Classify(ctx, req.(*RequestAuthentication))
+		return srv.(AuthenticatorServer).ClassifyFile(ctx, req.(*RequestAuthentication))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Authenticator_ClassifyProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestAuthentication)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthenticatorServer).ClassifyProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto_gen.Authenticator/ClassifyProfile",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthenticatorServer).ClassifyProfile(ctx, req.(*RequestAuthentication))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -866,8 +906,12 @@ var _Authenticator_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Authenticator_IssuedToken_Handler,
 		},
 		{
-			MethodName: "Classify",
-			Handler:    _Authenticator_Classify_Handler,
+			MethodName: "ClassifyFile",
+			Handler:    _Authenticator_ClassifyFile_Handler,
+		},
+		{
+			MethodName: "ClassifyProfile",
+			Handler:    _Authenticator_ClassifyProfile_Handler,
 		},
 		{
 			MethodName: "ProfileUpdate",
