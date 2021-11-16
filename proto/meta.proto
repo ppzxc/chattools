@@ -23,8 +23,9 @@ message ResponseMeta {
   repeated Message messages = 3;
   repeated User users = 4;
   repeated Profile profiles = 5;
-  repeated Notification notifications = 6;
-  Result result = 7;
+  Profile profile = 6;
+  repeated Notification notifications = 7;
+  Result result = 8;
 }
 
 service Meta {
