@@ -11,9 +11,10 @@ message RequestMeta {
   Header header = 1;
   bool mine = 2;
   int64 user_id = 3;
-  int64 topic_id = 4;
-  int64 sequence_id = 5;
-  Paging paging = 6;
+  string description = 4;
+  int64 topic_id = 5;
+  int64 sequence_id = 6;
+  Paging paging = 7;
 }
 
 message ResponseMeta {
