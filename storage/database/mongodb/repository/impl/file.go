@@ -48,7 +48,7 @@ func (c file) InsertOne(ctx context.Context, file model.File) error {
 	_, _ = c.collection.UpdateMany(cCtx,
 		bson.D{{"type", "profile"}, {"from_user_id", file.FromUserId}},
 		bson.D{{"$set", bson.M{
-			"profile.deleted_at": now,
+			"deleted_at": now,
 		}}})
 	cancel()
 
