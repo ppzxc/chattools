@@ -53,5 +53,5 @@ type RequestNotify struct {
 type RequestProfile struct {
 	UserId      int64  `json:"user_id,omitempty"`
 	FileId      int64  `json:"file_id,omitempty"`
-	Description string `json:"description,omitempty"`
+	Description string `json:"description,omitempty" validate:"required"`
 }
