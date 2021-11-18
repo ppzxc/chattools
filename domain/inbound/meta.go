@@ -31,7 +31,7 @@ func (m Meta) GetMetaType() common.Meta {
 }
 
 type RequestTopic struct {
-	Mine   bool          `json:"mine" validate:"required"`
+	//Mine   bool          `json:"mine" validate:"required"`
 	Paging *model.Paging `json:"paging,omitempty"`
 }
 
