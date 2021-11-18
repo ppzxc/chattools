@@ -4,13 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"github.com/ppzxc/chattools/storage/database"
-	model2 "github.com/ppzxc/chattools/storage/database/model"
+	"github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // TopicInsert is call to require new room
-func (m mongodb) TopicInsert(ctx context.Context, topic model2.Topic) (int64, error) {
+func (m mongodb) TopicInsert(ctx context.Context, topic model.Topic) (int64, error) {
 	id, err := m.crudSequence.Next(ctx, database.MongoCollectionTopic)
 	if err != nil {
 		return 0, err
@@ -73,13 +73,13 @@ func (m mongodb) TopicDeleteByEmptySubs(ctx context.Context) error {
 	return nil
 }
 
-func (m mongodb) TopicFindAll(ctx context.Context, paging model2.Paging) ([]model2.Topic, error) {
+func (m mongodb) TopicFindAll(ctx context.Context, paging model.Paging) ([]model.Topic, error) {
 	var filter bson.D
 	//filter := bson.M{"updated_at": bson.M{"$gte": paging.UpdatedAt, "$lte": paging.CreatedAt}}
 
-	if paging != (model2.Paging{}) && paging.UpdatedAt != nil {
+	if paging != (model.Paging{}) && paging.UpdatedAt != nil {
 		filter = bson.D{{"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
-	} else if paging != (model2.Paging{}) && paging.CreatedAt != nil {
+	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"created_at", bson.M{"$gt": paging.CreatedAt}}}
 	} else {
 		filter = bson.D{}
@@ -88,7 +88,7 @@ func (m mongodb) TopicFindAll(ctx context.Context, paging model2.Paging) ([]mode
 	return m.crudTopic.FindManyFilter(ctx, filter)
 }
 
-func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging model2.Paging) ([]model2.Topic, error) {
+func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging model.Paging) ([]model.Topic, error) {
 	subs, err := m.crudSubs.FindManyByFilter(ctx, bson.M{"user_id": userId})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -107,10 +107,12 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging 
 	}
 
 	var filter bson.D
-	if paging != (model2.Paging{}) && paging.UpdatedAt != nil {
+	if paging != (model.Paging{}) && paging.UpdatedAt != nil {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
-	} else if paging != (model2.Paging{}) && paging.CreatedAt != nil {
+	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"created_at", bson.M{"$gt": paging.CreatedAt}}}
+	} else if paging != (model.Paging{}) && paging.Id > 0 {
+		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$gt": paging.Id}}}
 	} else {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}}
 	}
@@ -118,6 +120,6 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging 
 	return m.crudTopic.FindManyFilter(ctx, filter)
 }
 
-func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model2.Topic, error) {
+func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model.Topic, error) {
 	return m.crudTopic.FindOneByFilter(ctx, bson.D{{"_id", topicId}})
 }
