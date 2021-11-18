@@ -9,13 +9,13 @@ import "model.proto";
 // META //
 message RequestMeta {
   Header header = 1;
-  bool mine = 2;
-  int64 user_id = 3;
-  string description = 4;
-  int64 topic_id = 5;
-  int64 file_id = 6;
-  int64 sequence_id = 7;
-  Paging paging = 8;
+//  bool mine = 2;
+  int64 user_id = 2;
+  string description = 3;
+  int64 topic_id = 4;
+  int64 file_id = 5;
+  int64 sequence_id = 6;
+  Paging paging = 7;
 }
 
 message ResponseMeta {
