@@ -4,12 +4,13 @@ import (
 	"context"
 	model2 "github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type User interface {
 	FindOneByFilter(ctx context.Context, filter bson.D) (model2.User, error)
 	FindOneAndDelete(ctx context.Context, userId int64) (*model2.User, error)
-	FindManyByFilter(ctx context.Context, filter bson.D) ([]model2.User, error)
+	FindManyByFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model2.User, error)
 	InsertMany(ctx context.Context, many []interface{}) error
 	InsertOne(ctx context.Context, user model2.User) error
 	FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, update bson.D) error
@@ -18,7 +19,7 @@ type User interface {
 
 type Topic interface {
 	FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, update bson.D) error
-	FindManyFilter(ctx context.Context, filter bson.D) ([]model2.Topic, error)
+	FindManyFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model2.Topic, error)
 	FindOneByFilter(ctx context.Context, filter bson.D) (model2.Topic, error)
 	InsertOne(ctx context.Context, topic model2.Topic) error
 	UpdateFilter(ctx context.Context, filter bson.D, update bson.D) error
@@ -58,6 +59,7 @@ type Message interface {
 	InsertOne(ctx context.Context, message model2.Message) error
 	InsertMany(ctx context.Context, messages []interface{}) error
 	FindManyByFilter(ctx context.Context, filter bson.D) ([]model2.Message, error)
+	//FindManyByFilterDescLimit(ctx context.Context, filter bson.D) ([]model2.Message, error)
 	Delete(ctx context.Context, filter bson.D) error
 }
 

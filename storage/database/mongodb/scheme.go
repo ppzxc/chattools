@@ -16,7 +16,7 @@ import (
 
 func (m *mongodb) dropTable(ctx context.Context, collectionName string) error {
 	dropCtx, cancel := context.WithTimeout(ctx, m.queryTimeout)
-	err := m.mongoDataBase.Collection(collectionName).Drop(dropCtx)
+	err := m.mdb.Collection(collectionName).Drop(dropCtx)
 	cancel()
 	if err != nil {
 		return err
@@ -38,21 +38,21 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 
 	if createTableOnStart {
 		logrus.Debug("create collections")
-		_ = m.mongoDataBase.CreateCollection(ctx, database.MongoCollectionUser)
-		_ = m.mongoDataBase.CreateCollection(ctx, database.MongoCollectionFile)
-		_ = m.mongoDataBase.CreateCollection(ctx, database.MongoCollectionTopic)
-		_ = m.mongoDataBase.CreateCollection(ctx, database.MongoCollectionNotify)
-		_ = m.mongoDataBase.CreateCollection(ctx, database.MongoCollectionSubscriptions)
-		_ = m.mongoDataBase.CreateCollection(ctx, database.MongoCollectionMessage)
-		_ = m.mongoDataBase.CreateCollection(ctx, database.MongoCollectionCounters)
+		_ = m.mdb.CreateCollection(ctx, database.MongoCollectionUser)
+		_ = m.mdb.CreateCollection(ctx, database.MongoCollectionFile)
+		_ = m.mdb.CreateCollection(ctx, database.MongoCollectionTopic)
+		_ = m.mdb.CreateCollection(ctx, database.MongoCollectionNotify)
+		_ = m.mdb.CreateCollection(ctx, database.MongoCollectionSubscriptions)
+		_ = m.mdb.CreateCollection(ctx, database.MongoCollectionMessage)
+		_ = m.mdb.CreateCollection(ctx, database.MongoCollectionCounters)
 
-		//collTopic := m.mongoDataBase.Collection(mgdb.MONGO_COLLECTION_TOPIC)
+		//collTopic := m.mdb.Collection(mgdb.MONGO_COLLECTION_TOPIC)
 		//_, _ = coll.Indexes().CreateOne(ctx, mongo.IndexModel{
 		//	Keys: bson.D{{"user_id", 1}},
 		//	Options: &options.IndexOptions{},
 		//})
 
-		fileCollection := m.mongoDataBase.Collection(database.MongoCollectionFile)
+		fileCollection := m.mdb.Collection(database.MongoCollectionFile)
 		_, _ = fileCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"_id", 1}, {"deleted_at", 1}},
 			Options: &options.IndexOptions{},
@@ -63,7 +63,7 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 			Options: &options.IndexOptions{},
 		})
 
-		topicCollection := m.mongoDataBase.Collection(database.MongoCollectionTopic)
+		topicCollection := m.mdb.Collection(database.MongoCollectionTopic)
 		_, _ = topicCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"updated_at", 1}},
 			Options: &options.IndexOptions{},
@@ -84,7 +84,7 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 			Options: &options.IndexOptions{},
 		})
 
-		collMessage := m.mongoDataBase.Collection(database.MongoCollectionMessage)
+		collMessage := m.mdb.Collection(database.MongoCollectionMessage)
 		_, _ = collMessage.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"topic_id", 1}},
 			Options: &options.IndexOptions{},
@@ -95,7 +95,7 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 			Options: &options.IndexOptions{},
 		})
 
-		coll := m.mongoDataBase.Collection(database.MongoCollectionSubscriptions)
+		coll := m.mdb.Collection(database.MongoCollectionSubscriptions)
 
 		_, _ = coll.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"user_id", 1}},
@@ -117,7 +117,7 @@ func (m *mongodb) InitializeTable(ctx context.Context, dropTableOnStart bool, cr
 			Options: &options.IndexOptions{},
 		})
 
-		notifyCollection := m.mongoDataBase.Collection(database.MongoCollectionNotify)
+		notifyCollection := m.mdb.Collection(database.MongoCollectionNotify)
 		_, _ = notifyCollection.Indexes().CreateOne(ctx, mongo.IndexModel{
 			Keys:    bson.D{{"receive_user_id", 1}, {"created_at", 1}, {"deleted_at", 1}},
 			Options: &options.IndexOptions{},

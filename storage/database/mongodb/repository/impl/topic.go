@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"github.com/ppzxc/chattools/storage/database"
+	"github.com/ppzxc/chattools/common/stats"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
 	"github.com/ppzxc/chattools/utils"
@@ -16,15 +16,15 @@ import (
 )
 
 type topic struct {
-	database     *mongo.Database
+	//database     *mongo.Database
 	collection   *mongo.Collection
 	queryTimeout time.Duration
 }
 
-func NewTopicRepository(db *mongo.Database, queryTimeout time.Duration) repository.Topic {
+func NewTopicRepository(collection *mongo.Collection, queryTimeout time.Duration) repository.Topic {
 	return &topic{
-		database:     db,
-		collection:   db.Collection(database.MongoCollectionTopic),
+		//database:     db,
+		collection:   collection,
 		queryTimeout: queryTimeout,
 	}
 }
@@ -40,19 +40,21 @@ func (c topic) FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, upda
 		"args1":     filter,
 		"args2":     update,
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "topics", "FindOneAndUpdateByFilter", start)
 	return result.Err()
 }
 
-func (c topic) FindManyFilter(ctx context.Context, filter bson.D) ([]model.Topic, error) {
+func (c topic) FindManyFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model.Topic, error) {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
-	cursor, err := c.collection.Find(cCtx, filter)
+	cursor, err := c.collection.Find(cCtx, filter, option)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.Find",
 		"exec.time": time.Since(start).String(),
 		"args":      filter,
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "topics", "FindManyFilter", start)
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +86,7 @@ func (c topic) FindOneByFilter(ctx context.Context, filter bson.D) (model.Topic,
 		"exec.time": time.Since(start).String(),
 		"args":      filter,
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "topics", "FindOneByFilter", start)
 	return topic, err
 }
 
@@ -97,6 +100,7 @@ func (c topic) InsertOne(ctx context.Context, topic model.Topic) error {
 		"exec.time": time.Since(start).String(),
 		"args":      topic,
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.INSERT, "topics", "InsertOne", start)
 	if err != nil {
 		return err
 	}
@@ -119,6 +123,7 @@ func (c topic) UpdateFilter(ctx context.Context, filter bson.D, update bson.D) e
 		"args1":     filter,
 		"args2":     update,
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.UPDATE, "topics", "UpdateFilter", start)
 	return result.Err()
 }
 
@@ -135,6 +140,7 @@ func (c topic) Update(ctx context.Context, topic *model.Topic) error {
 		"exec.time": time.Since(start).String(),
 		"args":      topic,
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.UPDATE, "topics", "Update", start)
 	return result.Err()
 }
 
@@ -148,6 +154,7 @@ func (c topic) Delete(ctx context.Context, topicId int64) error {
 		"exec.time": time.Since(start).String(),
 		"args":      topicId,
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.DELETE, "topics", "Delete", start)
 	if err != nil {
 		return err
 	}

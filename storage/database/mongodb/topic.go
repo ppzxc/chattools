@@ -7,11 +7,12 @@ import (
 	"github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // TopicInsert is call to require new room
 func (m mongodb) TopicInsert(ctx context.Context, topic model.Topic) (int64, error) {
-	id, err := m.crudSequence.Next(ctx, database.MongoCollectionTopic)
+	id, err := m.crudSeq.Next(ctx, database.MongoCollectionTopic)
 	if err != nil {
 		return 0, err
 	}
@@ -26,16 +27,12 @@ func (m mongodb) TopicInsert(ctx context.Context, topic model.Topic) (int64, err
 }
 
 func (m mongodb) TopicDelete(ctx context.Context, topicId int64) error {
-	err := m.crudTopic.Delete(ctx, topicId)
-	if err != nil {
-		return err
-	}
-
-	return m.crudMessage.Delete(ctx, bson.D{{"topic_id", topicId}})
+	_ = m.crudMsg.Delete(ctx, bson.D{{"topic_id", topicId}})
+	return m.crudTopic.Delete(ctx, topicId)
 }
 
 func (m mongodb) TopicDeleteByEmptySubs(ctx context.Context) error {
-	all, err := m.crudTopic.FindManyFilter(ctx, bson.D{})
+	all, err := m.crudTopic.FindManyFilter(ctx, bson.D{}, nil)
 	if err != nil {
 		return err
 	}
@@ -66,7 +63,7 @@ func (m mongodb) TopicDeleteByEmptySubs(ctx context.Context) error {
 				return err
 			}
 
-			_ = m.crudMessage.Delete(ctx, bson.D{{"topic_id", topic.Id}})
+			_ = m.crudMsg.Delete(ctx, bson.D{{"topic_id", topic.Id}})
 		}
 	}
 
@@ -81,11 +78,15 @@ func (m mongodb) TopicFindAll(ctx context.Context, paging model.Paging) ([]model
 		filter = bson.D{{"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
 	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"created_at", bson.M{"$gt": paging.CreatedAt}}}
+	} else if paging != (model.Paging{}) && paging.Id > 0 {
+		filter = bson.D{{"_id", bson.M{"$lt": paging.Id}}}
 	} else {
 		filter = bson.D{}
 	}
 
-	return m.crudTopic.FindManyFilter(ctx, filter)
+	return m.crudTopic.FindManyFilter(ctx, filter, options.Find().
+		SetSort(bson.D{{"_id", -1}}).
+		SetLimit(100))
 }
 
 func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging model.Paging) ([]model.Topic, error) {
@@ -112,12 +113,14 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging 
 	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"created_at", bson.M{"$gt": paging.CreatedAt}}}
 	} else if paging != (model.Paging{}) && paging.Id > 0 {
-		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$gt": paging.Id}}}
+		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$lt": paging.Id}}}
 	} else {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}}
 	}
 
-	return m.crudTopic.FindManyFilter(ctx, filter)
+	return m.crudTopic.FindManyFilter(ctx, filter, options.Find().
+		SetSort(bson.D{{"_id", -1}}).
+		SetLimit(100))
 }
 
 func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model.Topic, error) {

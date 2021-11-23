@@ -5,28 +5,29 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/ppzxc/chattools/storage/database"
+	"github.com/ppzxc/chattools/common/stats"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
 	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
 	"time"
 )
 
 type user struct {
-	database     *mongo.Database
+	//database     *mongo.Database
 	collection   *mongo.Collection
 	logger       *zap.Logger
 	queryTimeout time.Duration
 }
 
-func NewUserRepository(db *mongo.Database, queryTimeout time.Duration) repository.User {
+func NewUserRepository(collection *mongo.Collection, queryTimeout time.Duration) repository.User {
 	return &user{
-		database:     db,
-		collection:   db.Collection(database.MongoCollectionUser),
+		//database:     db,
+		collection:   collection,
 		queryTimeout: queryTimeout,
 	}
 }
@@ -42,6 +43,7 @@ func (c user) FindOneByFilter(ctx context.Context, filter bson.D) (model.User, e
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "users", "FindOneByFilter", start)
 	return findUser, err
 }
 
@@ -56,19 +58,21 @@ func (c user) FindOneAndDelete(ctx context.Context, userId int64) (*model.User, 
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", userId),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.DELETE, "users", "FindOneAndDelete", start)
 	return &findUser, err
 }
 
-func (c user) FindManyByFilter(ctx context.Context, filter bson.D) ([]model.User, error) {
+func (c user) FindManyByFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model.User, error) {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
-	cursor, err := c.collection.Find(cCtx, filter)
+	cursor, err := c.collection.Find(cCtx, filter, option)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.Find",
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "users", "FindManyByFilter", start)
 	if err != nil {
 		return nil, err
 	}
@@ -105,6 +109,7 @@ func (c user) InsertMany(ctx context.Context, many []interface{}) error {
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", many),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.INSERT, "users", "InsertMany", start)
 	if err != nil {
 		return err
 	}
@@ -126,6 +131,7 @@ func (c user) InsertOne(ctx context.Context, user model.User) error {
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", user),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.INSERT, "users", "InsertOne", start)
 	if err != nil {
 		return err
 	}
@@ -148,6 +154,7 @@ func (c user) FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, updat
 		"args":      fmt.Sprintf("%+#v", filter),
 		"args2":     fmt.Sprintf("%+#v", update),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.UPDATE, "users", "FindOneAndUpdateByFilter", start)
 	return result.Err()
 }
 
@@ -161,6 +168,7 @@ func (c user) Delete(ctx context.Context, userId int64) error {
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", userId),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.DELETE, "users", "Delete", start)
 	if err != nil {
 		return err
 	}

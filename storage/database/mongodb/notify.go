@@ -8,7 +8,7 @@ import (
 )
 
 func (m mongodb) NotifyInsertOne(ctx context.Context, notify model.Notify) (int64, error) {
-	id, err := m.crudSequence.Next(ctx, database.MongoCollectionNotify)
+	id, err := m.crudSeq.Next(ctx, database.MongoCollectionNotify)
 	if err != nil {
 		return 0, err
 	}
@@ -19,7 +19,7 @@ func (m mongodb) NotifyInsertOne(ctx context.Context, notify model.Notify) (int6
 func (m mongodb) NotifyInsertMany(ctx context.Context, notify []*model.Notify) error {
 	var many []interface{}
 	for i := 0; i < len(notify); i++ {
-		id, err := m.crudSequence.Next(ctx, database.MongoCollectionNotify)
+		id, err := m.crudSeq.Next(ctx, database.MongoCollectionNotify)
 		if err != nil {
 			return err
 		}

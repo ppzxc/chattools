@@ -33,7 +33,7 @@ func (m mongodb) SubscriptionFindOneByUserIdAndTopicId(ctx context.Context, user
 }
 
 func (m mongodb) SubscriptionInsert(ctx context.Context, subscription model.Subscription) (int64, error) {
-	id, err := m.crudSequence.Next(ctx, database.MongoCollectionSubscriptions)
+	id, err := m.crudSeq.Next(ctx, database.MongoCollectionSubscriptions)
 	if err != nil {
 		return 0, err
 	}

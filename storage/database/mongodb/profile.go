@@ -8,7 +8,7 @@ import (
 )
 
 func (m mongodb) ProfileImageUpdate(ctx context.Context, file model2.File) (int64, error) {
-	sequence, err := m.crudSequence.Next(ctx, database.MongoCollectionFile)
+	sequence, err := m.crudSeq.Next(ctx, database.MongoCollectionFile)
 	if err != nil {
 		return 0, err
 	}

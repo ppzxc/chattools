@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ppzxc/chattools/storage/database"
+	"github.com/ppzxc/chattools/common/stats"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
 	"github.com/ppzxc/chattools/utils"
@@ -15,23 +15,23 @@ import (
 )
 
 type file struct {
-	database     *mongo.Database
+	//database     *mongo.Database
 	collection   *mongo.Collection
 	queryTimeout time.Duration
 }
 
-func NewFileRepository(db *mongo.Database, queryTimeout time.Duration) repository.File {
+func NewFileRepository(collection *mongo.Collection, queryTimeout time.Duration) repository.File {
 	return &file{
-		database:     db,
-		collection:   db.Collection(database.MongoCollectionFile),
+		//database:     db,
+		collection:   collection,
 		queryTimeout: queryTimeout,
 	}
 }
 
 func (c file) FindOneByFilter(ctx context.Context, filter bson.D) (model.File, error) {
+	start := time.Now()
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	var file model.File
-	start := time.Now()
 	err := c.collection.FindOne(cCtx, filter).Decode(&file)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
@@ -39,10 +39,12 @@ func (c file) FindOneByFilter(ctx context.Context, filter bson.D) (model.File, e
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "file", "FindOneByFilter", start)
 	return file, err
 }
 
 func (c file) InsertOne(ctx context.Context, file model.File) error {
+	start := time.Now()
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	now := time.Now()
 	_, _ = c.collection.UpdateMany(cCtx,
@@ -53,7 +55,6 @@ func (c file) InsertOne(ctx context.Context, file model.File) error {
 	cancel()
 
 	cCtx, cancel = context.WithTimeout(ctx, c.queryTimeout)
-	start := time.Now()
 	result, err := c.collection.InsertOne(cCtx, file)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
@@ -61,6 +62,8 @@ func (c file) InsertOne(ctx context.Context, file model.File) error {
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", file),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.INSERT, "file", "InsertOne", start)
+
 	if err != nil {
 		return err
 	}

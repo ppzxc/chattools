@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/ppzxc/chattools/storage/database"
+	"github.com/ppzxc/chattools/common/stats"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
 	"github.com/ppzxc/chattools/types"
@@ -17,15 +17,15 @@ import (
 )
 
 type subscription struct {
-	database     *mongo.Database
+	//database     *mongo.Database
 	collection   *mongo.Collection
 	queryTimeout time.Duration
 }
 
-func NewSubscriptionRepository(db *mongo.Database, queryTimeout time.Duration) repository.Subscription {
+func NewSubscriptionRepository(collection *mongo.Collection, queryTimeout time.Duration) repository.Subscription {
 	return &subscription{
-		database:     db,
-		collection:   db.Collection(database.MongoCollectionSubscriptions),
+		//database:     db,
+		collection:   collection,
 		queryTimeout: queryTimeout,
 	}
 }
@@ -41,6 +41,7 @@ func (c subscription) FindOneByFilter(ctx context.Context, filter interface{}) (
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "subscriptions", "FindOneByFilter", start)
 	return subs, err
 }
 
@@ -54,6 +55,7 @@ func (c subscription) FindManyByFilter(ctx context.Context, filter interface{}) 
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "subscriptions", "FindManyByFilter", start)
 	if err != nil {
 		return nil, err
 	}
@@ -90,6 +92,7 @@ func (c subscription) InsertOne(ctx context.Context, subs model.Subscription) er
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", subs),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.INSERT, "subscriptions", "InsertOne", start)
 	if err != nil {
 		return err
 	}
@@ -111,6 +114,7 @@ func (c subscription) DeleteAllByFilter(ctx context.Context, filter interface{})
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.DELETE, "subscriptions", "DeleteAllByFilter", start)
 	if err != nil {
 		return err
 	}
@@ -131,6 +135,7 @@ func (c subscription) DeleteOneByFilter(ctx context.Context, filter interface{})
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("DeleteOneByFilter")
+	stats.QueryRecord(stats.DELETE, "subscriptions", "DeleteOneByFilter", start)
 	if err != nil {
 		return err
 	}
@@ -151,6 +156,7 @@ func (c subscription) UpdateOneByFilter(ctx context.Context, filter interface{},
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("UpdateOneByFilter")
+	stats.QueryRecord(stats.UPDATE, "subscriptions", "UpdateOneByFilter", start)
 
 	if err != nil {
 		return err

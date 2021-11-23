@@ -3,7 +3,7 @@ package impl
 import (
 	"context"
 	"fmt"
-	"github.com/ppzxc/chattools/storage/database"
+	"github.com/ppzxc/chattools/common/stats"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
 	"github.com/ppzxc/chattools/utils"
@@ -15,15 +15,15 @@ import (
 )
 
 type sequence struct {
-	database     *mongo.Database
+	//database     *mongo.Database
 	counter      *mongo.Collection
 	queryTimeout time.Duration
 }
 
-func NewSequenceRepository(db *mongo.Database, queryTimeout time.Duration) repository.Sequence {
+func NewSequenceRepository(collection *mongo.Collection, queryTimeout time.Duration) repository.Sequence {
 	return &sequence{
-		database:     db,
-		counter:      db.Collection(database.MongoCollectionCounters),
+		//database:     db,
+		counter:      collection,
 		queryTimeout: queryTimeout,
 	}
 }
@@ -44,6 +44,7 @@ func (s sequence) Current(ctx context.Context, collectionName string, topicId in
 		"query":     "s.counter.FindOne",
 		"exec.time": time.Since(start).String(),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "counters", "Current", start)
 	if err != nil {
 		return 0, err
 	}
@@ -64,6 +65,7 @@ func (s sequence) Next(ctx context.Context, collectionName string) (int64, error
 		"query":     "s.counter.FindOneAndUpdate",
 		"exec.time": time.Since(start).String(),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.UPDATE, "counters", "Next", start)
 	if err != nil {
 		return 0, err
 	}

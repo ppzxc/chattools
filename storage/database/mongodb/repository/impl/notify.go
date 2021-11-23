@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ppzxc/chattools/storage/database"
+	"github.com/ppzxc/chattools/common/stats"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/storage/database/mongodb/repository"
 	"github.com/ppzxc/chattools/utils"
@@ -15,23 +15,23 @@ import (
 )
 
 type notify struct {
-	database     *mongo.Database
+	//database     *mongo.Database
 	collection   *mongo.Collection
 	queryTimeout time.Duration
 }
 
-func NewNotifyRepository(db *mongo.Database, queryTimeout time.Duration) repository.Notify {
+func NewNotifyRepository(collection *mongo.Collection, queryTimeout time.Duration) repository.Notify {
 	return &notify{
-		database:     db,
-		collection:   db.Collection(database.MongoCollectionNotify),
+		//database:     db,
+		collection:   collection,
 		queryTimeout: queryTimeout,
 	}
 }
 
 func (c notify) FindOneByFilter(ctx context.Context, filter bson.D) (*model.Notify, error) {
+	start := time.Now()
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	var notify model.Notify
-	start := time.Now()
 	err := c.collection.FindOne(cCtx, filter).Decode(&notify)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
@@ -39,12 +39,13 @@ func (c notify) FindOneByFilter(ctx context.Context, filter bson.D) (*model.Noti
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "notify", "FindOneByFilter", start)
 	return &notify, err
 }
 
 func (c notify) FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Notify, error) {
-	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
+	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	cursor, err := c.collection.Find(cCtx, filter)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
@@ -52,6 +53,7 @@ func (c notify) FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Not
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", filter),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "notify", "FindManyFilter", start)
 	if err != nil {
 		return nil, err
 	}
@@ -88,6 +90,7 @@ func (c notify) InsertMany(ctx context.Context, many []interface{}) error {
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", many),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.INSERT, "notify", "InsertMany", start)
 	if err != nil {
 		return err
 	}
@@ -109,6 +112,7 @@ func (c notify) InsertOne(ctx context.Context, one interface{}) (int64, error) {
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", one),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.INSERT, "notify", "InsertOne", start)
 	if err != nil {
 		return 0, err
 	}
@@ -128,6 +132,7 @@ func (c notify) UpdateOne(ctx context.Context, notify *model.Notify) error {
 		"exec.time": time.Since(start).String(),
 		"args":      fmt.Sprintf("%+#v", notify),
 	})).Debug("sql execute")
+	stats.QueryRecord(stats.UPDATE, "notify", "UpdateOne", start)
 
 	if err != nil {
 		return err
