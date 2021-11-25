@@ -28,8 +28,9 @@ message ResponseAuthentication {
   File file = 3;
   string audience = 4;
   string token = 5;
-  repeated int64 subscription_topic_ids = 6;
-  Result result = 7;
+  bool isLogout = 6;
+  repeated int64 subscription_topic_ids = 7;
+  Result result = 8;
 }
 
 service Authenticator {
