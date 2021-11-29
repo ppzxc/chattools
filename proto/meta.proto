@@ -16,6 +16,7 @@ message RequestMeta {
   int64 file_id = 5;
   int64 sequence_id = 6;
   Paging paging = 7;
+  File file = 8;
 }
 
 message ResponseMeta {
@@ -35,6 +36,8 @@ service Meta {
   rpc Message(RequestMeta) returns (ResponseMeta) {}
   rpc User(RequestMeta) returns (ResponseMeta) {}
   rpc Profile(RequestMeta) returns (ResponseMeta) {}
+  rpc ProfileUpdate(RequestMeta) returns (ResponseMeta) {}
+  rpc ProfileImageUpdate(RequestMeta) returns (ResponseMeta) {}
   rpc Notify(RequestMeta) returns (ResponseMeta) {}
   rpc File(RequestMeta) returns (ResponseMeta) {}
 }
