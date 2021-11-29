@@ -39,6 +39,7 @@ service Meta {
   rpc Profile(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileUpdate(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileImageUpdate(RequestMeta) returns (ResponseMeta) {}
+  rpc ProfileImageGet(RequestMeta) returns (ResponseMeta) {}
   rpc Notify(RequestMeta) returns (ResponseMeta) {}
   rpc File(RequestMeta) returns (ResponseMeta) {}
 }
