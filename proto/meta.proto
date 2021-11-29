@@ -17,6 +17,7 @@ message RequestMeta {
   int64 sequence_id = 6;
   Paging paging = 7;
   File file = 8;
+  Profile profile = 9;
 }
 
 message ResponseMeta {
