@@ -34,7 +34,7 @@ func (c CustomClaims) Validate() error {
 		return ErrNilIssuer
 	}
 
-	if !strings.EqualFold(c.Issuer, os.Getenv("jwt.issuer")) {
+	if !strings.EqualFold(c.Issuer, os.Getenv("JWT_ISSUER")) {
 		return ErrInvalidIssuer
 	}
 
@@ -44,7 +44,7 @@ func (c CustomClaims) Validate() error {
 func NewTokenWithStandardClaims(secret string, browserId string, id int64, expires time.Time) (string, error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    os.Getenv("jwt.issuer"),
+			Issuer:    os.Getenv("JWT_ISSUER"),
 			ExpiresAt: jwt.NewNumericDate(expires),
 		},
 		UserId:    id,
