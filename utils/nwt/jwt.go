@@ -1,8 +1,18 @@
 package nwt
 
 import (
+	"errors"
 	"github.com/golang-jwt/jwt/v4"
+	"os"
+	"strings"
 	"time"
+)
+
+var (
+	ErrNilBrowserId  = errors.New("browser id is nil")
+	ErrNilUserId     = errors.New("user id is nil")
+	ErrNilIssuer     = errors.New("issuer is nil")
+	ErrInvalidIssuer = errors.New("invalid issuer")
 )
 
 type CustomClaims struct {
@@ -11,10 +21,30 @@ type CustomClaims struct {
 	BrowserId string `json:"bid,omitempty"`
 }
 
+func (c CustomClaims) Validate() error {
+	if len(c.BrowserId) <= 0 {
+		return ErrNilBrowserId
+	}
+
+	if c.UserId <= 0 {
+		return ErrNilUserId
+	}
+
+	if len(c.Issuer) <= 0 {
+		return ErrNilIssuer
+	}
+
+	if !strings.EqualFold(c.Issuer, os.Getenv("jwt.issuer")) {
+		return ErrInvalidIssuer
+	}
+
+	return nil
+}
+
 func NewTokenWithStandardClaims(secret string, browserId string, id int64, expires time.Time) (string, error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    "link.nanoit.kr",
+			Issuer:    os.Getenv("jwt.issuer"),
 			ExpiresAt: jwt.NewNumericDate(expires),
 		},
 		UserId:    id,
