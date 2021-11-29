@@ -52,30 +52,30 @@ func NewTokenWithStandardClaims(secret string, browserId string, id int64, expir
 	}).SignedString([]byte(secret))
 }
 
-func ParseErrorCheck(secret string, tokenString string, browserId string) (issuer string, userId int64, err error) {
+func ParseErrorCheck(secret string, tokenString string, browserId string) (CustomClaims, error) {
 	claims := CustomClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
 	if err != nil {
-		return "", 0, err
+		return CustomClaims{}, err
 	}
 
 	if token.Valid {
 		if claims.UserId <= 0 {
-			return "", 0, jwt.NewValidationError("invalid claims: user id is 0", jwt.ValidationErrorClaimsInvalid)
+			return CustomClaims{}, jwt.NewValidationError("invalid claims: user id is 0", jwt.ValidationErrorClaimsInvalid)
 		}
 
 		if len(claims.Issuer) <= 0 {
-			return "", 0, jwt.NewValidationError("invalid claims: issuer is null", jwt.ValidationErrorClaimsInvalid)
+			return CustomClaims{}, jwt.NewValidationError("invalid claims: issuer is null", jwt.ValidationErrorClaimsInvalid)
 		}
 
 		if len(claims.BrowserId) <= 0 {
-			return "", 0, jwt.NewValidationError("invalid claims: browser id is null", jwt.ValidationErrorClaimsInvalid)
+			return CustomClaims{}, jwt.NewValidationError("invalid claims: browser id is null", jwt.ValidationErrorClaimsInvalid)
 		}
 
-		return claims.Issuer, claims.UserId, nil
+		return claims, nil
 	} else {
-		return "", 0, jwt.NewValidationError("invalid claims", jwt.ValidationErrorClaimsInvalid)
+		return CustomClaims{}, jwt.NewValidationError("invalid claims", jwt.ValidationErrorClaimsInvalid)
 	}
 }
