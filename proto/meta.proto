@@ -9,7 +9,7 @@ import "model.proto";
 // META //
 message RequestMeta {
   Header header = 1;
-//  bool mine = 2;
+  //  bool mine = 2;
   int64 user_id = 2;
   string description = 3;
   int64 topic_id = 4;
@@ -25,8 +25,9 @@ message ResponseMeta {
   repeated User users = 4;
   repeated Profile profiles = 5;
   Profile profile = 6;
-  repeated Notification notifications = 7;
-  Result result = 8;
+  File file = 7;
+  repeated Notification notifications = 8;
+  Result result = 9;
 }
 
 service Meta {
@@ -35,4 +36,5 @@ service Meta {
   rpc User(RequestMeta) returns (ResponseMeta) {}
   rpc Profile(RequestMeta) returns (ResponseMeta) {}
   rpc Notify(RequestMeta) returns (ResponseMeta) {}
+  rpc File(RequestMeta) returns (ResponseMeta) {}
 }
