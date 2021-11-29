@@ -40,6 +40,7 @@ type Service interface {
 	FileFindOneById(ctx context.Context, fileId int64) (model.File, error)
 	FileInsert(ctx context.Context, file model.File) (fileId int64, err error)
 
+	ProfileFind(ctx context.Context, userId int64) (model.Profile, error)
 	ProfileImageFind(ctx context.Context, userId int64) (model.File, error)
 	ProfileImageUpdate(ctx context.Context, profile model.File) (fileId int64, err error)
 	ProfileUpdateByUserId(ctx context.Context, profile model.Profile) (err error)

@@ -8,6 +8,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+func (m mongodb) ProfileFind(ctx context.Context, userId int64) (model.Profile, error) {
+	filter, err := m.crudUser.FindOneByFilter(ctx, bson.D{{"_id", userId}})
+	if err != nil {
+		return model.Profile{}, err
+	}
+	return *filter.Profile, nil
+}
+
 func (m mongodb) ProfileImageFind(ctx context.Context, userId int64) (model.File, error) {
 	filter, err := m.crudUser.FindOneByFilter(ctx, bson.D{{"_id", userId}})
 	if err != nil {
