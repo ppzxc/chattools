@@ -113,7 +113,7 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging 
 	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"created_at", bson.M{"$gt": paging.CreatedAt}}}
 	} else if paging != (model.Paging{}) && paging.Id > 0 {
-		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$lt": paging.Id}}}
+		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$gt": paging.Id}}}
 	} else {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}}
 	}
