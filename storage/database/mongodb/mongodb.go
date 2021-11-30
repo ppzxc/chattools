@@ -84,6 +84,7 @@ func NewMongoDbInstance(closable context.Context, authMechanism string, authSour
 	bsoncodec.DefaultValueEncoders{}.RegisterDefaultEncoders(rb)
 	bsoncodec.DefaultValueDecoders{}.RegisterDefaultDecoders(rb)
 	t := true
+	rb.RegisterTypeEncoder(reflect.TypeOf(time.Time{}), bsoncodec.NewTimeCodec(&bsonoptions.TimeCodecOptions{UseLocalTimeZone: &t}))
 	rb.RegisterTypeDecoder(reflect.TypeOf(time.Time{}), bsoncodec.NewTimeCodec(&bsonoptions.TimeCodecOptions{UseLocalTimeZone: &t}))
 	primitiveCodecs.RegisterPrimitiveCodecs(rb)
 
