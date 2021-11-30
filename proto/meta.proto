@@ -43,4 +43,5 @@ service Meta {
   rpc ProfileImageGet(RequestMeta) returns (ResponseMeta) {}
   rpc Notify(RequestMeta) returns (ResponseMeta) {}
   rpc File(RequestMeta) returns (ResponseMeta) {}
+  rpc FileDelete(RequestMeta) returns (ResponseMeta) {}
 }

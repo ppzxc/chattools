@@ -300,7 +300,7 @@ var file_meta_proto_rawDesc = []byte{
 	0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x29, 0x0a, 0x06, 0x72, 0x65,
 	0x73, 0x75, 0x6c, 0x74, 0x18, 0x09, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x52, 0x06, 0x72,
-	0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0x85, 0x05, 0x0a, 0x04, 0x4d, 0x65, 0x74, 0x61, 0x12, 0x3a,
+	0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0xc6, 0x05, 0x0a, 0x04, 0x4d, 0x65, 0x74, 0x61, 0x12, 0x3a,
 	0x0a, 0x05, 0x54, 0x6f, 0x70, 0x69, 0x63, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f,
 	0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x61, 0x1a,
 	0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70,
@@ -340,9 +340,13 @@ var file_meta_proto_rawDesc = []byte{
 	0x22, 0x00, 0x12, 0x39, 0x0a, 0x04, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4d, 0x65,
 	0x74, 0x61, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x22, 0x00, 0x42, 0x0c, 0x5a,
-	0x0a, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2d, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x22, 0x00, 0x12, 0x3f, 0x0a,
+	0x0a, 0x46, 0x69, 0x6c, 0x65, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x16, 0x2e, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4d,
+	0x65, 0x74, 0x61, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x22, 0x00, 0x42, 0x0c,
+	0x5a, 0x0a, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2d, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -395,18 +399,20 @@ var file_meta_proto_depIdxs = []int32{
 	0,  // 20: proto_gen.Meta.ProfileImageGet:input_type -> proto_gen.RequestMeta
 	0,  // 21: proto_gen.Meta.Notify:input_type -> proto_gen.RequestMeta
 	0,  // 22: proto_gen.Meta.File:input_type -> proto_gen.RequestMeta
-	1,  // 23: proto_gen.Meta.Topic:output_type -> proto_gen.ResponseMeta
-	1,  // 24: proto_gen.Meta.Message:output_type -> proto_gen.ResponseMeta
-	1,  // 25: proto_gen.Meta.User:output_type -> proto_gen.ResponseMeta
-	1,  // 26: proto_gen.Meta.Profile:output_type -> proto_gen.ResponseMeta
-	1,  // 27: proto_gen.Meta.ProfileGet:output_type -> proto_gen.ResponseMeta
-	1,  // 28: proto_gen.Meta.ProfileUpdate:output_type -> proto_gen.ResponseMeta
-	1,  // 29: proto_gen.Meta.ProfileImageUpdate:output_type -> proto_gen.ResponseMeta
-	1,  // 30: proto_gen.Meta.ProfileImageGet:output_type -> proto_gen.ResponseMeta
-	1,  // 31: proto_gen.Meta.Notify:output_type -> proto_gen.ResponseMeta
-	1,  // 32: proto_gen.Meta.File:output_type -> proto_gen.ResponseMeta
-	23, // [23:33] is the sub-list for method output_type
-	13, // [13:23] is the sub-list for method input_type
+	0,  // 23: proto_gen.Meta.FileDelete:input_type -> proto_gen.RequestMeta
+	1,  // 24: proto_gen.Meta.Topic:output_type -> proto_gen.ResponseMeta
+	1,  // 25: proto_gen.Meta.Message:output_type -> proto_gen.ResponseMeta
+	1,  // 26: proto_gen.Meta.User:output_type -> proto_gen.ResponseMeta
+	1,  // 27: proto_gen.Meta.Profile:output_type -> proto_gen.ResponseMeta
+	1,  // 28: proto_gen.Meta.ProfileGet:output_type -> proto_gen.ResponseMeta
+	1,  // 29: proto_gen.Meta.ProfileUpdate:output_type -> proto_gen.ResponseMeta
+	1,  // 30: proto_gen.Meta.ProfileImageUpdate:output_type -> proto_gen.ResponseMeta
+	1,  // 31: proto_gen.Meta.ProfileImageGet:output_type -> proto_gen.ResponseMeta
+	1,  // 32: proto_gen.Meta.Notify:output_type -> proto_gen.ResponseMeta
+	1,  // 33: proto_gen.Meta.File:output_type -> proto_gen.ResponseMeta
+	1,  // 34: proto_gen.Meta.FileDelete:output_type -> proto_gen.ResponseMeta
+	24, // [24:35] is the sub-list for method output_type
+	13, // [13:24] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name
 	13, // [13:13] is the sub-list for extension extendee
 	0,  // [0:13] is the sub-list for field type_name
@@ -486,6 +492,7 @@ type MetaClient interface {
 	ProfileImageGet(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 	Notify(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 	File(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
+	FileDelete(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 }
 
 type metaClient struct {
@@ -586,6 +593,15 @@ func (c *metaClient) File(ctx context.Context, in *RequestMeta, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *metaClient) FileDelete(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error) {
+	out := new(ResponseMeta)
+	err := c.cc.Invoke(ctx, "/proto_gen.Meta/FileDelete", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MetaServer is the server API for Meta service.
 type MetaServer interface {
 	Topic(context.Context, *RequestMeta) (*ResponseMeta, error)
@@ -598,6 +614,7 @@ type MetaServer interface {
 	ProfileImageGet(context.Context, *RequestMeta) (*ResponseMeta, error)
 	Notify(context.Context, *RequestMeta) (*ResponseMeta, error)
 	File(context.Context, *RequestMeta) (*ResponseMeta, error)
+	FileDelete(context.Context, *RequestMeta) (*ResponseMeta, error)
 }
 
 // UnimplementedMetaServer can be embedded to have forward compatible implementations.
@@ -633,6 +650,9 @@ func (*UnimplementedMetaServer) Notify(context.Context, *RequestMeta) (*Response
 }
 func (*UnimplementedMetaServer) File(context.Context, *RequestMeta) (*ResponseMeta, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method File not implemented")
+}
+func (*UnimplementedMetaServer) FileDelete(context.Context, *RequestMeta) (*ResponseMeta, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FileDelete not implemented")
 }
 
 func RegisterMetaServer(s *grpc.Server, srv MetaServer) {
@@ -819,6 +839,24 @@ func _Meta_File_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Meta_FileDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestMeta)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetaServer).FileDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto_gen.Meta/FileDelete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetaServer).FileDelete(ctx, req.(*RequestMeta))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Meta_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto_gen.Meta",
 	HandlerType: (*MetaServer)(nil),
@@ -862,6 +900,10 @@ var _Meta_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "File",
 			Handler:    _Meta_File_Handler,
+		},
+		{
+			MethodName: "FileDelete",
+			Handler:    _Meta_FileDelete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
