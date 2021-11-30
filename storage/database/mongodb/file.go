@@ -5,7 +5,6 @@ import (
 	"github.com/ppzxc/chattools/storage/database"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
-	"os"
 )
 
 func (m mongodb) FileInsert(ctx context.Context, file model.File) (int64, error) {
@@ -22,14 +21,10 @@ func (m mongodb) FileFindOneById(ctx context.Context, fileId int64) (model.File,
 	return m.crudFile.FindOneByFilter(ctx, bson.D{{"_id", fileId}, {"deleted_at", bson.M{"$eq": nil}}})
 }
 
-func (m mongodb) FileDeleteOneById(ctx context.Context, fileId int64) error {
+func (m mongodb) FileDeleteOneById(ctx context.Context, fileId int64) (model.File, error) {
 	file, err := m.crudFile.DeleteOneByFilter(ctx, bson.D{{"_id", fileId}})
 	if err != nil {
-		return err
+		return model.File{}, err
 	}
-	err = os.Remove(file.Path)
-	if err != nil {
-		return err
-	}
-	return nil
+	return file, nil
 }
