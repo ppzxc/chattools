@@ -8,6 +8,7 @@ import (
 )
 
 type User interface {
+	CountDocuments(ctx context.Context, filter bson.D) (count int64, err error)
 	FindOneByFilter(ctx context.Context, filter bson.D) (model.User, error)
 	FindOneAndDelete(ctx context.Context, userId int64) (*model.User, error)
 	FindManyByFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model.User, error)

@@ -30,12 +30,14 @@ message ResponseMeta {
   File file = 7;
   repeated Notification notifications = 8;
   Result result = 9;
+  int64 user_count = 10;
 }
 
 service Meta {
   rpc Topic(RequestMeta) returns (ResponseMeta) {}
   rpc Message(RequestMeta) returns (ResponseMeta) {}
   rpc User(RequestMeta) returns (ResponseMeta) {}
+  rpc UserAllCount(RequestMeta) returns (ResponseMeta) {}
   rpc Profile(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileGet(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileUpdate(RequestMeta) returns (ResponseMeta) {}

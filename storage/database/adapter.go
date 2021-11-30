@@ -17,6 +17,7 @@ type Service interface {
 	UserUpdate(ctx context.Context, user model.User) (err error)
 	UserDeleteByUserId(ctx context.Context, userId int64) (err error)
 	UserLogout(ctx context.Context, userId int64) (err error)
+	UserCountDocuments(ctx context.Context) (int64, error)
 
 	TopicInsert(ctx context.Context, topic model.Topic) (topicId int64, err error)
 	TopicFindAll(ctx context.Context, paging model.Paging) (topics []model.Topic, err error)

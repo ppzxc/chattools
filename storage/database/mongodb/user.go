@@ -25,6 +25,10 @@ func (m mongodb) registerAll(ctx context.Context, users []*model.User) error {
 	return m.crudUser.InsertMany(ctx, many)
 }
 
+func (m mongodb) UserCountDocuments(ctx context.Context) (int64, error) {
+	return m.crudUser.CountDocuments(ctx, bson.D{})
+}
+
 func (m mongodb) UserDeleteByUserId(ctx context.Context, userId int64) error {
 	return m.crudUser.Delete(ctx, userId)
 }

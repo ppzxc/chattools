@@ -32,6 +32,20 @@ func NewUserRepository(collection *mongo.Collection, queryTimeout time.Duration)
 	}
 }
 
+func (c user) CountDocuments(ctx context.Context, filter bson.D) (count int64, err error) {
+	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
+	start := time.Now()
+	count, err = c.collection.CountDocuments(cCtx, filter)
+	cancel()
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
+		"query":     "c.collection.CountDocuments",
+		"exec.time": time.Since(start).String(),
+		"args":      fmt.Sprintf("%+#v", filter),
+	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "users", "CountDocuments", start)
+	return
+}
+
 func (c user) FindOneByFilter(ctx context.Context, filter bson.D) (model.User, error) {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	var findUser model.User
