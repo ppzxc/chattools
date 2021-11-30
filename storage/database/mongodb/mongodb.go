@@ -83,16 +83,20 @@ func NewMongoDbInstance(closable context.Context, authMechanism string, authSour
 	rb := bsoncodec.NewRegistryBuilder()
 	bsoncodec.DefaultValueEncoders{}.RegisterDefaultEncoders(rb)
 	bsoncodec.DefaultValueDecoders{}.RegisterDefaultDecoders(rb)
-	t := true
-	rb.RegisterTypeEncoder(reflect.TypeOf(time.Time{}), bsoncodec.NewTimeCodec(&bsonoptions.TimeCodecOptions{UseLocalTimeZone: &t}))
-	rb.RegisterTypeDecoder(reflect.TypeOf(time.Time{}), bsoncodec.NewTimeCodec(&bsonoptions.TimeCodecOptions{UseLocalTimeZone: &t}))
+	//rb.RegisterTypeEncoder(reflect.TypeOf(time.Time{}), bsoncodec.NewTimeCodec(&bsonoptions.TimeCodecOptions{UseLocalTimeZone: &t}))
+	tco := bsonoptions.TimeCodecOptions{}
+
+	tco.SetUseLocalTimeZone(true)
+	tc := bsoncodec.NewTimeCodec(&tco)
+	rb.RegisterTypeDecoder(reflect.TypeOf(time.Time{}), tc)
+	//rb.RegisterTypeEncoder(reflect.TypeOf(time.Time{}), tc)
 	primitiveCodecs.RegisterPrimitiveCodecs(rb)
 
-	registry := rb.Build()
-
 	m.mdb = m.cli.Database(dbName, &options.DatabaseOptions{
-		Registry: registry,
+		Registry: rb.Build(),
 	})
+
+	//m.mdb = m.cli.Database(dbName)
 
 	m.crudSeq = impl.NewSequenceRepository(m.mdb.Collection(database.MongoCollectionCounters), m.queryTimeout)
 	m.crudUser = impl.NewUserRepository(m.mdb.Collection(database.MongoCollectionUser), m.queryTimeout)
