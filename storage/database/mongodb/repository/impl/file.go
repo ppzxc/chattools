@@ -28,6 +28,26 @@ func NewFileRepository(collection *mongo.Collection, queryTimeout time.Duration)
 	}
 }
 
+func (c file) DeleteOneByFilter(ctx context.Context, filter bson.D) (model.File, error) {
+	start := time.Now()
+	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
+	var file model.File
+	err := c.collection.FindOneAndDelete(cCtx, filter).Decode(&file)
+	cancel()
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
+		"query":     "c.collection.FindOne",
+		"exec.time": time.Since(start).String(),
+		"args":      fmt.Sprintf("%+#v", filter),
+	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "file", "FindOneByFilter", start)
+
+	if err != nil {
+		return model.File{}, err
+	}
+
+	return file, nil
+}
+
 func (c file) FindOneByFilter(ctx context.Context, filter bson.D) (model.File, error) {
 	start := time.Now()
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)

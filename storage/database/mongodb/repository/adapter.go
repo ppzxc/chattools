@@ -2,46 +2,46 @@ package repository
 
 import (
 	"context"
-	model2 "github.com/ppzxc/chattools/storage/database/model"
+	"github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type User interface {
-	FindOneByFilter(ctx context.Context, filter bson.D) (model2.User, error)
-	FindOneAndDelete(ctx context.Context, userId int64) (*model2.User, error)
-	FindManyByFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model2.User, error)
+	FindOneByFilter(ctx context.Context, filter bson.D) (model.User, error)
+	FindOneAndDelete(ctx context.Context, userId int64) (*model.User, error)
+	FindManyByFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model.User, error)
 	InsertMany(ctx context.Context, many []interface{}) error
-	InsertOne(ctx context.Context, user model2.User) error
+	InsertOne(ctx context.Context, user model.User) error
 	FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, update bson.D) error
 	Delete(ctx context.Context, userId int64) error
 }
 
 type Topic interface {
 	FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, update bson.D) error
-	FindManyFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model2.Topic, error)
-	FindOneByFilter(ctx context.Context, filter bson.D) (model2.Topic, error)
-	InsertOne(ctx context.Context, topic model2.Topic) error
+	FindManyFilter(ctx context.Context, filter bson.D, option *options.FindOptions) ([]model.Topic, error)
+	FindOneByFilter(ctx context.Context, filter bson.D) (model.Topic, error)
+	InsertOne(ctx context.Context, topic model.Topic) error
 	UpdateFilter(ctx context.Context, filter bson.D, update bson.D) error
-	Update(ctx context.Context, topic *model2.Topic) error
+	Update(ctx context.Context, topic *model.Topic) error
 	Delete(ctx context.Context, topicId int64) error
 }
 
 type Subscription interface {
-	FindOneByFilter(ctx context.Context, filter interface{}) (model2.Subscription, error)
-	FindManyByFilter(ctx context.Context, filter interface{}) ([]model2.Subscription, error)
-	InsertOne(ctx context.Context, subs model2.Subscription) error
+	FindOneByFilter(ctx context.Context, filter interface{}) (model.Subscription, error)
+	FindManyByFilter(ctx context.Context, filter interface{}) ([]model.Subscription, error)
+	InsertOne(ctx context.Context, subs model.Subscription) error
 	DeleteAllByFilter(ctx context.Context, filter interface{}) error
 	DeleteOneByFilter(ctx context.Context, filter interface{}) error
 	UpdateOneByFilter(ctx context.Context, filter interface{}, update interface{}) error
 }
 
 type Notify interface {
-	FindOneByFilter(ctx context.Context, filter bson.D) (*model2.Notify, error)
-	FindManyFilter(ctx context.Context, filter bson.D) ([]*model2.Notify, error)
+	FindOneByFilter(ctx context.Context, filter bson.D) (*model.Notify, error)
+	FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Notify, error)
 	InsertMany(ctx context.Context, many []interface{}) error
 	InsertOne(ctx context.Context, one interface{}) (int64, error)
-	UpdateOne(ctx context.Context, notify *model2.Notify) error
+	UpdateOne(ctx context.Context, notify *model.Notify) error
 }
 
 type Sequence interface {
@@ -51,15 +51,16 @@ type Sequence interface {
 }
 
 type File interface {
-	FindOneByFilter(ctx context.Context, filter bson.D) (model2.File, error)
-	InsertOne(ctx context.Context, file model2.File) error
+	FindOneByFilter(ctx context.Context, filter bson.D) (model.File, error)
+	InsertOne(ctx context.Context, file model.File) error
+	DeleteOneByFilter(ctx context.Context, filter bson.D) (model.File, error)
 }
 
 type Message interface {
-	InsertOne(ctx context.Context, message model2.Message) error
+	InsertOne(ctx context.Context, message model.Message) error
 	InsertMany(ctx context.Context, messages []interface{}) error
-	FindManyByFilter(ctx context.Context, filter bson.D) ([]model2.Message, error)
-	//FindManyByFilterDescLimit(ctx context.Context, filter bson.D) ([]model2.Message, error)
+	FindManyByFilter(ctx context.Context, filter bson.D) ([]model.Message, error)
+	//FindManyByFilterDescLimit(ctx context.Context, filter bson.D) ([]model.Message, error)
 	Delete(ctx context.Context, filter bson.D) error
 }
 

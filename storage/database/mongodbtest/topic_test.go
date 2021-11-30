@@ -2,6 +2,7 @@ package mongodbtest
 
 import (
 	"context"
+	"fmt"
 	"github.com/ppzxc/chattools/common/stats"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"github.com/ppzxc/chattools/types"
@@ -76,7 +77,7 @@ func TestTopicTimezone(t *testing.T) {
 	timeEquals(t, insertTopic.UpdatedAt, findTopic.UpdatedAt)
 	assert.Equal(t, insertTopic.Message, findTopic.Message)
 
-	//fmt.Printf("################################## %v : %v", insertTopic.CreatedAt.Local(), findTopic.CreatedAt.Local())
+	fmt.Printf("################################## %v : %v", insertTopic.CreatedAt, findTopic.CreatedAt)
 
 	queryCtx, cancel = context.WithCancel(ctx)
 	err = service.TopicDelete(queryCtx, insertTopic.Id)
