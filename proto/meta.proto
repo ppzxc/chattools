@@ -31,6 +31,7 @@ message ResponseMeta {
   repeated Notification notifications = 8;
   Result result = 9;
   int64 user_count = 10;
+  int64 topic_count = 11;
 }
 
 service Meta {
