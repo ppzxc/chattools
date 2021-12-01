@@ -128,5 +128,9 @@ func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model.Top
 }
 
 func (m mongodb) TopicCountDocumentsByUserId(ctx context.Context, userId int64) (count int64, err error) {
-	return m.crudSubs.CountDocuments(ctx, bson.D{{"user_id", userId}})
+	count, err = m.crudSubs.CountDocuments(ctx, bson.D{{"user_id", userId}})
+	if err == nil && count <= 0 {
+		return 0, mongo.ErrNoDocuments
+	}
+	return
 }
