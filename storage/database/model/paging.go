@@ -8,4 +8,6 @@ type Paging struct {
 	Id        int64      `json:"id,omitempty"`
 	Offset    int64      `json:"offset,omitempty"`
 	Limit     int64      `json:"limit,omitempty"`
+	Order     int64      `json:"order,omitempty"`
+	By        string     `json:"by,omitempty"`
 }
