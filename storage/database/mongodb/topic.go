@@ -112,7 +112,7 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging 
 	if paging != (model.Paging{}) && paging.Offset > 0 && paging.Limit > 0 {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$gte": paging.Offset}}}
 		opt = options.Find().
-			SetSort(bson.D{{"_id", 1}}).
+			SetSort(bson.D{{paging.By, paging.Order}}).
 			SetLimit(paging.Limit)
 	} else if paging != (model.Paging{}) && paging.UpdatedAt != nil {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
