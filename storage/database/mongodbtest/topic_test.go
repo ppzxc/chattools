@@ -34,6 +34,44 @@ func topicCreate(ctx context.Context, t *testing.T, count int, owner int, time t
 	}
 }
 
+func TestMaxTopicId(t *testing.T) {
+	stats.Writer = stats.Initialize()
+	mono.Init()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	_ = service.InitializeTable(ctx, true, true, false)
+
+	for i := 1; i <= 10; i++ {
+		now := time.Now()
+		insertTopic := model.Subscription{
+			//Id:                0,
+			UserId:            5,
+			TopicId:           int64(i),
+			StartSequenceId:   0,
+			ReceiveSequenceId: 0,
+			ReadSequenceId:    0,
+			CreatedAt:         &now,
+			UpdatedAt:         &now,
+			DeletedAt:         nil,
+		}
+		queryCtx, cancel := context.WithCancel(ctx)
+		insertTopicId, err := service.SubscriptionInsert(queryCtx, insertTopic)
+		cancel()
+		require.NoError(t, err)
+		assert.Greater(t, insertTopicId, int64(0))
+	}
+
+	cCtx, cancel := context.WithCancel(ctx)
+	_, err := service.TopicCountDocumentsByUserId(cCtx, 5)
+	cancel()
+	require.NoError(t, err)
+
+	cCtx, cancel = context.WithCancel(ctx)
+	_, err = service.TopicMaxIdByUserId(cCtx, 5)
+	cancel()
+	require.NoError(t, err)
+}
+
 func TestTopicTimezone(t *testing.T) {
 	stats.Writer = stats.Initialize()
 	mono.Init()

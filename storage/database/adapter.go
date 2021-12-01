@@ -18,6 +18,7 @@ type Service interface {
 	UserDeleteByUserId(ctx context.Context, userId int64) (err error)
 	UserLogout(ctx context.Context, userId int64) (err error)
 	UserCountDocuments(ctx context.Context) (int64, error)
+	UserMaxId(ctx context.Context) (int64, error)
 
 	TopicInsert(ctx context.Context, topic model.Topic) (topicId int64, err error)
 	TopicFindAll(ctx context.Context, paging model.Paging) (topics []model.Topic, err error)
@@ -25,6 +26,7 @@ type Service interface {
 	TopicFindOneById(ctx context.Context, topicId int64) (topic model.Topic, err error)
 	TopicDelete(ctx context.Context, topicId int64) (err error)
 	TopicCountDocumentsByUserId(ctx context.Context, userId int64) (int64, error)
+	TopicMaxIdByUserId(ctx context.Context, userId int64) (maxTopicId int64, err error)
 
 	SubscriptionInsert(ctx context.Context, subscription model.Subscription) (subscriptionId int64, err error)
 	SubscriptionFindAllByTopicId(ctx context.Context, topicId int64) (subscriptions []model.Subscription, err error)
@@ -38,6 +40,7 @@ type Service interface {
 	MessageInsert(ctx context.Context, message model.Message) (sequenceId int64, err error)
 	MessageFindAllByTopicIdAndMoreThanSequenceId(ctx context.Context, topicId int64, sequenceId int64) ([]model.Message, error)
 	MessageFindMaxSequenceIdByTopicId(ctx context.Context, topicId int64) (int64, error)
+	MessageMaxIdByTopicId(ctx context.Context, topicId int64) (maxId int64, err error)
 
 	FileFindOneById(ctx context.Context, fileId int64) (model.File, error)
 	FileInsert(ctx context.Context, file model.File) (fileId int64, err error)

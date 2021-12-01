@@ -127,6 +127,22 @@ func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model.Top
 	return m.crudTopic.FindOneByFilter(ctx, bson.D{{"_id", topicId}})
 }
 
+func (m mongodb) TopicMaxIdByUserId(ctx context.Context, userId int64) (maxTopicId int64, err error) {
+	option := options.FindOptions{}
+	option.SetSort(bson.D{{"topic_id", -1}})
+	option.SetLimit(1)
+
+	subs, err := m.crudSubs.FindManyByFilter(ctx, bson.D{{"user_id", userId}}, &option)
+	if err != nil {
+		return 0, err
+	}
+	if len(subs) <= 0 {
+		return 0, mongo.ErrNoDocuments
+	}
+
+	return subs[0].TopicId, nil
+}
+
 func (m mongodb) TopicCountDocumentsByUserId(ctx context.Context, userId int64) (count int64, err error) {
 	count, err = m.crudSubs.CountDocuments(ctx, bson.D{{"user_id", userId}})
 	if err == nil && count <= 0 {

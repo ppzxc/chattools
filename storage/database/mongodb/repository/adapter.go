@@ -30,8 +30,8 @@ type Topic interface {
 }
 
 type Subscription interface {
-	FindOneByFilter(ctx context.Context, filter interface{}) (model.Subscription, error)
-	FindManyByFilter(ctx context.Context, filter interface{}) ([]model.Subscription, error)
+	FindOneByFilter(ctx context.Context, filter interface{}, options ...*options.FindOneOptions) (model.Subscription, error)
+	FindManyByFilter(ctx context.Context, filter interface{}, options ...*options.FindOptions) ([]model.Subscription, error)
 	InsertOne(ctx context.Context, subs model.Subscription) error
 	DeleteAllByFilter(ctx context.Context, filter interface{}) error
 	DeleteOneByFilter(ctx context.Context, filter interface{}) error
@@ -62,8 +62,7 @@ type File interface {
 type Message interface {
 	InsertOne(ctx context.Context, message model.Message) error
 	InsertMany(ctx context.Context, messages []interface{}) error
-	FindManyByFilter(ctx context.Context, filter bson.D) ([]model.Message, error)
-	//FindManyByFilterDescLimit(ctx context.Context, filter bson.D) ([]model.Message, error)
+	FindManyByFilter(ctx context.Context, filter interface{}, options ...*options.FindOptions) ([]model.Message, error)
 	Delete(ctx context.Context, filter bson.D) error
 }
 

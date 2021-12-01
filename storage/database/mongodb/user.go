@@ -25,6 +25,22 @@ func (m mongodb) registerAll(ctx context.Context, users []*model.User) error {
 	return m.crudUser.InsertMany(ctx, many)
 }
 
+func (m mongodb) UserMaxId(ctx context.Context) (int64, error) {
+	option := options.FindOptions{}
+	option.SetSort(bson.D{{"_id", -1}})
+	option.SetLimit(1)
+
+	users, err := m.crudUser.FindManyByFilter(ctx, bson.D{}, &option)
+	if err != nil {
+		return 0, err
+	}
+	if len(users) <= 0 {
+		return 0, mongo.ErrNoDocuments
+	}
+
+	return users[0].Id, nil
+}
+
 func (m mongodb) UserCountDocuments(ctx context.Context) (int64, error) {
 	return m.crudUser.CountDocuments(ctx, bson.D{})
 }

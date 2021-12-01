@@ -44,11 +44,11 @@ func (c subscription) CountDocuments(ctx context.Context, filter interface{}) (c
 	return
 }
 
-func (c subscription) FindOneByFilter(ctx context.Context, filter interface{}) (model.Subscription, error) {
+func (c subscription) FindOneByFilter(ctx context.Context, filter interface{}, options ...*options.FindOneOptions) (model.Subscription, error) {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	var subs model.Subscription
 	start := time.Now()
-	err := c.collection.FindOne(cCtx, filter).Decode(&subs)
+	err := c.collection.FindOne(cCtx, filter, options...).Decode(&subs)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.FindOne",
@@ -59,10 +59,10 @@ func (c subscription) FindOneByFilter(ctx context.Context, filter interface{}) (
 	return subs, err
 }
 
-func (c subscription) FindManyByFilter(ctx context.Context, filter interface{}) ([]model.Subscription, error) {
+func (c subscription) FindManyByFilter(ctx context.Context, filter interface{}, options ...*options.FindOptions) ([]model.Subscription, error) {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()
-	cursor, err := c.collection.Find(cCtx, filter)
+	cursor, err := c.collection.Find(cCtx, filter, options...)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.Find",

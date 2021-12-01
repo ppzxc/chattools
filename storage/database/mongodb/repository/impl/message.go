@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
@@ -101,10 +102,10 @@ func (c message) InsertMany(ctx context.Context, messages []interface{}) error {
 //	return messages, nil
 //}
 
-func (c message) FindManyByFilter(ctx context.Context, filter bson.D) ([]model.Message, error) {
+func (c message) FindManyByFilter(ctx context.Context, filter interface{}, options ...*options.FindOptions) ([]model.Message, error) {
 	start := time.Now()
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
-	cursor, err := c.collection.Find(cCtx, filter)
+	cursor, err := c.collection.Find(cCtx, filter, options...)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "c.collection.Find",
