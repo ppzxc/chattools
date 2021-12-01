@@ -108,19 +108,35 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging 
 	}
 
 	var filter bson.D
-	if paging != (model.Paging{}) && paging.UpdatedAt != nil {
+	var opt *options.FindOptions
+	if paging != (model.Paging{}) && paging.Offset > 0 && paging.Limit > 0 {
+		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$gt": paging.Offset}}}
+		opt = options.Find().
+			SetSort(bson.D{{"_id", 1}}).
+			SetLimit(paging.Limit)
+	} else if paging != (model.Paging{}) && paging.UpdatedAt != nil {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
+		opt = options.Find().
+			SetSort(bson.D{{"_id", 1}}).
+			SetLimit(100)
 	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"created_at", bson.M{"$gt": paging.CreatedAt}}}
+		opt = options.Find().
+			SetSort(bson.D{{"_id", 1}}).
+			SetLimit(100)
 	} else if paging != (model.Paging{}) && paging.Id > 0 {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}, {"_id", bson.M{"$gt": paging.Id}}}
+		opt = options.Find().
+			SetSort(bson.D{{"_id", 1}}).
+			SetLimit(100)
 	} else {
 		filter = bson.D{{"_id", bson.M{"$in": topicIds}}}
+		opt = options.Find().
+			SetSort(bson.D{{"_id", 1}}).
+			SetLimit(100)
 	}
 
-	return m.crudTopic.FindManyFilter(ctx, filter, options.Find().
-		SetSort(bson.D{{"_id", -1}}).
-		SetLimit(100))
+	return m.crudTopic.FindManyFilter(ctx, filter, opt)
 }
 
 func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model.Topic, error) {

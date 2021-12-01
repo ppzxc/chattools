@@ -119,6 +119,7 @@ message Paging {
   int64 id = 3;
   int64 offset = 4;
   int64 limit = 5;
+  string order = 6;
 }
 
 enum MessageType {
