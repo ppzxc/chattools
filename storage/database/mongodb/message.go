@@ -10,6 +10,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+func (m mongodb) MessageFindByPaging(ctx context.Context, topicId int64, paging model.Paging) ([]model.Message, error) {
+	return m.crudMsg.FindManyByFilter(ctx, bson.D{{"topic_id", topicId}, {"sequence_id", bson.M{"$gte": paging.Offset, "$lt": paging.Offset + paging.Limit}}}, options.Find().SetSort(bson.D{{paging.By, paging.Order}}))
+}
+
 func (m mongodb) MessageMaxIdByTopicId(ctx context.Context, topicId int64) (maxId int64, err error) {
 	findOptions := options.FindOptions{}
 	findOptions.SetSort(bson.D{{"_id", -1}})

@@ -44,6 +44,7 @@ service Meta {
   rpc TopicMaxId(RequestMeta) returns (ResponseMeta) {}
   rpc Message(RequestMeta) returns (ResponseMeta) {}
   rpc MessageMaxId(RequestMeta) returns (ResponseMeta) {}
+  rpc MessageByPaging(RequestMeta) returns (ResponseMeta) {}
   rpc User(RequestMeta) returns (ResponseMeta) {}
   rpc UserAllCount(RequestMeta) returns (ResponseMeta) {}
   rpc UserMaxId(RequestMeta) returns (ResponseMeta) {}

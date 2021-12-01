@@ -41,6 +41,7 @@ type Service interface {
 	MessageFindAllByTopicIdAndMoreThanSequenceId(ctx context.Context, topicId int64, sequenceId int64) ([]model.Message, error)
 	MessageFindMaxSequenceIdByTopicId(ctx context.Context, topicId int64) (int64, error)
 	MessageMaxIdByTopicId(ctx context.Context, topicId int64) (maxId int64, err error)
+	MessageFindByPaging(ctx context.Context, topicId int64, paging model.Paging) ([]model.Message, error)
 
 	FileFindOneById(ctx context.Context, fileId int64) (model.File, error)
 	FileInsert(ctx context.Context, file model.File) (fileId int64, err error)
