@@ -35,6 +35,7 @@ message ResponseMeta {
 
 service Meta {
   rpc Topic(RequestMeta) returns (ResponseMeta) {}
+  rpc TopicCount(RequestMeta) returns (ResponseMeta) {}
   rpc Message(RequestMeta) returns (ResponseMeta) {}
   rpc User(RequestMeta) returns (ResponseMeta) {}
   rpc UserAllCount(RequestMeta) returns (ResponseMeta) {}

@@ -26,6 +26,7 @@ type Topic interface {
 	UpdateFilter(ctx context.Context, filter bson.D, update bson.D) error
 	Update(ctx context.Context, topic *model.Topic) error
 	Delete(ctx context.Context, topicId int64) error
+	CountDocuments(ctx context.Context, filter bson.D) (int64, error)
 }
 
 type Subscription interface {
@@ -35,6 +36,7 @@ type Subscription interface {
 	DeleteAllByFilter(ctx context.Context, filter interface{}) error
 	DeleteOneByFilter(ctx context.Context, filter interface{}) error
 	UpdateOneByFilter(ctx context.Context, filter interface{}, update interface{}) error
+	CountDocuments(ctx context.Context, filter interface{}) (int64, error)
 }
 
 type Notify interface {

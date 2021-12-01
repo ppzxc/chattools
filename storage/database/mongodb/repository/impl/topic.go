@@ -29,6 +29,20 @@ func NewTopicRepository(collection *mongo.Collection, queryTimeout time.Duration
 	}
 }
 
+func (c topic) CountDocuments(ctx context.Context, filter bson.D) (count int64, err error) {
+	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
+	start := time.Now()
+	count, err = c.collection.CountDocuments(cCtx, filter)
+	cancel()
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
+		"query":     "c.collection.CountDocuments",
+		"exec.time": time.Since(start).String(),
+		"args1":     filter,
+	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "topics", "CountDocuments", start)
+	return
+}
+
 func (c topic) FindOneAndUpdateByFilter(ctx context.Context, filter bson.D, update bson.D) error {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	start := time.Now()

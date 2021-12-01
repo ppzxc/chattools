@@ -126,3 +126,7 @@ func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging 
 func (m mongodb) TopicFindOneById(ctx context.Context, topicId int64) (model.Topic, error) {
 	return m.crudTopic.FindOneByFilter(ctx, bson.D{{"_id", topicId}})
 }
+
+func (m mongodb) TopicCountDocumentsByUserId(ctx context.Context, userId int64) (count int64, err error) {
+	return m.crudSubs.CountDocuments(ctx, bson.D{{"user_id", userId}})
+}

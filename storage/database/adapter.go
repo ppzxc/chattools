@@ -24,6 +24,7 @@ type Service interface {
 	TopicFindAllByUserId(ctx context.Context, userId int64, paging model.Paging) (topics []model.Topic, err error)
 	TopicFindOneById(ctx context.Context, topicId int64) (topic model.Topic, err error)
 	TopicDelete(ctx context.Context, topicId int64) (err error)
+	TopicCountDocumentsByUserId(ctx context.Context, userId int64) (int64, error)
 
 	SubscriptionInsert(ctx context.Context, subscription model.Subscription) (subscriptionId int64, err error)
 	SubscriptionFindAllByTopicId(ctx context.Context, topicId int64) (subscriptions []model.Subscription, err error)

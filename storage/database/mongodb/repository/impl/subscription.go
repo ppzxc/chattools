@@ -30,6 +30,20 @@ func NewSubscriptionRepository(collection *mongo.Collection, queryTimeout time.D
 	}
 }
 
+func (c subscription) CountDocuments(ctx context.Context, filter interface{}) (count int64, err error) {
+	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
+	start := time.Now()
+	count, err = c.collection.CountDocuments(cCtx, filter)
+	cancel()
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
+		"query":     "c.collection.CountDocuments",
+		"exec.time": time.Since(start).String(),
+		"args":      fmt.Sprintf("%+#v", filter),
+	})).Debug("sql execute")
+	stats.QueryRecord(stats.SELECT, "subscriptions", "CountDocuments", start)
+	return
+}
+
 func (c subscription) FindOneByFilter(ctx context.Context, filter interface{}) (model.Subscription, error) {
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
 	var subs model.Subscription
