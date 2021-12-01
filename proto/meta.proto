@@ -33,7 +33,7 @@ message ResponseMeta {
   int64 user_count = 10;
   int64 topic_count = 11;
   int64 message_count = 12;
-  int64 user_max_id = 13;
+  int64 user_max_id = 133
   int64 topic_max_id = 14;
   int64 message_max_id = 15;
 }
