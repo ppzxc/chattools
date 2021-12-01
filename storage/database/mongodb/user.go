@@ -118,21 +118,24 @@ func (m mongodb) UserFindAllByTopicIdAndPaging(ctx context.Context, topicId int6
 
 func (m mongodb) UserFindAllByPaging(ctx context.Context, paging model.Paging) ([]model.User, error) {
 	var filter bson.D
-	//filter := bson.M{"updated_at": bson.M{"$gte": paging.UpdatedAt, "$lte": paging.CreatedAt}}
-
-	if paging != (model.Paging{}) && paging.UpdatedAt != nil {
+	var opt *options.FindOptions
+	if paging != (model.Paging{}) && paging.Offset > 0 && paging.Limit > 0 {
+		filter = bson.D{{"_id", bson.M{"$gte": paging.Offset, "$lt": paging.Offset + paging.Limit}}}
+		opt = options.Find().SetSort(bson.D{{paging.By, paging.Order}})
+	} else if paging != (model.Paging{}) && paging.UpdatedAt != nil {
 		filter = bson.D{{"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
+		opt = options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(100)
 	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"created_at", bson.M{"$gt": paging.CreatedAt}}}
+		opt = options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(100)
 	} else if paging != (model.Paging{}) && paging.Id > 0 {
 		filter = bson.D{{"_id", bson.M{"$lt": paging.Id}}}
+		opt = options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(100)
 	} else {
 		filter = bson.D{}
 	}
 
-	return m.crudUser.FindManyByFilter(ctx, filter, options.Find().
-		SetSort(bson.D{{"_id", -1}}).
-		SetLimit(100))
+	return m.crudUser.FindManyByFilter(ctx, filter, opt)
 }
 
 func (m mongodb) UserFindOneById(ctx context.Context, userId int64) (model.User, error) {
