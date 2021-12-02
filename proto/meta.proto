@@ -61,5 +61,6 @@ service Meta {
   rpc NotifyFindAllByUserId(RequestMeta) returns (ResponseMeta) {}
   rpc NotifyFindAllByUserIdUsingPagination(RequestMeta) returns (ResponseMeta) {}
   rpc File(RequestMeta) returns (ResponseMeta) {}
+  rpc FileDownloadsValidateTopicSubs(RequestMeta) returns (ResponseMeta) {}
   rpc FileDelete(RequestMeta) returns (ResponseMeta) {}
 }
