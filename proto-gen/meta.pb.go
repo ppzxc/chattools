@@ -394,7 +394,7 @@ var file_meta_proto_rawDesc = []byte{
 	0x6e, 0x6f, 0x74, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x11, 0x20, 0x01,
 	0x28, 0x0b, 0x32, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x4e,
 	0x6f, 0x74, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0c, 0x6e, 0x6f, 0x74,
-	0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x32, 0xe9, 0x09, 0x0a, 0x04, 0x4d, 0x65,
+	0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x32, 0xc4, 0x0a, 0x0a, 0x04, 0x4d, 0x65,
 	0x74, 0x61, 0x12, 0x3a, 0x0a, 0x05, 0x54, 0x6f, 0x70, 0x69, 0x63, 0x12, 0x16, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4d,
 	0x65, 0x74, 0x61, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e,
@@ -465,16 +465,22 @@ var file_meta_proto_rawDesc = []byte{
 	0x55, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67,
 	0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x61, 0x1a, 0x17,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x22, 0x00, 0x12, 0x39, 0x0a, 0x04, 0x46, 0x69, 0x6c,
-	0x65, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65,
+	0x6e, 0x73, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x22, 0x00, 0x12, 0x59, 0x0a, 0x24, 0x4e, 0x6f, 0x74,
+	0x69, 0x66, 0x79, 0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x42, 0x79, 0x55, 0x73, 0x65, 0x72,
+	0x49, 0x64, 0x55, 0x73, 0x69, 0x6e, 0x67, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f,
+	0x6e, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x61, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x4d, 0x65,
-	0x74, 0x61, 0x22, 0x00, 0x12, 0x3f, 0x0a, 0x0a, 0x46, 0x69, 0x6c, 0x65, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x12, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x4d, 0x65, 0x74, 0x61, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x4d,
-	0x65, 0x74, 0x61, 0x22, 0x00, 0x42, 0x0c, 0x5a, 0x0a, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2d,
-	0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x74, 0x61, 0x22, 0x00, 0x12, 0x39, 0x0a, 0x04, 0x46, 0x69, 0x6c, 0x65, 0x12, 0x16, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x4d, 0x65, 0x74, 0x61, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e,
+	0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x22, 0x00, 0x12,
+	0x3f, 0x0a, 0x0a, 0x46, 0x69, 0x6c, 0x65, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x12, 0x16, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65, 0x6e, 0x2e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x4d, 0x65, 0x74, 0x61, 0x1a, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x67, 0x65,
+	0x6e, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x4d, 0x65, 0x74, 0x61, 0x22, 0x00,
+	0x42, 0x0c, 0x5a, 0x0a, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2d, 0x67, 0x65, 0x6e, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -535,29 +541,31 @@ var file_meta_proto_depIdxs = []int32{
 	0,  // 28: proto_gen.Meta.NotifyMaxId:input_type -> proto_gen.RequestMeta
 	0,  // 29: proto_gen.Meta.NotifyFindOne:input_type -> proto_gen.RequestMeta
 	0,  // 30: proto_gen.Meta.NotifyFindAllByUserId:input_type -> proto_gen.RequestMeta
-	0,  // 31: proto_gen.Meta.File:input_type -> proto_gen.RequestMeta
-	0,  // 32: proto_gen.Meta.FileDelete:input_type -> proto_gen.RequestMeta
-	1,  // 33: proto_gen.Meta.Topic:output_type -> proto_gen.ResponseMeta
-	1,  // 34: proto_gen.Meta.TopicCount:output_type -> proto_gen.ResponseMeta
-	1,  // 35: proto_gen.Meta.TopicMaxId:output_type -> proto_gen.ResponseMeta
-	1,  // 36: proto_gen.Meta.Message:output_type -> proto_gen.ResponseMeta
-	1,  // 37: proto_gen.Meta.MessageMaxId:output_type -> proto_gen.ResponseMeta
-	1,  // 38: proto_gen.Meta.MessageByPaging:output_type -> proto_gen.ResponseMeta
-	1,  // 39: proto_gen.Meta.User:output_type -> proto_gen.ResponseMeta
-	1,  // 40: proto_gen.Meta.UserAllCount:output_type -> proto_gen.ResponseMeta
-	1,  // 41: proto_gen.Meta.UserMaxId:output_type -> proto_gen.ResponseMeta
-	1,  // 42: proto_gen.Meta.Profile:output_type -> proto_gen.ResponseMeta
-	1,  // 43: proto_gen.Meta.ProfileGet:output_type -> proto_gen.ResponseMeta
-	1,  // 44: proto_gen.Meta.ProfileUpdate:output_type -> proto_gen.ResponseMeta
-	1,  // 45: proto_gen.Meta.ProfileImageUpdate:output_type -> proto_gen.ResponseMeta
-	1,  // 46: proto_gen.Meta.ProfileImageGet:output_type -> proto_gen.ResponseMeta
-	1,  // 47: proto_gen.Meta.NotifyMaxId:output_type -> proto_gen.ResponseMeta
-	1,  // 48: proto_gen.Meta.NotifyFindOne:output_type -> proto_gen.ResponseMeta
-	1,  // 49: proto_gen.Meta.NotifyFindAllByUserId:output_type -> proto_gen.ResponseMeta
-	1,  // 50: proto_gen.Meta.File:output_type -> proto_gen.ResponseMeta
-	1,  // 51: proto_gen.Meta.FileDelete:output_type -> proto_gen.ResponseMeta
-	33, // [33:52] is the sub-list for method output_type
-	14, // [14:33] is the sub-list for method input_type
+	0,  // 31: proto_gen.Meta.NotifyFindAllByUserIdUsingPagination:input_type -> proto_gen.RequestMeta
+	0,  // 32: proto_gen.Meta.File:input_type -> proto_gen.RequestMeta
+	0,  // 33: proto_gen.Meta.FileDelete:input_type -> proto_gen.RequestMeta
+	1,  // 34: proto_gen.Meta.Topic:output_type -> proto_gen.ResponseMeta
+	1,  // 35: proto_gen.Meta.TopicCount:output_type -> proto_gen.ResponseMeta
+	1,  // 36: proto_gen.Meta.TopicMaxId:output_type -> proto_gen.ResponseMeta
+	1,  // 37: proto_gen.Meta.Message:output_type -> proto_gen.ResponseMeta
+	1,  // 38: proto_gen.Meta.MessageMaxId:output_type -> proto_gen.ResponseMeta
+	1,  // 39: proto_gen.Meta.MessageByPaging:output_type -> proto_gen.ResponseMeta
+	1,  // 40: proto_gen.Meta.User:output_type -> proto_gen.ResponseMeta
+	1,  // 41: proto_gen.Meta.UserAllCount:output_type -> proto_gen.ResponseMeta
+	1,  // 42: proto_gen.Meta.UserMaxId:output_type -> proto_gen.ResponseMeta
+	1,  // 43: proto_gen.Meta.Profile:output_type -> proto_gen.ResponseMeta
+	1,  // 44: proto_gen.Meta.ProfileGet:output_type -> proto_gen.ResponseMeta
+	1,  // 45: proto_gen.Meta.ProfileUpdate:output_type -> proto_gen.ResponseMeta
+	1,  // 46: proto_gen.Meta.ProfileImageUpdate:output_type -> proto_gen.ResponseMeta
+	1,  // 47: proto_gen.Meta.ProfileImageGet:output_type -> proto_gen.ResponseMeta
+	1,  // 48: proto_gen.Meta.NotifyMaxId:output_type -> proto_gen.ResponseMeta
+	1,  // 49: proto_gen.Meta.NotifyFindOne:output_type -> proto_gen.ResponseMeta
+	1,  // 50: proto_gen.Meta.NotifyFindAllByUserId:output_type -> proto_gen.ResponseMeta
+	1,  // 51: proto_gen.Meta.NotifyFindAllByUserIdUsingPagination:output_type -> proto_gen.ResponseMeta
+	1,  // 52: proto_gen.Meta.File:output_type -> proto_gen.ResponseMeta
+	1,  // 53: proto_gen.Meta.FileDelete:output_type -> proto_gen.ResponseMeta
+	34, // [34:54] is the sub-list for method output_type
+	14, // [14:34] is the sub-list for method input_type
 	14, // [14:14] is the sub-list for extension type_name
 	14, // [14:14] is the sub-list for extension extendee
 	0,  // [0:14] is the sub-list for field type_name
@@ -644,6 +652,7 @@ type MetaClient interface {
 	NotifyMaxId(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 	NotifyFindOne(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 	NotifyFindAllByUserId(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
+	NotifyFindAllByUserIdUsingPagination(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 	File(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 	FileDelete(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error)
 }
@@ -809,6 +818,15 @@ func (c *metaClient) NotifyFindAllByUserId(ctx context.Context, in *RequestMeta,
 	return out, nil
 }
 
+func (c *metaClient) NotifyFindAllByUserIdUsingPagination(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error) {
+	out := new(ResponseMeta)
+	err := c.cc.Invoke(ctx, "/proto_gen.Meta/NotifyFindAllByUserIdUsingPagination", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *metaClient) File(ctx context.Context, in *RequestMeta, opts ...grpc.CallOption) (*ResponseMeta, error) {
 	out := new(ResponseMeta)
 	err := c.cc.Invoke(ctx, "/proto_gen.Meta/File", in, out, opts...)
@@ -846,6 +864,7 @@ type MetaServer interface {
 	NotifyMaxId(context.Context, *RequestMeta) (*ResponseMeta, error)
 	NotifyFindOne(context.Context, *RequestMeta) (*ResponseMeta, error)
 	NotifyFindAllByUserId(context.Context, *RequestMeta) (*ResponseMeta, error)
+	NotifyFindAllByUserIdUsingPagination(context.Context, *RequestMeta) (*ResponseMeta, error)
 	File(context.Context, *RequestMeta) (*ResponseMeta, error)
 	FileDelete(context.Context, *RequestMeta) (*ResponseMeta, error)
 }
@@ -904,6 +923,9 @@ func (*UnimplementedMetaServer) NotifyFindOne(context.Context, *RequestMeta) (*R
 }
 func (*UnimplementedMetaServer) NotifyFindAllByUserId(context.Context, *RequestMeta) (*ResponseMeta, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method NotifyFindAllByUserId not implemented")
+}
+func (*UnimplementedMetaServer) NotifyFindAllByUserIdUsingPagination(context.Context, *RequestMeta) (*ResponseMeta, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NotifyFindAllByUserIdUsingPagination not implemented")
 }
 func (*UnimplementedMetaServer) File(context.Context, *RequestMeta) (*ResponseMeta, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method File not implemented")
@@ -1222,6 +1244,24 @@ func _Meta_NotifyFindAllByUserId_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Meta_NotifyFindAllByUserIdUsingPagination_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestMeta)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetaServer).NotifyFindAllByUserIdUsingPagination(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto_gen.Meta/NotifyFindAllByUserIdUsingPagination",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetaServer).NotifyFindAllByUserIdUsingPagination(ctx, req.(*RequestMeta))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Meta_File_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RequestMeta)
 	if err := dec(in); err != nil {
@@ -1329,6 +1369,10 @@ var _Meta_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "NotifyFindAllByUserId",
 			Handler:    _Meta_NotifyFindAllByUserId_Handler,
+		},
+		{
+			MethodName: "NotifyFindAllByUserIdUsingPagination",
+			Handler:    _Meta_NotifyFindAllByUserIdUsingPagination_Handler,
 		},
 		{
 			MethodName: "File",

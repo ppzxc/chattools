@@ -59,6 +59,7 @@ service Meta {
   rpc NotifyMaxId(RequestMeta) returns (ResponseMeta) {}
   rpc NotifyFindOne(RequestMeta) returns (ResponseMeta) {}
   rpc NotifyFindAllByUserId(RequestMeta) returns (ResponseMeta) {}
+  rpc NotifyFindAllByUserIdUsingPagination(RequestMeta) returns (ResponseMeta) {}
   rpc File(RequestMeta) returns (ResponseMeta) {}
   rpc FileDelete(RequestMeta) returns (ResponseMeta) {}
 }

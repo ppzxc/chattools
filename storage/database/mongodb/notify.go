@@ -54,15 +54,22 @@ func (m mongodb) NotifyUpdate(ctx context.Context, notify *model.Notify) error {
 
 func (m mongodb) NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId int64, paging model.Paging) ([]*model.Notify, error) {
 	var filter bson.D
-	if paging != (model.Paging{}) && paging.UpdatedAt != nil {
+	var option *options.FindOptions
+	if paging != (model.Paging{}) && paging.Offset > 0 && paging.Limit > 0 {
+		filter = bson.D{{"receive_user_id", receiveUserId}, {"_id", bson.M{"$gte": paging.Offset, "$lt": paging.Offset + paging.Limit}}}
+		option = options.Find().SetSort(bson.D{{paging.By, paging.Order}})
+	} else if paging != (model.Paging{}) && paging.UpdatedAt != nil {
 		filter = bson.D{{"receive_user_id", receiveUserId}, {"updated_at", bson.M{"$gt": paging.UpdatedAt}}, {"deleted_at", bson.M{"$eq": nil}}}
+		option = options.Find().SetSort(bson.D{{"_id", 1}}).SetLimit(100)
 	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"receive_user_id", receiveUserId}, {"created_at", bson.M{"$gt": paging.CreatedAt}}, {"deleted_at", bson.M{"$eq": nil}}}
+		option = options.Find().SetSort(bson.D{{"_id", 1}}).SetLimit(100)
 	} else if paging != (model.Paging{}) && paging.Id > 0 {
 		filter = bson.D{{"receive_user_id", receiveUserId}, {"_id", bson.M{"$lt": paging.Id}}, {"deleted_at", bson.M{"$eq": nil}}}
+		option = options.Find().SetSort(bson.D{{"_id", 1}}).SetLimit(100)
 	}
 
-	return m.crudNotify.FindManyFilter(ctx, filter)
+	return m.crudNotify.FindManyFilter(ctx, filter, option)
 }
 
 func (m mongodb) NotifyFindOneById(ctx context.Context, notifyId int64) (*model.Notify, error) {
