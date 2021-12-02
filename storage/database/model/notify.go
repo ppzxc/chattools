@@ -11,7 +11,7 @@ type Notify struct {
 	SequenceId    int64       `json:"sequence_id,omitempty" bson:"sequence_id,omitempty"`
 	IsReceived    bool        `json:"is_received,omitempty" bson:"is_received,omitempty"`
 	IsRead        bool        `json:"is_read,omitempty" bson:"is_read,omitempty"`
-	Custom        interface{} `json:"custom,omitempty" bson:"custom,omitempty"`
+	Custom        interface{} `json:"custom,omitempty" bson:"custom"`
 	CreatedAt     *time.Time  `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	UpdatedAt     *time.Time  `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 	DeletedAt     *time.Time  `json:"deleted_at,omitempty" bson:"deleted_at,omitempty"`
