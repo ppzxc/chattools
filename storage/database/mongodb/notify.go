@@ -5,7 +5,25 @@ import (
 	"github.com/ppzxc/chattools/storage/database"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+func (m mongodb) NotifyMaxIdByUserId(ctx context.Context, userId int64) (maxId int64, err error) {
+	findOptions := options.FindOptions{}
+	findOptions.SetSort(bson.D{{"_id", -1}})
+	findOptions.SetLimit(1)
+	messages, err := m.crudNotify.FindManyFilter(ctx, bson.D{{"receive_user_id", userId}}, &findOptions)
+	if err != nil {
+		return 0, err
+	}
+
+	if len(messages) <= 0 {
+		return 0, mongo.ErrNoDocuments
+	}
+
+	return messages[0].Id, nil
+}
 
 func (m mongodb) NotifyInsertOne(ctx context.Context, notify model.Notify) (int64, error) {
 	id, err := m.crudSeq.Next(ctx, database.MongoCollectionNotify)

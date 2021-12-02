@@ -41,7 +41,7 @@ type Subscription interface {
 
 type Notify interface {
 	FindOneByFilter(ctx context.Context, filter bson.D) (*model.Notify, error)
-	FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Notify, error)
+	FindManyFilter(ctx context.Context, filter bson.D, options ...*options.FindOptions) ([]*model.Notify, error)
 	InsertMany(ctx context.Context, many []interface{}) error
 	InsertOne(ctx context.Context, one interface{}) (int64, error)
 	UpdateOne(ctx context.Context, notify *model.Notify) error

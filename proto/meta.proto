@@ -37,7 +37,8 @@ message ResponseMeta {
   int64 user_max_id = 133;
   int64 topic_max_id = 14;
   int64 message_max_id = 15;
-  Notification notification = 16;
+  int64 notification_max_id = 16;
+  Notification notification = 17;
 }
 
 service Meta {
@@ -55,6 +56,7 @@ service Meta {
   rpc ProfileUpdate(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileImageUpdate(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileImageGet(RequestMeta) returns (ResponseMeta) {}
+  rpc NotifyMaxId(RequestMeta) returns (ResponseMeta) {}
   rpc NotifyFindOne(RequestMeta) returns (ResponseMeta) {}
   rpc NotifyFindAllByUserId(RequestMeta) returns (ResponseMeta) {}
   rpc File(RequestMeta) returns (ResponseMeta) {}

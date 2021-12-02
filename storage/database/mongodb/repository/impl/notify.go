@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 )
 
@@ -43,10 +44,10 @@ func (c notify) FindOneByFilter(ctx context.Context, filter bson.D) (*model.Noti
 	return &notify, err
 }
 
-func (c notify) FindManyFilter(ctx context.Context, filter bson.D) ([]*model.Notify, error) {
+func (c notify) FindManyFilter(ctx context.Context, filter bson.D, options ...*options.FindOptions) ([]*model.Notify, error) {
 	start := time.Now()
 	cCtx, cancel := context.WithTimeout(ctx, c.queryTimeout)
-	cursor, err := c.collection.Find(cCtx, filter)
+	cursor, err := c.collection.Find(cCtx, filter, options...)
 	cancel()
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{
 		"query":     "u.collection.Find",
