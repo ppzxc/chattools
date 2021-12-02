@@ -18,6 +18,7 @@ message RequestMeta {
   Paging paging = 7;
   File file = 8;
   Profile profile = 9;
+  int64 notification_id = 10;
 }
 
 message ResponseMeta {
@@ -33,9 +34,10 @@ message ResponseMeta {
   int64 user_count = 10;
   int64 topic_count = 11;
   int64 message_count = 12;
-  int64 user_max_id = 133
+  int64 user_max_id = 133;
   int64 topic_max_id = 14;
   int64 message_max_id = 15;
+  Notification notification = 16;
 }
 
 service Meta {
@@ -53,7 +55,8 @@ service Meta {
   rpc ProfileUpdate(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileImageUpdate(RequestMeta) returns (ResponseMeta) {}
   rpc ProfileImageGet(RequestMeta) returns (ResponseMeta) {}
-  rpc Notify(RequestMeta) returns (ResponseMeta) {}
+  rpc NotifyFindOne(RequestMeta) returns (ResponseMeta) {}
+  rpc NotifyFindAllByUserId(RequestMeta) returns (ResponseMeta) {}
   rpc File(RequestMeta) returns (ResponseMeta) {}
   rpc FileDelete(RequestMeta) returns (ResponseMeta) {}
 }

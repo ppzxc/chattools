@@ -47,6 +47,14 @@ func (m mongodb) NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId
 	return m.crudNotify.FindManyFilter(ctx, filter)
 }
 
+func (m mongodb) NotifyFindOneById(ctx context.Context, notifyId int64) (*model.Notify, error) {
+	filter, err := m.crudNotify.FindOneByFilter(ctx, bson.D{{"_id", notifyId}})
+	if err != nil {
+		return &model.Notify{}, err
+	}
+	return filter, nil
+}
+
 func (m mongodb) NotifyFindOneReceiveUserIdById(ctx context.Context, notifyId int64) (int64, error) {
 	filter, err := m.crudNotify.FindOneByFilter(ctx, bson.D{{"_id", notifyId}})
 	if err != nil {
