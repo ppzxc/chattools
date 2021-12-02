@@ -15,8 +15,12 @@ func (m mongodb) MessageFindByPaging(ctx context.Context, topicId int64, paging 
 	var gt int64
 	if paging.Offset > paging.Limit {
 		gt = paging.Offset - paging.Limit
-	} else if paging.Limit > paging.Offset {
-		gt = paging.Limit - paging.Offset
+	} else if paging.Offset < paging.Limit {
+		if paging.Limit-paging.Offset <= 0 {
+			gt = 1
+		} else {
+			gt = paging.Limit - paging.Offset
+		}
 	} else if paging.Limit > 1 && paging.Offset > 1 && paging.Limit == paging.Offset {
 		//gte = paging.Offset
 		gt = paging.Limit
@@ -24,7 +28,7 @@ func (m mongodb) MessageFindByPaging(ctx context.Context, topicId int64, paging 
 		gt = 1
 	}
 
-	return m.crudMsg.FindManyByFilter(ctx, bson.D{{"topic_id", topicId}, {"sequence_id", bson.M{"$gt": gt, "$lte": paging.Offset}}},
+	return m.crudMsg.FindManyByFilter(ctx, bson.D{{"topic_id", topicId}, {"sequence_id", bson.M{"$lte": paging.Offset, "$gt": gt}}},
 		options.Find().SetSort(bson.D{{paging.By, paging.Order}}))
 }
 
