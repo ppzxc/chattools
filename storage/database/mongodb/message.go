@@ -21,9 +21,6 @@ func (m mongodb) MessageFindByPaging(ctx context.Context, topicId int64, paging 
 		} else {
 			gt = paging.Limit - paging.Offset
 		}
-	} else if paging.Limit > 1 && paging.Offset > 1 && paging.Limit == paging.Offset {
-		//gte = paging.Offset
-		gt = paging.Limit
 	} else {
 		gt = 1
 	}
