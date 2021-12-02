@@ -22,7 +22,11 @@ func (m mongodb) MessageFindByPaging(ctx context.Context, topicId int64, paging 
 			gt = paging.Limit - paging.Offset
 		}
 	} else {
-		gt = 1
+		// in my case
+		// offset = 100, limit 100  :  0
+		// offset > 100, limit 100  :  0
+		// offset = 1, limit  1  :  0
+		gt = 0
 	}
 
 	return m.crudMsg.FindManyByFilter(ctx, bson.D{{"topic_id", topicId}, {"sequence_id", bson.M{"$lte": paging.Offset, "$gt": gt}}},
