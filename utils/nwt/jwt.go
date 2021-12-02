@@ -18,6 +18,7 @@ var (
 type CustomClaims struct {
 	jwt.RegisteredClaims
 	UserId    int64  `json:"uid,omitempty"`
+	UserName  string `json:"unm,omitempty"`
 	BrowserId string `json:"bid,omitempty"`
 }
 
@@ -41,7 +42,7 @@ func (c CustomClaims) Validate() error {
 	return nil
 }
 
-func NewTokenWithStandardClaims(secret string, browserId string, id int64, expires time.Time) (string, error) {
+func NewTokenWithStandardClaims(secret string, browserId string, id int64, userName string, expires time.Time) (string, error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    os.Getenv("JWT_ISSUER"),
@@ -49,6 +50,7 @@ func NewTokenWithStandardClaims(secret string, browserId string, id int64, expir
 		},
 		UserId:    id,
 		BrowserId: browserId,
+		UserName:  userName,
 	}).SignedString([]byte(secret))
 }
 
