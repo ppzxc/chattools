@@ -58,4 +58,5 @@ type Service interface {
 	NotifyFindAllByReceiveUserId(ctx context.Context, receiveUserId int64, paging model.Paging) ([]*model.Notify, error)
 	NotifyFindOneReceiveUserIdById(ctx context.Context, notifyId int64) (int64, error)
 	NotifyFindOneById(ctx context.Context, notifyId int64) (*model.Notify, error)
+	NotifyMaxIdByUserId(ctx context.Context, userId int64) (maxId int64, err error)
 }
