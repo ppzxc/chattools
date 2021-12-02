@@ -13,19 +13,15 @@ import (
 func (m mongodb) MessageFindByPaging(ctx context.Context, topicId int64, paging model.Paging) ([]model.Message, error) {
 	//return m.crudMsg.FindManyByFilter(ctx, bson.D{{"topic_id", topicId}, {"sequence_id", bson.M{"$gte": paging.Offset, "$lt": paging.Offset + paging.Limit}}},
 	var gt int64
+	// in my case
+	// limit 1~100
+	// offset 1~999999999999
+	// condition
+	// offset 101~99999999 if
+	// else offset == 1~99
 	if paging.Offset > paging.Limit {
 		gt = paging.Offset - paging.Limit
-	} else if paging.Offset < paging.Limit {
-		if paging.Limit-paging.Offset <= 0 {
-			gt = 1
-		} else {
-			gt = paging.Limit - paging.Offset
-		}
 	} else {
-		// in my case
-		// offset = 100, limit 100  :  0
-		// offset > 100, limit 100  :  0
-		// offset = 1, limit  1  :  0
 		gt = 0
 	}
 
