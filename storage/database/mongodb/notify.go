@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"github.com/ppzxc/chattools/common"
 	"github.com/ppzxc/chattools/storage/database"
 	"github.com/ppzxc/chattools/storage/database/model"
 	"go.mongodb.org/mongo-driver/bson"
@@ -31,6 +32,9 @@ func (m mongodb) NotifyInsertOne(ctx context.Context, notify model.Notify) (int6
 		return 0, err
 	}
 	notify.Id = id
+	if notify.Custom == nil {
+		notify.Custom = common.FromByteToMap([]byte("{}"))
+	}
 	return m.crudNotify.InsertOne(ctx, notify)
 }
 
@@ -43,6 +47,9 @@ func (m mongodb) NotifyInsertMany(ctx context.Context, notify []*model.Notify) e
 		}
 		notify[i].Id = id
 		many = append(many, notify[i])
+		if notify[i].Custom == nil {
+			notify[i].Custom = common.FromByteToMap([]byte("{}"))
+		}
 	}
 
 	return m.crudNotify.InsertMany(ctx, many)

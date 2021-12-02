@@ -58,6 +58,10 @@ func (m mongodb) MessageInsert(ctx context.Context, message model.Message) (sequ
 	}
 	message.Id = id
 
+	if message.Custom == nil {
+		message.Custom = common.FromByteToMap([]byte("{}"))
+	}
+
 	err = m.crudMsg.InsertOne(ctx, message)
 	if err != nil {
 		return 0, err
