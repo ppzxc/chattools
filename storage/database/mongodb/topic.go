@@ -106,10 +106,6 @@ func (m mongodb) TopicFindIdsByUserId(ctx context.Context, userId int64) ([]int6
 		topicIds = append(topicIds, v.TopicId)
 	}
 
-	if len(topicIds) <= 0 {
-		return nil, sql.ErrNoRows
-	}
-
 	return topicIds, nil
 }
 
