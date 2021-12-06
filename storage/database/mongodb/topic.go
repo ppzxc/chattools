@@ -93,7 +93,7 @@ func (m mongodb) TopicFindIdsByUserId(ctx context.Context, userId int64) ([]int6
 	subs, err := m.crudSubs.FindManyByFilter(ctx, bson.M{"user_id": userId})
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, sql.ErrNoRows
+			return []int64{}, nil
 		}
 		return nil, err
 	}
