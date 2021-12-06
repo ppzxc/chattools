@@ -15,6 +15,16 @@ type Adapter interface {
 	Register(ctx context.Context, session domain.SessionAdapter) error
 	Unregister(ctx context.Context, sessionId string)
 
-	Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error)
+	//Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error)
+	//Publish(ctx context.Context, key string, message interface{}) error
+
+	PubSubNumSub(ctx context.Context, key ...string) (map[string]int64, error)
+	SubscribeUser(ctx context.Context, userId int64) (<-chan *redis.Message, error)
+	SubscribeTopic(ctx context.Context, userId int64, topicId int64) (<-chan *redis.Message, error)
 	Publish(ctx context.Context, key string, message interface{}) error
+	UnsubscribeUser(ctx context.Context, userId int64) error
+	UnsubscribeTopic(ctx context.Context, userId int64, topicId int64) error
+
+	GetTopicKey(topicId int64) string
+	GetUserKey(userId int64) string
 }

@@ -16,7 +16,10 @@ type Adapter interface {
 	HSet(ctx context.Context, key string, value ...interface{}) error
 	HDel(ctx context.Context, key string, fields ...string) error
 	HExists(ctx context.Context, key string, field string) error
+
+	PubSubNumSub(ctx context.Context, key ...string) (map[string]int64, error)
 	Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error)
+	PSubscribe(ctx context.Context, key ...string) (*redis.PubSub, error)
 	Publish(ctx context.Context, key string, message interface{}) error
 }
 
@@ -51,6 +54,35 @@ func (r redisCache) Exists(ctx context.Context, key ...string) error {
 	} else {
 		return types.ErrNoExistsKeys
 	}
+}
+
+func (r redisCache) PubSubNumSub(ctx context.Context, key ...string) (map[string]int64, error) {
+	redisCtx, cancel := context.WithTimeout(ctx, common.RedisCmdTimeOut)
+	stringIntMapCmd := r.rdb.PubSubNumSub(redisCtx, key...)
+	cancel()
+
+	if stringIntMapCmd.Err() != nil {
+		return nil, stringIntMapCmd.Err()
+	}
+	result, err := stringIntMapCmd.Result()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (r redisCache) PSubscribe(ctx context.Context, key ...string) (*redis.PubSub, error) {
+	redisCtx, cancel := context.WithTimeout(ctx, common.RedisCmdTimeOut)
+	pub := r.rdb.PSubscribe(redisCtx, key...)
+	cancel()
+
+	redisCtx2, cancel2 := context.WithTimeout(ctx, common.RedisCmdTimeOut)
+	err := pub.Ping(redisCtx2)
+	cancel2()
+	if err != nil {
+		return nil, err
+	}
+	return pub, nil
 }
 
 func (r redisCache) Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error) {

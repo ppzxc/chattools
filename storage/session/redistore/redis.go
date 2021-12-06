@@ -10,25 +10,108 @@ import (
 	"github.com/ppzxc/chattools/types"
 	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
+	"sync"
 )
-
-func getUserKey(userId int64) string {
-	return fmt.Sprintf("USER_%v", userId)
-}
 
 func NewRedisSessionStore(adapter cache.Adapter) session.Adapter {
 	return &redisSessionStore{
 		rdb: adapter,
+		mtx: sync.Mutex{},
+		pss: make(map[string]*redis.PubSub),
 	}
 }
 
 type redisSessionStore struct {
 	rdb cache.Adapter
+	mtx sync.Mutex
+	pss map[string]*redis.PubSub
 }
 
-func (r *redisSessionStore) Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error) {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("subscribe called")
-	return r.rdb.Subscribe(ctx, key...)
+func (r *redisSessionStore) UnsubscribeUser(ctx context.Context, userId int64) error {
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+		err := ps.Unsubscribe(ctx)
+		if err != nil {
+			return err
+		}
+		err = ps.Close()
+		if err != nil {
+			return err
+		}
+		delete(r.pss, r.GetUserKey(userId))
+		return nil
+	}
+	return nil
+}
+
+func (r *redisSessionStore) UnsubscribeTopic(ctx context.Context, userId int64, topicId int64) error {
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+		err := ps.Unsubscribe(ctx, r.GetTopicKey(topicId))
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	return nil
+}
+
+func (r *redisSessionStore) PubSubNumSub(ctx context.Context, key ...string) (map[string]int64, error) {
+	return r.rdb.PubSubNumSub(ctx, key...)
+}
+
+func (r *redisSessionStore) SubscribeTopic(ctx context.Context, userId int64, topicId int64) (<-chan *redis.Message, error) {
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{"subscribe.user": userId, "subscribe.topic": topicId})).Debug("subscribe topic called")
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+		err := ps.Subscribe(ctx, r.GetTopicKey(topicId))
+		if err != nil {
+			return nil, err
+		}
+		return ps.Channel(), nil
+	} else {
+		subscribe, err := r.rdb.Subscribe(ctx, r.GetUserKey(userId))
+		if err != nil {
+			return nil, err
+		}
+		err = subscribe.Subscribe(ctx, r.GetTopicKey(topicId))
+		if err != nil {
+			return nil, err
+		}
+		r.pss[r.GetUserKey(userId)] = subscribe
+		return subscribe.Channel(), nil
+	}
+}
+
+func (r *redisSessionStore) GetTopicKey(topicId int64) string {
+	return fmt.Sprintf("TOPIC.%v", topicId)
+}
+
+func (r *redisSessionStore) GetUserKey(userId int64) string {
+	return fmt.Sprintf("USER.%v", userId)
+}
+
+func (r *redisSessionStore) SubscribeUser(ctx context.Context, userId int64) (<-chan *redis.Message, error) {
+	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{"subscribe.user": r.GetUserKey(userId)})).Debug("subscribe user called")
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+		err := ps.Subscribe(ctx, r.GetUserKey(userId))
+		if err != nil {
+			return nil, err
+		}
+		return ps.Channel(), nil
+	} else {
+		subscribe, err := r.rdb.Subscribe(ctx, r.GetUserKey(userId))
+		if err != nil {
+			return nil, err
+		}
+		r.pss[r.GetUserKey(userId)] = subscribe
+		return subscribe.Channel(), nil
+	}
 }
 
 func (r *redisSessionStore) Publish(ctx context.Context, key string, message interface{}) error {
@@ -50,13 +133,13 @@ func (r *redisSessionStore) Login(ctx context.Context, sessionId string, userId 
 		return err
 	}
 
-	if err = r.rdb.Exists(ctx, getUserKey(userId)); err != nil {
+	if err = r.rdb.Exists(ctx, r.GetUserKey(userId)); err != nil {
 		if err != types.ErrNoExistsKeys {
 			return err
 		}
 	}
 
-	return r.rdb.HSet(ctx, getUserKey(userId), sessionId, browserId)
+	return r.rdb.HSet(ctx, r.GetUserKey(userId), sessionId, browserId)
 }
 
 func (r *redisSessionStore) Logout(ctx context.Context, sessionId string) error {
@@ -72,8 +155,8 @@ func (r *redisSessionStore) Logout(ctx context.Context, sessionId string) error 
 	}
 
 	if sess.IsLogin() {
-		if err := r.rdb.HExists(ctx, getUserKey(sess.GetUserId()), sessionId); err == nil {
-			_ = r.rdb.HDel(ctx, getUserKey(sess.GetUserId()), sessionId)
+		if err := r.rdb.HExists(ctx, r.GetUserKey(sess.GetUserId()), sessionId); err == nil {
+			_ = r.rdb.HDel(ctx, r.GetUserKey(sess.GetUserId()), sessionId)
 		}
 
 		sess.Logout()
@@ -111,7 +194,7 @@ func (r *redisSessionStore) GetSession(ctx context.Context, sessionId string) (d
 
 func (r *redisSessionStore) GetSessionByUserId(ctx context.Context, userId int64) (map[string]domain.SessionAdapter, error) {
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("GetSessionByUserId called")
-	maps, err := r.rdb.HGetAll(ctx, getUserKey(userId))
+	maps, err := r.rdb.HGetAll(ctx, r.GetUserKey(userId))
 	if err != nil {
 		return nil, err
 	}
@@ -180,7 +263,7 @@ func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) {
 		return
 	}
 
-	all, err := r.rdb.HGetAll(ctx, getUserKey(sess.GetUserId()))
+	all, err := r.rdb.HGetAll(ctx, r.GetUserKey(sess.GetUserId()))
 	if err != nil {
 		logrus.WithFields(logrus.Fields{
 			"session.id": sessionId,
@@ -190,7 +273,7 @@ func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) {
 
 	if browserId, loaded := all[sessionId]; loaded {
 		if len(all) <= 1 {
-			if err := r.rdb.Del(ctx, getUserKey(sess.GetUserId())); err != nil {
+			if err := r.rdb.Del(ctx, r.GetUserKey(sess.GetUserId())); err != nil {
 				logrus.WithFields(logrus.Fields{
 					"session.id": sessionId,
 					"browser.id": browserId,
@@ -198,7 +281,7 @@ func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) {
 				return
 			}
 		} else {
-			if err := r.rdb.HDel(ctx, getUserKey(sess.GetUserId()), sess.GetSessionId()); err != nil {
+			if err := r.rdb.HDel(ctx, r.GetUserKey(sess.GetUserId()), sess.GetSessionId()); err != nil {
 				logrus.WithFields(logrus.Fields{
 					"session.id": sessionId,
 					"browser.id": browserId,
