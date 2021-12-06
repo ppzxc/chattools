@@ -15,6 +15,6 @@ type Adapter interface {
 	Register(ctx context.Context, session domain.SessionAdapter) error
 	Unregister(ctx context.Context, sessionId string)
 
-	Subscribe(ctx context.Context, key string) (*redis.PubSub, error)
+	Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error)
 	Publish(ctx context.Context, key string, message interface{}) error
 }

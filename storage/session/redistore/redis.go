@@ -26,9 +26,9 @@ type redisSessionStore struct {
 	rdb cache.Adapter
 }
 
-func (r *redisSessionStore) Subscribe(ctx context.Context, key string) (*redis.PubSub, error) {
+func (r *redisSessionStore) Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error) {
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("subscribe called")
-	return r.rdb.Subscribe(ctx, key)
+	return r.rdb.Subscribe(ctx, key...)
 }
 
 func (r *redisSessionStore) Publish(ctx context.Context, key string, message interface{}) error {

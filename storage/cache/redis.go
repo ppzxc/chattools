@@ -16,7 +16,7 @@ type Adapter interface {
 	HSet(ctx context.Context, key string, value ...interface{}) error
 	HDel(ctx context.Context, key string, fields ...string) error
 	HExists(ctx context.Context, key string, field string) error
-	Subscribe(ctx context.Context, key string) (*redis.PubSub, error)
+	Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error)
 	Publish(ctx context.Context, key string, message interface{}) error
 }
 
@@ -53,9 +53,9 @@ func (r redisCache) Exists(ctx context.Context, key ...string) error {
 	}
 }
 
-func (r redisCache) Subscribe(ctx context.Context, key string) (*redis.PubSub, error) {
+func (r redisCache) Subscribe(ctx context.Context, key ...string) (*redis.PubSub, error) {
 	redisCtx, cancel := context.WithTimeout(ctx, common.RedisCmdTimeOut)
-	pub := r.rdb.Subscribe(redisCtx, key)
+	pub := r.rdb.Subscribe(redisCtx, key...)
 	cancel()
 
 	redisCtx2, cancel2 := context.WithTimeout(ctx, common.RedisCmdTimeOut)
