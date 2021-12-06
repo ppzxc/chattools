@@ -29,3 +29,9 @@ type PubSubProtocol struct {
 	//TransactionId string        `json:"transaction_id"`
 	//UserId        int64         `json:"user_id"`
 }
+
+type PubSubs struct {
+	Command Command `json:"command"`
+	TopicId int64   `json:"topic_id"`
+	Payload []byte  `json:"payload"`
+}
