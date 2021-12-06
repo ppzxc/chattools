@@ -39,12 +39,14 @@ message ResponseMeta {
   int64 message_max_id = 15;
   int64 notification_max_id = 16;
   Notification notification = 17;
+  repeated int64 topic_ids = 18;
 }
 
 service Meta {
   rpc Topic(RequestMeta) returns (ResponseMeta) {}
   rpc TopicCount(RequestMeta) returns (ResponseMeta) {}
   rpc TopicMaxId(RequestMeta) returns (ResponseMeta) {}
+  rpc TopicListIdsByUserId(RequestMeta) returns (ResponseMeta) {}
   rpc Message(RequestMeta) returns (ResponseMeta) {}
   rpc MessageMaxId(RequestMeta) returns (ResponseMeta) {}
   rpc MessageByPaging(RequestMeta) returns (ResponseMeta) {}

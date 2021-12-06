@@ -89,6 +89,27 @@ func (m mongodb) TopicFindAll(ctx context.Context, paging model.Paging) ([]model
 		SetLimit(100))
 }
 
+func (m mongodb) TopicFindIdsByUserId(ctx context.Context, userId int64) ([]int64, error) {
+	subs, err := m.crudSubs.FindManyByFilter(ctx, bson.M{"user_id": userId})
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, sql.ErrNoRows
+		}
+		return nil, err
+	}
+
+	var topicIds []int64
+	for _, v := range subs {
+		topicIds = append(topicIds, v.TopicId)
+	}
+
+	if len(topicIds) <= 0 {
+		return nil, sql.ErrNoRows
+	}
+
+	return topicIds, nil
+}
+
 func (m mongodb) TopicFindAllByUserId(ctx context.Context, userId int64, paging model.Paging) ([]model.Topic, error) {
 	subs, err := m.crudSubs.FindManyByFilter(ctx, bson.M{"user_id": userId})
 	if err != nil {

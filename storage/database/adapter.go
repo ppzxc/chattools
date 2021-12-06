@@ -27,6 +27,7 @@ type Service interface {
 	TopicDelete(ctx context.Context, topicId int64) (err error)
 	TopicCountDocumentsByUserId(ctx context.Context, userId int64) (int64, error)
 	TopicMaxIdByUserId(ctx context.Context, userId int64) (maxTopicId int64, err error)
+	TopicFindIdsByUserId(ctx context.Context, userId int64) ([]int64, error)
 
 	SubscriptionInsert(ctx context.Context, subscription model.Subscription) (subscriptionId int64, err error)
 	SubscriptionFindAllByTopicId(ctx context.Context, topicId int64) (subscriptions []model.Subscription, err error)
