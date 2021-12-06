@@ -92,6 +92,9 @@ func (m mongodb) TopicFindAll(ctx context.Context, paging model.Paging) ([]model
 func (m mongodb) TopicFindIdsByUserId(ctx context.Context, userId int64) ([]int64, error) {
 	subs, err := m.crudSubs.FindManyByFilter(ctx, bson.M{"user_id": userId})
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return []int64{}, nil
+		}
 		if err == mongo.ErrNoDocuments {
 			return []int64{}, nil
 		}
