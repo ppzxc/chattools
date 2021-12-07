@@ -22,6 +22,7 @@ message ResponseCtrl {
   int64 user_id = 5;
   string user_name = 6;
   Result result = 7;
+  bool is_topic_delete = 8;
 }
 
 service Control {
