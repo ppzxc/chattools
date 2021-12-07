@@ -27,10 +27,10 @@ type redisSessionStore struct {
 	pss map[string]*redis.PubSub
 }
 
-func (r *redisSessionStore) UnsubscribeUser(ctx context.Context, userId int64) error {
+func (r *redisSessionStore) UnsubscribeUser(ctx context.Context, sessionId string) error {
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
-	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+	if ps, ok := r.pss[sessionId]; ok {
 		err := ps.Unsubscribe(ctx)
 		if err != nil {
 			return err
@@ -39,16 +39,16 @@ func (r *redisSessionStore) UnsubscribeUser(ctx context.Context, userId int64) e
 		if err != nil {
 			return err
 		}
-		delete(r.pss, r.GetUserKey(userId))
+		delete(r.pss, sessionId)
 		return nil
 	}
 	return nil
 }
 
-func (r *redisSessionStore) UnsubscribeTopic(ctx context.Context, userId int64, topicId int64) error {
+func (r *redisSessionStore) UnsubscribeTopic(ctx context.Context, sessionId string, topicId int64) error {
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
-	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+	if ps, ok := r.pss[sessionId]; ok {
 		err := ps.Unsubscribe(ctx, r.GetTopicKey(topicId))
 		if err != nil {
 			return err
@@ -62,11 +62,11 @@ func (r *redisSessionStore) PubSubNumSub(ctx context.Context, key ...string) (ma
 	return r.rdb.PubSubNumSub(ctx, key...)
 }
 
-func (r *redisSessionStore) SubscribeTopic(ctx context.Context, userId int64, topicId int64) (<-chan *redis.Message, error) {
+func (r *redisSessionStore) SubscribeTopic(ctx context.Context, sessionId string, userId int64, topicId int64) (<-chan *redis.Message, error) {
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{"subscribe.user": userId, "subscribe.topic": topicId})).Debug("subscribe topic called")
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
-	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+	if ps, ok := r.pss[sessionId]; ok {
 		err := ps.Subscribe(ctx, r.GetTopicKey(topicId))
 		if err != nil {
 			return nil, err
@@ -81,7 +81,7 @@ func (r *redisSessionStore) SubscribeTopic(ctx context.Context, userId int64, to
 		if err != nil {
 			return nil, err
 		}
-		r.pss[r.GetUserKey(userId)] = subscribe
+		r.pss[sessionId] = subscribe
 		return subscribe.Channel(), nil
 	}
 }
@@ -94,11 +94,11 @@ func (r *redisSessionStore) GetUserKey(userId int64) string {
 	return fmt.Sprintf("USER.%v", userId)
 }
 
-func (r *redisSessionStore) SubscribeUser(ctx context.Context, userId int64) (<-chan *redis.Message, error) {
+func (r *redisSessionStore) SubscribeUser(ctx context.Context, sessionId string, userId int64) (<-chan *redis.Message, error) {
 	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{"subscribe.user": r.GetUserKey(userId)})).Debug("subscribe user called")
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
-	if ps, ok := r.pss[r.GetUserKey(userId)]; ok {
+	if ps, ok := r.pss[sessionId]; ok {
 		err := ps.Subscribe(ctx, r.GetUserKey(userId))
 		if err != nil {
 			return nil, err
@@ -109,7 +109,7 @@ func (r *redisSessionStore) SubscribeUser(ctx context.Context, userId int64) (<-
 		if err != nil {
 			return nil, err
 		}
-		r.pss[r.GetUserKey(userId)] = subscribe
+		r.pss[sessionId] = subscribe
 		return subscribe.Channel(), nil
 	}
 }

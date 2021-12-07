@@ -19,11 +19,11 @@ type Adapter interface {
 	//Publish(ctx context.Context, key string, message interface{}) error
 
 	PubSubNumSub(ctx context.Context, key ...string) (map[string]int64, error)
-	SubscribeUser(ctx context.Context, userId int64) (<-chan *redis.Message, error)
-	SubscribeTopic(ctx context.Context, userId int64, topicId int64) (<-chan *redis.Message, error)
+	SubscribeUser(ctx context.Context, sessionId string, userId int64) (<-chan *redis.Message, error)
+	SubscribeTopic(ctx context.Context, sessionId string, userId int64, topicId int64) (<-chan *redis.Message, error)
 	Publish(ctx context.Context, key string, message interface{}) error
-	UnsubscribeUser(ctx context.Context, userId int64) error
-	UnsubscribeTopic(ctx context.Context, userId int64, topicId int64) error
+	UnsubscribeUser(ctx context.Context, sessionId string) error
+	UnsubscribeTopic(ctx context.Context, sessionId string, topicId int64) error
 
 	GetTopicKey(topicId int64) string
 	GetUserKey(userId int64) string
