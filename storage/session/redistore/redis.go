@@ -8,7 +8,6 @@ import (
 	"github.com/ppzxc/chattools/storage/cache"
 	"github.com/ppzxc/chattools/storage/session"
 	"github.com/ppzxc/chattools/types"
-	"github.com/ppzxc/chattools/utils"
 	"github.com/sirupsen/logrus"
 	"sync"
 )
@@ -63,7 +62,6 @@ func (r *redisSessionStore) PubSubNumSub(ctx context.Context, key ...string) (ma
 }
 
 func (r *redisSessionStore) SubscribeTopic(ctx context.Context, sessionId string, userId int64, topicId int64) (<-chan *redis.Message, error) {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{"subscribe.user": userId, "subscribe.topic": topicId})).Debug("subscribe topic called")
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 	if ps, ok := r.pss[sessionId]; ok {
@@ -95,7 +93,6 @@ func (r *redisSessionStore) GetUserKey(userId int64) string {
 }
 
 func (r *redisSessionStore) SubscribeUser(ctx context.Context, sessionId string, userId int64) (<-chan *redis.Message, error) {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{"subscribe.user": r.GetUserKey(userId)})).Debug("subscribe user called")
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 	if ps, ok := r.pss[sessionId]; ok {
@@ -115,12 +112,10 @@ func (r *redisSessionStore) SubscribeUser(ctx context.Context, sessionId string,
 }
 
 func (r *redisSessionStore) Publish(ctx context.Context, key string, message interface{}) error {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("publish called")
 	return r.rdb.Publish(ctx, key, message)
 }
 
 func (r *redisSessionStore) Login(ctx context.Context, sessionId string, userId int64, userName string, browserId string) error {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("login called")
 	if err := r.rdb.Exists(ctx, sessionId); err != nil {
 		return err
 	}
@@ -143,7 +138,6 @@ func (r *redisSessionStore) Login(ctx context.Context, sessionId string, userId 
 }
 
 func (r *redisSessionStore) Logout(ctx context.Context, sessionId string) error {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("logout called")
 	get, err := r.rdb.HGetAll(ctx, sessionId)
 	if err != nil {
 		return err
@@ -170,7 +164,6 @@ func (r *redisSessionStore) Logout(ctx context.Context, sessionId string) error 
 }
 
 func (r *redisSessionStore) ExistSession(ctx context.Context, sessionId string) bool {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("ExistSession called")
 	err := r.rdb.Exists(ctx, sessionId)
 	if err != nil {
 		return false
@@ -179,7 +172,6 @@ func (r *redisSessionStore) ExistSession(ctx context.Context, sessionId string) 
 }
 
 func (r *redisSessionStore) GetSession(ctx context.Context, sessionId string) (domain.SessionAdapter, bool) {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("GetSession called")
 	get, err := r.rdb.HGetAll(ctx, sessionId)
 	if err != nil || get == nil {
 		return nil, false
@@ -193,7 +185,6 @@ func (r *redisSessionStore) GetSession(ctx context.Context, sessionId string) (d
 }
 
 func (r *redisSessionStore) GetSessionByUserId(ctx context.Context, userId int64) (map[string]domain.SessionAdapter, error) {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("GetSessionByUserId called")
 	maps, err := r.rdb.HGetAll(ctx, r.GetUserKey(userId))
 	if err != nil {
 		return nil, err
@@ -217,23 +208,17 @@ func (r *redisSessionStore) GetSessionByUserId(ctx context.Context, userId int64
 }
 
 func (r *redisSessionStore) Register(ctx context.Context, registerSession domain.SessionAdapter) error {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("Register called")
 	err := r.rdb.Exists(ctx, registerSession.GetSessionId())
 	if err != nil && err != types.ErrNoExistsKeys {
 		return err
 	}
-
 	return r.rdb.HSet(ctx, registerSession.GetSessionId(), registerSession.ToMap())
 }
 
-func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) {
-	logrus.WithFields(utils.ContextValueExtractor(ctx, logrus.Fields{})).Debug("Unregister called")
+func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) error {
 	get, err := r.rdb.HGetAll(ctx, sessionId)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"session.id": sessionId,
-		}).WithError(err).Error("unregister session get failed")
-		return
+		return err
 	}
 
 	defer func() {
@@ -250,44 +235,28 @@ func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) {
 
 	sess, err := domain.FromMap(get)
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"session.id": sessionId,
-		}).WithError(err).Error("unregister, fromMap transform fail")
-		return
+		return err
 	}
 
 	if !sess.IsLogin() {
-		logrus.WithFields(logrus.Fields{
-			"session.id": sessionId,
-		}).WithError(err).Error("session is not login")
-		return
+		return nil
 	}
 
 	all, err := r.rdb.HGetAll(ctx, r.GetUserKey(sess.GetUserId()))
 	if err != nil {
-		logrus.WithFields(logrus.Fields{
-			"session.id": sessionId,
-		}).WithError(err).Error("unregister user sessions get failed")
-		return
+		return err
 	}
 
-	if browserId, loaded := all[sessionId]; loaded {
+	if _, loaded := all[sessionId]; loaded {
 		if len(all) <= 1 {
 			if err := r.rdb.Del(ctx, r.GetUserKey(sess.GetUserId())); err != nil {
-				logrus.WithFields(logrus.Fields{
-					"session.id": sessionId,
-					"browser.id": browserId,
-				}).WithError(err).Error("unregister user sessions get failed")
-				return
+				return err
 			}
 		} else {
 			if err := r.rdb.HDel(ctx, r.GetUserKey(sess.GetUserId()), sess.GetSessionId()); err != nil {
-				logrus.WithFields(logrus.Fields{
-					"session.id": sessionId,
-					"browser.id": browserId,
-				}).WithError(err).Error("unregister user sessions get failed")
-				return
+				return err
 			}
 		}
 	}
+	return nil
 }
