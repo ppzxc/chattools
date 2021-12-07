@@ -124,15 +124,16 @@ func (m mongodb) UserFindAllByPaging(ctx context.Context, paging model.Paging) (
 		opt = options.Find().SetSort(bson.D{{paging.By, paging.Order}})
 	} else if paging != (model.Paging{}) && paging.UpdatedAt != nil {
 		filter = bson.D{{"updated_at", bson.M{"$gt": paging.UpdatedAt}}}
-		opt = options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(100)
+		opt = options.Find().SetSort(bson.D{{"_id", -1}})
 	} else if paging != (model.Paging{}) && paging.CreatedAt != nil {
 		filter = bson.D{{"created_at", bson.M{"$gt": paging.CreatedAt}}}
-		opt = options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(100)
+		opt = options.Find().SetSort(bson.D{{"_id", -1}})
 	} else if paging != (model.Paging{}) && paging.Id > 0 {
 		filter = bson.D{{"_id", bson.M{"$lt": paging.Id}}}
-		opt = options.Find().SetSort(bson.D{{"_id", -1}}).SetLimit(100)
+		opt = options.Find().SetSort(bson.D{{"_id", -1}})
 	} else {
 		filter = bson.D{}
+		opt = options.Find().SetSort(bson.D{{"_id", -1}})
 	}
 
 	return m.crudUser.FindManyByFilter(ctx, filter, opt)
