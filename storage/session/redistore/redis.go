@@ -226,10 +226,6 @@ func (r *redisSessionStore) Unregister(ctx context.Context, sessionId string) er
 			logrus.WithFields(logrus.Fields{
 				"session.id": sessionId,
 			}).WithError(err).Error("unregister, rdb delete error")
-		} else {
-			logrus.WithFields(logrus.Fields{
-				"session.id": sessionId,
-			}).Info("unregister done")
 		}
 	}()
 
