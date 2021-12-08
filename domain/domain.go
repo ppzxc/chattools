@@ -8,7 +8,7 @@ import (
 type Command int
 
 const (
-	PubSubTopicCreate Command = iota
+	PubSubTopicCreate Command = iota + 1
 	PubSubTopicLeave
 	PubSubTopicJoin
 	PubSubTopicInvite
@@ -19,6 +19,8 @@ const (
 
 	PubSubNotifyCreate
 	PubSubNotifyCrud
+
+	PubSubDefaultWriteOut
 )
 
 type PubSubProtocol struct {
