@@ -8,16 +8,17 @@ import (
 type Command int
 
 const (
-	TopicCreate Command = iota
-	TopicLeave
-	TopicJoin
-	TopicInvite
+	PubSubTopicCreate Command = iota
+	PubSubTopicLeave
+	PubSubTopicJoin
+	PubSubTopicInvite
 
-	MsgAck
-	MsgRead
+	PubSubMsgAck
+	PubSubMsgRead
+	PubSubMsgSend
 
-	NotifyCreate
-	NotifyCrud
+	PubSubNotifyCreate
+	PubSubNotifyCrud
 )
 
 type PubSubProtocol struct {
